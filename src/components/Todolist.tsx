@@ -38,7 +38,7 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
           setInputValue={setInputValue}
           addTask={addTask}
         />
-        <Button className="btn-primary" title={'Add'} callBack={addTask} />
+        <Button className="btn-primary" title={'+'} callBack={addTask} />
       </div>
       <ul className="todo-list">
         {props.tasks.map((task) => (
@@ -54,14 +54,18 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
       </ul>
       <div className="todo-buttons">
         <Button
-          className={props.filter === 'all' ? 'btn-active' : 'btn-success'}
+          className={
+            props.filter === 'all' ? 'btn-success active' : 'btn-success'
+          }
           title={'All'}
           callBack={() => {
             props.changeFilter('all')
           }}
         />
         <Button
-          className={props.filter === 'active' ? 'btn-active' : 'btn-success'}
+          className={
+            props.filter === 'active' ? 'btn-success active' : 'btn-success'
+          }
           title={'Active'}
           callBack={() => {
             props.changeFilter('active')
@@ -69,7 +73,7 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
         />
         <Button
           className={
-            props.filter === 'completed' ? 'btn-active' : 'btn-success'
+            props.filter === 'completed' ? 'btn-success active' : 'btn-success'
           }
           title={'Completed'}
           callBack={() => {

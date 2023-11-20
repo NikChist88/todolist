@@ -15,15 +15,13 @@ export const Task: FC<TaskPropsType> = (props) => {
 
   return (
     <li key={id} className="todo-list-item">
-      <Checkbox
-        id={id}
-        checked={isDone}
-        updateTaskStatus={updateTaskStatus}
-      />
-      <span className={`todo-list-task ${isDone && 'is-done'}`}>{task}</span>
+      <Checkbox id={id} checked={isDone} updateTaskStatus={updateTaskStatus} />
+      <label htmlFor={id} className={`todo-list-task ${isDone && 'is-done'}`}>
+        {task}
+      </label>
       <Button
         className="btn-danger"
-        title={'Delete'}
+        title={'x'}
         callBack={() => {
           deleteTask(id)
         }}

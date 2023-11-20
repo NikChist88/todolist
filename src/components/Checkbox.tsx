@@ -13,5 +13,5 @@ export const Checkbox: FC<CheckboxPropsType> = (props) => {
     updateTaskStatus(id, e.currentTarget.checked)
   }
 
-  return <input type="checkbox" checked={checked} onChange={onChangeHandler} />
+  return <input id={id} type="checkbox" checked={checked} onChange={onChangeHandler} />
 }

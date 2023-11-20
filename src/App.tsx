@@ -55,7 +55,7 @@ export const App: React.FC<AppPropsType> = ({ initTasks }) => {
   return (
     <div className="app">
       <Todolist
-        title={'Todo List'}
+        title={'Todo App'}
         tasks={filteredTasks}
         createTask={createTask}
         updateTaskStatus={updateTaskStatus}
