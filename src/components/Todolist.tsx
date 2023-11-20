@@ -10,7 +10,7 @@ type TodolistPropsType = {
   tasks: TaskType[]
   filter: FilterType
   createTask: (task: string) => void
-  updateTaskStatus: (status: string) => void
+  updateTaskStatus: (taskId: string, isDone: boolean) => void
   deleteTask: (id: string) => void
   changeFilter: (value: FilterType) => void
 }

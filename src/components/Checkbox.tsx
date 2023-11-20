@@ -1,24 +1,17 @@
 import { ChangeEvent, FC } from 'react'
 
 type CheckboxPropsType = {
-  value: string
+  id: string
   checked: boolean
-  updateTaskStatus: (status: string) => void
+  updateTaskStatus: (taskId: string, isDone: boolean) => void
 }
 
 export const Checkbox: FC<CheckboxPropsType> = (props) => {
-  const { value, checked, updateTaskStatus } = props
+  const { id, checked, updateTaskStatus } = props
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    updateTaskStatus(e.currentTarget.value)
+    updateTaskStatus(id, e.currentTarget.checked)
   }
 
-  return (
-    <input
-      type="checkbox"
-      value={value}
-      checked={checked}
-      onChange={onChangeHandler}
-    />
-  )
+  return <input type="checkbox" checked={checked} onChange={onChangeHandler} />
 }

@@ -25,11 +25,10 @@ export const App: React.FC<AppPropsType> = ({ initTasks }) => {
   }
 
   // Update Task Status
-  const updateTaskStatus = (status: string) => {
-    const updateTasks = tasks.map((task) => {
-      return task.id === status ? { ...task, isDone: !task.isDone } : task
-    })
-    setTasks(updateTasks)
+  const updateTaskStatus = (taskId: string, isDone: boolean) => {
+    const task = tasks.find((task) => task.id === taskId)
+    if (task) task.isDone = isDone
+    setTasks([...tasks])
   }
 
   // Delete Task
