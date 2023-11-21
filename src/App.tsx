@@ -1,8 +1,7 @@
 import './App.css'
-import { ChangeEvent, useState } from 'react'
+import { useState } from 'react'
 import { Todolist } from './components/Todolist'
-import { TaskType } from './types/types'
-import { FilterType } from './types/types'
+import { TaskType } from './data/initTasks'
 import { v1 } from 'uuid'
 
 type AppPropsType = {
@@ -11,17 +10,12 @@ type AppPropsType = {
 
 export const App: React.FC<AppPropsType> = ({ initTasks }) => {
   // Local State
+  const todoListTitle: string = 'What to learn'
   const [tasks, setTasks] = useState<TaskType[]>(initTasks)
-  const [filter, setFilter] = useState<FilterType>('all')
 
   // Create Task
-  const createTask = (value: string) => {
-    const newTask = {
-      id: v1(),
-      task: value,
-      isDone: false,
-    }
-    setTasks([newTask, ...tasks])
+  const createTask = (task: string) => {
+    setTasks([...tasks, { id: v1(), task: task, isDone: false }])
   }
 
   // Update Task Status
@@ -33,35 +27,18 @@ export const App: React.FC<AppPropsType> = ({ initTasks }) => {
 
   // Delete Task
   const deleteTask = (id: string) => {
-    if (window.confirm('Do you want to delete a task?')) {
-      const updateTasks = tasks.filter((task) => task.id !== id)
-      setTasks(updateTasks)
-    }
+    if (window.confirm('Do you want to delete a task?'))
+      setTasks(tasks.filter((task) => task.id !== id))
   }
-
-  // Change Tasks Filter
-  const changeFilter = (value: FilterType) => {
-    setFilter(value)
-  }
-
-  // Filtered Tasks
-  const filteredTasks =
-    filter === 'active'
-      ? tasks.filter((task) => task.isDone === false)
-      : filter === 'completed'
-      ? tasks.filter((task) => task.isDone === true)
-      : tasks
 
   return (
     <div className="app">
       <Todolist
-        title={'Todo App'}
-        tasks={filteredTasks}
+        title={todoListTitle}
+        tasks={tasks}
         createTask={createTask}
         updateTaskStatus={updateTaskStatus}
         deleteTask={deleteTask}
-        changeFilter={changeFilter}
-        filter={filter}
       />
     </div>
   )

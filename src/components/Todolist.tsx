@@ -1,27 +1,44 @@
 import { Task } from './Task'
 import { Input } from './Input'
 import { Button } from './Button'
-import { TaskType } from '../types/types'
-import { FilterType } from '../types/types'
+import { TaskType } from '../data/initTasks'
 import { FC, useState } from 'react'
 
 type TodolistPropsType = {
   title: string
   tasks: TaskType[]
-  filter: FilterType
   createTask: (task: string) => void
   updateTaskStatus: (taskId: string, isDone: boolean) => void
   deleteTask: (id: string) => void
-  changeFilter: (value: FilterType) => void
 }
 
+export type FilterType = 'all' | 'active' | 'completed'
+
 export const Todolist: FC<TodolistPropsType> = (props) => {
+  // Props
+  const { title, tasks, createTask, updateTaskStatus, deleteTask } = props
+
+  // Local State
   const [inputValue, setInputValue] = useState<string>('')
+  const [filter, setFilter] = useState<FilterType>('all')
+
+  // Change Tasks Filter
+  const changeFilter = (value: FilterType) => {
+    setFilter(value)
+  }
+
+  // Filtered Tasks
+  const filteredTasks =
+    filter === 'active'
+      ? tasks.filter((task) => task.isDone === false)
+      : filter === 'completed'
+      ? tasks.filter((task) => task.isDone === true)
+      : tasks
 
   // Add Task
   const addTask = () => {
     if (inputValue !== '') {
-      props.createTask(inputValue)
+      createTask(inputValue)
       setInputValue('')
     } else {
       window.alert('The field must not be empty!')
@@ -30,7 +47,7 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
 
   return (
     <div className="todo">
-      <h3 className="todo-title">{props.title}</h3>
+      <h3 className="todo-title">{title}</h3>
       <div className="todo-field">
         <Input
           className="todo-input-task"
@@ -40,44 +57,46 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
         />
         <Button className="btn-primary" title={'+'} callBack={addTask} />
       </div>
-      <ul className="todo-list">
-        {props.tasks.map((task) => (
-          <Task
-            key={task.id}
-            id={task.id}
-            task={task.task}
-            isDone={task.isDone}
-            updateTaskStatus={props.updateTaskStatus}
-            deleteTask={props.deleteTask}
-          />
-        ))}
-      </ul>
+
+      {filteredTasks.length === 0 ? (
+        <span>Your task list is empty.</span>
+      ) : (
+        <ul className="todo-list">
+          {filteredTasks.map((task) => (
+            <Task
+              key={task.id}
+              id={task.id}
+              task={task.task}
+              isDone={task.isDone}
+              updateTaskStatus={updateTaskStatus}
+              deleteTask={deleteTask}
+            />
+          ))}
+        </ul>
+      )}
+
       <div className="todo-buttons">
         <Button
-          className={
-            props.filter === 'all' ? 'btn-success active' : 'btn-success'
-          }
+          className={filter === 'all' ? 'btn-success active' : 'btn-success'}
           title={'All'}
           callBack={() => {
-            props.changeFilter('all')
+            changeFilter('all')
           }}
         />
         <Button
-          className={
-            props.filter === 'active' ? 'btn-success active' : 'btn-success'
-          }
+          className={filter === 'active' ? 'btn-success active' : 'btn-success'}
           title={'Active'}
           callBack={() => {
-            props.changeFilter('active')
+            changeFilter('active')
           }}
         />
         <Button
           className={
-            props.filter === 'completed' ? 'btn-success active' : 'btn-success'
+            filter === 'completed' ? 'btn-success active' : 'btn-success'
           }
           title={'Completed'}
           callBack={() => {
-            props.changeFilter('completed')
+            changeFilter('completed')
           }}
         />
       </div>

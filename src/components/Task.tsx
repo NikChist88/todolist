@@ -11,10 +11,11 @@ type TaskPropsType = {
 }
 
 export const Task: FC<TaskPropsType> = (props) => {
+  // Props
   const { id, task, isDone, updateTaskStatus, deleteTask } = props
 
   return (
-    <li key={id} className="todo-list-item">
+    <li className="todo-list-item">
       <Checkbox id={id} checked={isDone} updateTaskStatus={updateTaskStatus} />
       <label htmlFor={id} className={`todo-list-task ${isDone && 'is-done'}`}>
         {task}

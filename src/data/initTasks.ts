@@ -1,5 +1,10 @@
 import { v1 } from 'uuid'
-import { TaskType } from '../types/types'
+
+export type TaskType = {
+  id: string
+  task: string
+  isDone: boolean
+}
 
 export const initTasks: TaskType[] = [
   {
