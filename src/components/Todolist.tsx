@@ -21,6 +21,8 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
   // Local State
   const [inputValue, setInputValue] = useState<string>('')
   const [filter, setFilter] = useState<FilterType>('all')
+  const maxTaksLength = inputValue.length === 15
+  const msgError = 'Max task length is 15 chars!'
 
   // Change Tasks Filter
   const changeFilter = (value: FilterType) => {
@@ -37,12 +39,8 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
 
   // Add Task
   const addTask = () => {
-    if (inputValue !== '') {
-      createTask(inputValue)
-      setInputValue('')
-    } else {
-      window.alert('The field must not be empty!')
-    }
+    createTask(inputValue)
+    setInputValue('')
   }
 
   return (
@@ -52,14 +50,21 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
         <Input
           className="todo-input-task"
           value={inputValue}
-          setInputValue={setInputValue}
+          onChange={setInputValue}
           addTask={addTask}
         />
-        <Button className="btn-primary" title={'+'} callBack={addTask} />
+        <Button
+          className="btn-primary"
+          title={'+'}
+          callBack={addTask}
+          disabled={!inputValue || maxTaksLength}
+        />
       </div>
 
+      {maxTaksLength && <p className="error">{msgError}</p>}
+
       {filteredTasks.length === 0 ? (
-        <span>Your task list is empty.</span>
+        <span>Your {filter} tasks list is empty.</span>
       ) : (
         <ul className="todo-list">
           {filteredTasks.map((task) => (
@@ -79,25 +84,19 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
         <Button
           className={filter === 'all' ? 'btn-success active' : 'btn-success'}
           title={'All'}
-          callBack={() => {
-            changeFilter('all')
-          }}
+          callBack={() => changeFilter('all')}
         />
         <Button
           className={filter === 'active' ? 'btn-success active' : 'btn-success'}
           title={'Active'}
-          callBack={() => {
-            changeFilter('active')
-          }}
+          callBack={() => changeFilter('active')}
         />
         <Button
           className={
             filter === 'completed' ? 'btn-success active' : 'btn-success'
           }
           title={'Completed'}
-          callBack={() => {
-            changeFilter('completed')
-          }}
+          callBack={() => changeFilter('completed')}
         />
       </div>
     </div>

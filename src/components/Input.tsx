@@ -3,19 +3,19 @@ import { ChangeEvent, KeyboardEvent, FC } from 'react'
 type InputPropsType = {
   className?: string
   value: string
-  setInputValue: (value: string) => void
+  onChange: (value: string) => void
   addTask: () => void
 }
 
 export const Input: FC<InputPropsType> = (props) => {
-  const { value, className, setInputValue, addTask } = props
+  const { value, className, onChange, addTask } = props
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.currentTarget.value.trimStart())
+    onChange(e.currentTarget.value.trimStart())
   }
 
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    e.key === 'Enter' && addTask()
+    if (e.key === 'Enter' && value.length < 15 && value) addTask()
   }
 
   return (
@@ -26,6 +26,7 @@ export const Input: FC<InputPropsType> = (props) => {
       onChange={onChangeHandler}
       onKeyUp={onKeyPressHandler}
       placeholder="Task to be done..."
+      maxLength={15}
     />
   )
 }

@@ -23,9 +23,7 @@ export const Task: FC<TaskPropsType> = (props) => {
       <Button
         className="btn-danger"
         title={'x'}
-        callBack={() => {
-          deleteTask(id)
-        }}
+        callBack={() => deleteTask(id)}
       />
     </li>
   )
