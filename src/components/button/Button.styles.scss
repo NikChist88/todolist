@@ -1,0 +1,40 @@
+.btn {
+  font-size: 14px;
+  font-weight: 400;
+  padding: 0 10px;
+  height: 30px;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color ease-in 0.3s;
+}
+
+.btn-primary {
+  background-color: #286eef;
+
+  &:hover {
+    background-color: #215dce;
+  }
+  &:disabled {
+    background-color: #286eef85;
+  }
+}
+
+.btn-danger {
+  background-color: #ff4d3e;
+
+  &:hover {
+    background-color: #b8382d;
+  }
+}
+
+.btn-success {
+  background-color: #198754;
+
+  &:hover {
+    background-color: #0f5232;
+  }
+  &.active {
+    background-color: #0f5232;
+  }
+}

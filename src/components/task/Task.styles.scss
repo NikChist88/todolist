@@ -1,0 +1,22 @@
+.task {
+  display: flex;
+  gap: 20px 0;
+}
+
+.task__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0 20px;
+
+  &.is-done {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+}
+
+.task__controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0 5px;
+}

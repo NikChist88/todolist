@@ -1,6 +1,6 @@
 import './App.css'
 import { useState } from 'react'
-import { Todolist } from './components/Todolist'
+import { Todolist } from './components/todoList/TodoList'
 import { TaskType } from './data/initTasks'
 import { v1 } from 'uuid'
 
@@ -10,7 +10,6 @@ type AppPropsType = {
 
 export const App: React.FC<AppPropsType> = ({ initTasks }) => {
   // Local State
-  const todoListTitle: string = 'What to learn'
   const [tasks, setTasks] = useState<TaskType[]>(initTasks)
 
   // Create Task
@@ -18,8 +17,16 @@ export const App: React.FC<AppPropsType> = ({ initTasks }) => {
     setTasks([...tasks, { id: v1(), task: task, isDone: false }])
   }
 
-  // Update Task Status
-  const updateTaskStatus = (taskId: string, isDone: boolean) => {
+  // Edit Task
+  const editTask = (taskId: string, newTask: string) => {
+    const updatedTask = { id: taskId, task: newTask, isDone: false }
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+    )
+  }
+
+  // Change Task Status
+  const changeTaskStatus = (taskId: string, isDone: boolean) => {
     const task = tasks.find((task) => task.id === taskId)
     if (task) task.isDone = isDone
     setTasks([...tasks])
@@ -34,11 +41,12 @@ export const App: React.FC<AppPropsType> = ({ initTasks }) => {
   return (
     <div className="app">
       <Todolist
-        title={todoListTitle}
+        title={'What to learn'}
         tasks={tasks}
         createTask={createTask}
-        updateTaskStatus={updateTaskStatus}
+        changeTaskStatus={changeTaskStatus}
         deleteTask={deleteTask}
+        editTask={editTask}
       />
     </div>
   )

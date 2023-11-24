@@ -1,15 +1,15 @@
+import './Button.styles.scss'
 import { FC } from 'react'
 
 type ButtonType = {
   className?: string
   title: string
   disabled?: boolean
-  callBack: () => void
+  onClickHandler: () => void
 }
 
 export const Button: FC<ButtonType> = (props) => {
-  const { className, title, callBack, disabled } = props
-  const onClickHandler = () => callBack()
+  const { className, title, disabled, onClickHandler } = props
 
   return (
     <button

@@ -1,21 +1,23 @@
+import './Checkbox.styles.scss'
 import { ChangeEvent, FC } from 'react'
 
 type CheckboxPropsType = {
   id: string
   checked: boolean
-  updateTaskStatus: (taskId: string, isDone: boolean) => void
+  changeTaskStatus: (taskId: string, isDone: boolean) => void
 }
 
 export const Checkbox: FC<CheckboxPropsType> = (props) => {
-  const { id, checked, updateTaskStatus } = props
+  const { id, checked, changeTaskStatus } = props
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    updateTaskStatus(id, e.currentTarget.checked)
+    changeTaskStatus(id, e.currentTarget.checked)
   }
 
   return (
     <input
       id={id}
+      className={'checkbox'}
       type="checkbox"
       checked={checked}
       onChange={onChangeHandler}
