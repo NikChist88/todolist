@@ -6,22 +6,35 @@ import { Input } from '../input/Input'
 
 type TaskPropsType = {
   id: string
+  todolistId: string
   task: string
   isDone: boolean
-  changeTaskStatus: (taskId: string, isDone: boolean) => void
-  deleteTask: (id: string) => void
-  editTask: (taskId: string, newTask: string) => void
+  changeTaskStatus: (
+    taskId: string,
+    todolistId: string,
+    isDone: boolean
+  ) => void
+  deleteTask: (id: string, todolistId: string) => void
+  editTask: (taskId: string, todolistId: string, newTask: string) => void
 }
 
 export const Task: FC<TaskPropsType> = (props) => {
-  const { id, task, isDone, changeTaskStatus, deleteTask, editTask } = props
+  const {
+    id,
+    todolistId,
+    task,
+    isDone,
+    changeTaskStatus,
+    deleteTask,
+    editTask,
+  } = props
 
   const [inputValue, setInputValue] = useState<string>(task)
-  const [isFocused, setFocused] = useState<boolean>(false)
+  const [isFocused, setIsFocused] = useState<boolean>(false)
 
   const changeTask = () => {
-    editTask(id, inputValue)
-    setFocused(false)
+    editTask(id,todolistId, inputValue)
+    setIsFocused(false)
   }
 
   return (
@@ -29,6 +42,7 @@ export const Task: FC<TaskPropsType> = (props) => {
       <label className={`task__item ${isDone && 'is-done'}`}>
         <Checkbox
           id={id}
+          todolistsId={todolistId}
           checked={isDone}
           changeTaskStatus={changeTaskStatus}
         />
@@ -37,7 +51,8 @@ export const Task: FC<TaskPropsType> = (props) => {
             value={inputValue}
             onChange={setInputValue}
             onKeyPress={changeTask}
-            onBlur={setFocused}
+            onBlur={setIsFocused}
+            autoFocus={isFocused}
           />
         ) : (
           task
@@ -45,14 +60,14 @@ export const Task: FC<TaskPropsType> = (props) => {
       </label>
       <div className="task__controls">
         <Button
-          className="btn-primary"
           title={'Edit'}
-          onClickHandler={() => setFocused(true)}
+          disabled={isDone}
+          onClickHandler={() => setIsFocused(true)}
         />
         <Button
-          className="btn-danger"
-          title={'X'}
-          onClickHandler={() => deleteTask(id)}
+          className="btn_danger"
+          title={'Del'}
+          onClickHandler={() => deleteTask(id, todolistId)}
         />
       </div>
     </li>

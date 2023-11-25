@@ -3,15 +3,20 @@ import { ChangeEvent, FC } from 'react'
 
 type CheckboxPropsType = {
   id: string
+  todolistsId: string
   checked: boolean
-  changeTaskStatus: (taskId: string, isDone: boolean) => void
+  changeTaskStatus: (
+    taskId: string,
+    todolistsId: string,
+    isDone: boolean
+  ) => void
 }
 
 export const Checkbox: FC<CheckboxPropsType> = (props) => {
-  const { id, checked, changeTaskStatus } = props
+  const { id, todolistsId, checked, changeTaskStatus } = props
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    changeTaskStatus(id, e.currentTarget.checked)
+    changeTaskStatus(id, todolistsId, e.currentTarget.checked)
   }
 
   return (

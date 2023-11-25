@@ -7,9 +7,6 @@
   color: #fff;
   cursor: pointer;
   transition: background-color ease-in 0.3s;
-}
-
-.btn-primary {
   background-color: #286eef;
 
   &:hover {
@@ -18,23 +15,23 @@
   &:disabled {
     background-color: #286eef85;
   }
-}
 
-.btn-danger {
-  background-color: #ff4d3e;
+  &_danger {
+    background-color: #ff4d3e;
 
-  &:hover {
-    background-color: #b8382d;
+    &:hover {
+      background-color: #b8382d;
+    }
   }
-}
 
-.btn-success {
-  background-color: #198754;
+  &_success {
+    background-color: #198754;
 
-  &:hover {
-    background-color: #0f5232;
-  }
-  &.active {
-    background-color: #0f5232;
+    &:hover {
+      background-color: #0f5232;
+    }
+    &.active {
+      background-color: #0f5232;
+    }
   }
 }

@@ -5,11 +5,12 @@ type InputPropsType = {
   value: string
   onChange: (value: string) => void
   onKeyPress: () => void
-  onBlur: (focused: boolean) => void
+  onBlur?: (focused: boolean) => void
+  autoFocus?: boolean
 }
 
 export const Input: FC<InputPropsType> = (props) => {
-  const { value, onChange, onKeyPress, onBlur } = props
+  const { value, onChange, onKeyPress, onBlur, autoFocus } = props
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.currentTarget.value.trimStart())
@@ -17,6 +18,10 @@ export const Input: FC<InputPropsType> = (props) => {
 
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && value.length < 16 && value) onKeyPress()
+  }
+
+  const onBlurHandler = () => {
+    onBlur && onBlur(false)
   }
 
   return (
@@ -27,8 +32,9 @@ export const Input: FC<InputPropsType> = (props) => {
       value={value}
       onChange={onChangeHandler}
       onKeyUp={onKeyPressHandler}
-      onBlur={() => onBlur(false)}
+      onBlur={onBlurHandler}
       maxLength={16}
+      autoFocus={autoFocus}
     />
   )
 }

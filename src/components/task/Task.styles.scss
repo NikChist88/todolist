@@ -5,9 +5,11 @@
 
 .task__item {
   width: 100%;
+  padding-right: 15px;
   display: flex;
   align-items: center;
-  gap: 0 20px;
+  gap: 0 15px;
+  text-transform: uppercase;
 
   &.is-done {
     text-decoration: line-through;
