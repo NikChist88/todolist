@@ -28,13 +28,13 @@ export const todolists: TodolistType[] = [
 
 export const tasks: TasksType = {
   [todolistId_1]: [
-    { id: v1(), title: 'HTML', isDone: false },
-    { id: v1(), title: 'CSS', isDone: false },
-    { id: v1(), title: 'JS', isDone: false },
+    { id: v1(), title: 'html', isDone: false },
+    { id: v1(), title: 'css', isDone: false },
+    { id: v1(), title: 'js', isDone: false },
   ],
   [todolistId_2]: [
-    { id: v1(), title: 'BEER', isDone: false },
-    { id: v1(), title: 'MILK', isDone: false },
-    { id: v1(), title: 'MEET', isDone: false },
+    { id: v1(), title: 'beer', isDone: false },
+    { id: v1(), title: 'milk', isDone: false },
+    { id: v1(), title: 'meet', isDone: false },
   ],
 }

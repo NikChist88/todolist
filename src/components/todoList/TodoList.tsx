@@ -19,6 +19,7 @@ type TodolistPropsType = {
     isDone: boolean
   ) => void
   deleteTask: (id: string, todolistsId: string) => void
+  deleteTodolist: (todolistId: string) => void
   editTask: (taskId: string, todolistsId: string, newTask: string) => void
 }
 
@@ -32,13 +33,13 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
     changeTaskStatus,
     changeTaskFilter,
     deleteTask,
+    deleteTodolist,
     editTask,
   } = props
 
   // Local State
   const [inputValue, setInputValue] = useState<string>('')
   const maxTaskLength: boolean = inputValue.length === 16
-  const msgError: string = 'Max task length is 15 chars!'
 
   // Add Task
   const addTask = () => {
@@ -56,10 +57,19 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
   const onCompletedClickHandler = () => {
     changeTaskFilter('completed', id)
   }
-  
+
   return (
     <div className="todolist">
-      <h3 className="todolist__title">{title}</h3>
+      <div className="todolist__header">
+        <h3 className="todolist__title">{title}</h3>
+        <Button
+          className="btn_danger"
+          onClickHandler={() => {
+            deleteTodolist(id)
+          }}
+          tooltip={'Delete Todolist'}
+        />
+      </div>
       <div className="todolist__field">
         <Input
           value={inputValue}
@@ -67,13 +77,16 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
           onKeyPress={addTask}
         />
         <Button
-          title={'Add'}
+          className="btn_primary"
+          tooltip="Add Task"
           onClickHandler={addTask}
           disabled={!inputValue || maxTaskLength}
         />
       </div>
 
-      {maxTaskLength && <p className="error">{msgError}</p>}
+      {maxTaskLength && (
+        <span className="error">Max task length is 15 chars!</span>
+      )}
 
       {tasks.length === 0 ? (
         <span>

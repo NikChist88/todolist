@@ -16,12 +16,26 @@
     background-color: #286eef85;
   }
 
+  &_primary {
+    width: 30px;
+    height: 30px;
+    background: #286eef url('../../assets/icons/plus.png') no-repeat center / 18px;
+  }
+
   &_danger {
-    background-color: #ff4d3e;
+    width: 30px;
+    height: 30px;
+    background: #ff4d3e url('../../assets/icons/trash.png') no-repeat center / 18px;
 
     &:hover {
       background-color: #b8382d;
     }
+  }
+
+  &_edit {
+    width: 30px;
+    height: 30px;
+    background: #286eef url('../../assets/icons/edit.png') no-repeat center / 18px;
   }
 
   &_success {

@@ -20,18 +20,27 @@ export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
   console.log(tasks)
 
   // Create Task
-  const createTask = (task: string, todoListId: string) => {
-    const newTask = { id: v1(), title: task, isDone: false }
-    tasks[todoListId] = [...tasks[todoListId], newTask]
-    setTasks({ ...tasks })
+  const createTask = (title: string, todoListId: string) => {
+    const newTask = { id: v1(), title: title.toLowerCase(), isDone: false }
+    if (tasks[todoListId].find((t) => t.title === newTask.title)) {
+      window.alert('Such a task already exists!')
+    } else {
+      tasks[todoListId] = [...tasks[todoListId], newTask]
+      setTasks({ ...tasks })
+    }
   }
 
   // Edit Task
-  const editTask = (taskId: string, todolistId: string, task: string) => {
-    const newTask = tasks[todolistId].find((t) => t.id === taskId)
-    if (newTask) {
-      newTask.title = task
+  const editTask = (taskId: string, todolistId: string, newTitle: string) => {
+    const task = tasks[todolistId].find((t) => t.id === taskId)
+    const existinTitle = tasks[todolistId].find(
+      (t) => t.title === newTitle.toLowerCase()
+    )
+    if (task && !existinTitle?.title) {
+      task.title = newTitle
       setTasks({ ...tasks })
+    } else {
+      window.alert('Such a task already exists!')
     }
   }
 
@@ -64,6 +73,16 @@ export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
     }
   }
 
+  // Delete Todolist
+  const deleteTodolist = (todolistId: string) => {
+    if (window.confirm('Delete Todolist?')) {
+      const filteredTodolist = todolists.filter((tl) => tl.id !== todolistId)
+      setTodolists([...filteredTodolist])
+      delete tasks[todolistId]
+      setTasks({ ...tasks })
+    }
+  }
+
   return (
     <div className="app">
       {todolists.map((tl) => {
@@ -85,6 +104,7 @@ export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
             createTask={createTask}
             changeTaskStatus={changeTaskStatus}
             deleteTask={deleteTask}
+            deleteTodolist={deleteTodolist}
             editTask={editTask}
           />
         )

@@ -33,7 +33,7 @@ export const Task: FC<TaskPropsType> = (props) => {
   const [isFocused, setIsFocused] = useState<boolean>(false)
 
   const changeTask = () => {
-    editTask(id,todolistId, inputValue)
+    editTask(id, todolistId, inputValue)
     setIsFocused(false)
   }
 
@@ -60,13 +60,14 @@ export const Task: FC<TaskPropsType> = (props) => {
       </label>
       <div className="task__controls">
         <Button
-          title={'Edit'}
+          className="btn_edit"
+          tooltip='Editing Task'
           disabled={isDone}
           onClickHandler={() => setIsFocused(true)}
         />
         <Button
           className="btn_danger"
-          title={'Del'}
+          tooltip='Delete Task'
           onClickHandler={() => deleteTask(id, todolistId)}
         />
       </div>
