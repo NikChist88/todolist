@@ -18,13 +18,11 @@
 
   &_primary {
     width: 30px;
-    height: 30px;
     background: #286eef url('../../assets/icons/plus.png') no-repeat center / 18px;
   }
 
   &_danger {
     width: 30px;
-    height: 30px;
     background: #ff4d3e url('../../assets/icons/trash.png') no-repeat center / 18px;
 
     &:hover {
@@ -34,7 +32,6 @@
 
   &_edit {
     width: 30px;
-    height: 30px;
     background: #286eef url('../../assets/icons/edit.png') no-repeat center / 18px;
   }
 

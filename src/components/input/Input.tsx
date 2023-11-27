@@ -1,5 +1,5 @@
 import './Input.styles.scss'
-import { ChangeEvent, KeyboardEvent, FC, FocusEvent } from 'react'
+import { ChangeEvent, KeyboardEvent, FC } from 'react'
 
 type InputPropsType = {
   value: string
@@ -7,12 +7,17 @@ type InputPropsType = {
   onKeyPress: () => void
   onBlur?: (focused: boolean) => void
   autoFocus?: boolean
+  maxTaskLength: (value: boolean) => void
 }
 
 export const Input: FC<InputPropsType> = (props) => {
-  const { value, onChange, onKeyPress, onBlur, autoFocus } = props
+  const { value, onChange, onKeyPress, onBlur, autoFocus, maxTaskLength } =
+    props
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    e.currentTarget.value.length > 15
+      ? maxTaskLength(true)
+      : maxTaskLength(false)
     onChange(e.currentTarget.value.trimStart())
   }
 
@@ -26,7 +31,7 @@ export const Input: FC<InputPropsType> = (props) => {
 
   return (
     <input
-      className="input"
+      className={`input ${value.length > 15 && 'input_error'}`}
       type="text"
       placeholder="Task to be done..."
       value={value}

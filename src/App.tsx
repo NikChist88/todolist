@@ -1,9 +1,7 @@
 import './App.css'
 import { FC, useState } from 'react'
 import { Todolist } from './components/todoList/TodoList'
-import { TasksType } from './data/store'
-import { TodolistType } from './data/store'
-import { FilterType } from './data/store'
+import { TaskType, TasksType, TodolistType, FilterType } from './data/store'
 import { v1 } from 'uuid'
 
 type AppPropsType = {
@@ -12,7 +10,7 @@ type AppPropsType = {
 }
 
 export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
-  // Local State
+  // Global State
   const [todolists, setTodolists] = useState<TodolistType[]>(initTodolists)
   const [tasks, setTasks] = useState<TasksType>(initTasks)
 
@@ -21,36 +19,30 @@ export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
 
   // Create Task
   const createTask = (title: string, todoListId: string) => {
-    const newTask = { id: v1(), title: title.toLowerCase(), isDone: false }
-    if (tasks[todoListId].find((t) => t.title === newTask.title)) {
-      window.alert('Such a task already exists!')
-    } else {
-      tasks[todoListId] = [...tasks[todoListId], newTask]
-      setTasks({ ...tasks })
+    const newTask: TaskType = {
+      id: v1(),
+      title: title.toLowerCase(),
+      isDone: false,
     }
+    const updatedTasks: TaskType[] = [...tasks[todoListId], newTask]
+    setTasks({ ...tasks, [todoListId]: updatedTasks })
   }
 
   // Edit Task
   const editTask = (taskId: string, todolistId: string, newTitle: string) => {
-    const task = tasks[todolistId].find((t) => t.id === taskId)
-    const existinTitle = tasks[todolistId].find(
-      (t) => t.title === newTitle.toLowerCase()
+    const editedTask: TaskType[] = tasks[todolistId].map((t: TaskType) =>
+      t.id === taskId ? { ...t, title: newTitle } : t
     )
-    if (task && !existinTitle?.title) {
-      task.title = newTitle
-      setTasks({ ...tasks })
-    } else {
-      window.alert('Such a task already exists!')
-    }
+    setTasks({ ...tasks, [todolistId]: editedTask })
   }
 
   // Change Tasks Filter
   const changeTaskFilter = (value: FilterType, todoListId: string) => {
-    const todolist = todolists.find((tl) => tl.id === todoListId)
-    if (todolist) {
-      todolist.filter = value
-      setTodolists([...todolists])
-    }
+    const updatedTaskFilter: TodolistType[] = todolists.map(
+      (tl: TodolistType) =>
+        tl.id === todoListId ? { ...tl, filter: value } : tl
+    )
+    setTodolists(updatedTaskFilter)
   }
 
   // Change Task Status
@@ -59,28 +51,28 @@ export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
     todolistId: string,
     isDone: boolean
   ) => {
-    const newTaksStatus = tasks[todolistId].find((task) => task.id === taskId)
-    if (newTaksStatus) newTaksStatus.isDone = isDone
-    setTasks({ ...tasks })
+    const updatedTaskStatus: TaskType[] = tasks[todolistId].map((t: TaskType) =>
+      t.id === taskId ? { ...t, isDone: isDone } : t
+    )
+    setTasks({ ...tasks, [todolistId]: updatedTaskStatus })
   }
 
   // Delete Task
   const deleteTask = (id: string, todolistId: string) => {
-    if (window.confirm('Do you want to delete a task?')) {
-      const updatedTasks = tasks[todolistId].filter((t) => t.id !== id)
-      tasks[todolistId] = updatedTasks
-      setTasks({ ...tasks })
-    }
+    const updatedTask: TaskType[] = (tasks[todolistId] = tasks[
+      todolistId
+    ].filter((t: TaskType) => t.id !== id))
+    setTasks({ ...tasks, [todolistId]: updatedTask })
   }
 
   // Delete Todolist
   const deleteTodolist = (todolistId: string) => {
-    if (window.confirm('Delete Todolist?')) {
-      const filteredTodolist = todolists.filter((tl) => tl.id !== todolistId)
-      setTodolists([...filteredTodolist])
-      delete tasks[todolistId]
-      setTasks({ ...tasks })
-    }
+    const filteredTodolist: TodolistType[] = todolists.filter(
+      (tl) => tl.id !== todolistId
+    )
+    setTodolists(filteredTodolist)
+    delete tasks[todolistId]
+    setTasks(tasks)
   }
 
   return (

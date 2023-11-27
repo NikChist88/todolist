@@ -8,4 +8,8 @@
   &::placeholder {
     font-size: 14px;
   }
+
+  &_error {
+    border-color: red;
+  }
 }

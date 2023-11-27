@@ -2,8 +2,7 @@ import './TodoList.styles.scss'
 import { Task } from '../task/Task'
 import { Input } from '../input/Input'
 import { Button } from '../button/Button'
-import { TaskType } from '../../data/store'
-import { FilterType } from '../../data/store'
+import { TaskType, FilterType } from '../../data/store'
 import { FC, useState } from 'react'
 
 type TodolistPropsType = {
@@ -39,15 +38,27 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
 
   // Local State
   const [inputValue, setInputValue] = useState<string>('')
-  const maxTaskLength: boolean = inputValue.length === 16
+  const [maxTaskLength, setMaxTaskLength] = useState<boolean>(false)
 
-  // Add Task
-  const addTask = () => {
-    createTask(inputValue, id)
-    setInputValue('')
+  // Add Task Handler
+  const addTaskHandler = () => {
+    if (tasks.find((t) => t.title === inputValue.toLowerCase())) {
+      window.alert(`Task ${inputValue} already exists!`)
+      setInputValue('')
+    } else {
+      createTask(inputValue, id)
+      setInputValue('')
+    }
   }
 
-  // Buttons click handlers / change task filter
+  // Delete Todolist Handler
+  const deleteTodolistHandler = () => {
+    if (window.confirm(`Delete Todolist ${title}?`)) {
+      deleteTodolist(id)
+    }
+  }
+
+  // Change task filter handlers
   const onAllClickHandler = () => {
     changeTaskFilter('all', id)
   }
@@ -64,9 +75,7 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
         <h3 className="todolist__title">{title}</h3>
         <Button
           className="btn_danger"
-          onClickHandler={() => {
-            deleteTodolist(id)
-          }}
+          onClickHandler={deleteTodolistHandler}
           tooltip={'Delete Todolist'}
         />
       </div>
@@ -74,12 +83,13 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
         <Input
           value={inputValue}
           onChange={setInputValue}
-          onKeyPress={addTask}
+          onKeyPress={addTaskHandler}
+          maxTaskLength={setMaxTaskLength}
         />
         <Button
           className="btn_primary"
           tooltip="Add Task"
-          onClickHandler={addTask}
+          onClickHandler={addTaskHandler}
           disabled={!inputValue || maxTaskLength}
         />
       </div>
@@ -88,11 +98,7 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
         <span className="error">Max task length is 15 chars!</span>
       )}
 
-      {tasks.length === 0 ? (
-        <span>
-          {filter === 'all' ? 'You have no tasks' : `No ${filter} tasks`}
-        </span>
-      ) : (
+      {tasks.length ? (
         <ul className="todolist__list">
           {tasks.map((task) => (
             <Task
@@ -104,9 +110,15 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
               changeTaskStatus={changeTaskStatus}
               deleteTask={deleteTask}
               editTask={editTask}
+              tasks={tasks}
+              maxTaskLength={setMaxTaskLength}
             />
           ))}
         </ul>
+      ) : (
+        <span>
+          {filter === 'all' ? 'You have no tasks' : `No ${filter} tasks`}
+        </span>
       )}
 
       <div className="todolist__controls">
