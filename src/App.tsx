@@ -1,15 +1,19 @@
-import './App.css'
+import './App.scss'
 import { FC, useState } from 'react'
 import { Todolist } from './components/todoList/TodoList'
 import { TaskType, TasksType, TodolistType, FilterType } from './data/store'
 import { v1 } from 'uuid'
+import { Form } from './components/form/Form'
 
 type AppPropsType = {
   initTodolists: TodolistType[]
   initTasks: TasksType
 }
 
-export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
+export const App: FC<AppPropsType> = (props) => {
+  // Props
+  const { initTodolists, initTasks } = props
+
   // Global State
   const [todolists, setTodolists] = useState<TodolistType[]>(initTodolists)
   const [tasks, setTasks] = useState<TasksType>(initTasks)
@@ -28,12 +32,23 @@ export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
     setTasks({ ...tasks, [todoListId]: updatedTasks })
   }
 
-  // Edit Task
-  const editTask = (taskId: string, todolistId: string, newTitle: string) => {
-    const editedTask: TaskType[] = tasks[todolistId].map((t: TaskType) =>
+  // Create Todolist
+  const createTodolist = (title: string) => {
+    const newTodolist: TodolistType = {
+      id: v1(),
+      title: title,
+      filter: 'all',
+    }
+    setTodolists([...todolists, newTodolist])
+    setTasks({ ...tasks, [newTodolist.id]: [] })
+  }
+
+  // Update Task
+  const updateTask = (taskId: string, todolistId: string, newTitle: string) => {
+    const updatedTask: TaskType[] = tasks[todolistId].map((t: TaskType) =>
       t.id === taskId ? { ...t, title: newTitle } : t
     )
-    setTasks({ ...tasks, [todolistId]: editedTask })
+    setTasks({ ...tasks, [todolistId]: updatedTask })
   }
 
   // Change Tasks Filter
@@ -46,13 +61,9 @@ export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
   }
 
   // Change Task Status
-  const changeTaskStatus = (
-    taskId: string,
-    todolistId: string,
-    isDone: boolean
-  ) => {
+  const changeTaskStatus = (taskId: string, todolistId: string) => {
     const updatedTaskStatus: TaskType[] = tasks[todolistId].map((t: TaskType) =>
-      t.id === taskId ? { ...t, isDone: isDone } : t
+      t.id === taskId ? { ...t, isDone: !t.isDone } : t
     )
     setTasks({ ...tasks, [todolistId]: updatedTaskStatus })
   }
@@ -75,32 +86,44 @@ export const App: FC<AppPropsType> = ({ initTodolists, initTasks }) => {
     setTasks(tasks)
   }
 
+  // Check Existing Task
+  const checkExistingTask = (taskTitle: string, todolistId: string) => {
+    if (tasks[todolistId].find((t) => t.title === taskTitle)) {
+      window.alert(`Task ${taskTitle.toUpperCase()} already exists!`)
+      return true
+    } else return false
+  }
+
   return (
     <div className="app">
-      {todolists.map((tl) => {
-        // Filtered Tasks
-        let filteredTasks = tasks[tl.id]
-        if (tl.filter === 'active')
-          filteredTasks = filteredTasks.filter((t) => t.isDone === false)
-        if (tl.filter === 'completed')
-          filteredTasks = filteredTasks.filter((t) => t.isDone === true)
+      <Form action={createTodolist} />
+      <div className="wrapper">
+        {todolists.map((tl) => {
+          // Filtered Tasks
+          let filteredTasks = tasks[tl.id]
+          if (tl.filter === 'active')
+            filteredTasks = filteredTasks.filter((t) => t.isDone === false)
+          if (tl.filter === 'completed')
+            filteredTasks = filteredTasks.filter((t) => t.isDone === true)
 
-        return (
-          <Todolist
-            key={tl.id}
-            id={tl.id}
-            title={tl.title}
-            filter={tl.filter}
-            tasks={filteredTasks}
-            changeTaskFilter={changeTaskFilter}
-            createTask={createTask}
-            changeTaskStatus={changeTaskStatus}
-            deleteTask={deleteTask}
-            deleteTodolist={deleteTodolist}
-            editTask={editTask}
-          />
-        )
-      })}
+          return (
+            <Todolist
+              key={tl.id}
+              id={tl.id}
+              title={tl.title}
+              filter={tl.filter}
+              tasks={filteredTasks}
+              changeTaskFilter={changeTaskFilter}
+              createTask={createTask}
+              changeTaskStatus={changeTaskStatus}
+              deleteTask={deleteTask}
+              deleteTodolist={deleteTodolist}
+              updateTask={updateTask}
+              checkExistingTask={checkExistingTask}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 }

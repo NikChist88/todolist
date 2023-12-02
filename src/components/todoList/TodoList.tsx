@@ -1,9 +1,9 @@
 import './TodoList.styles.scss'
 import { Task } from '../task/Task'
-import { Input } from '../input/Input'
 import { Button } from '../button/Button'
 import { TaskType, FilterType } from '../../data/store'
-import { FC, useState } from 'react'
+import { FC } from 'react'
+import { Form } from '../form/Form'
 
 type TodolistPropsType = {
   id: string
@@ -12,17 +12,15 @@ type TodolistPropsType = {
   filter: FilterType
   createTask: (task: string, todoListId: string) => void
   changeTaskFilter: (value: FilterType, todoListId: string) => void
-  changeTaskStatus: (
-    taskId: string,
-    todolistId: string,
-    isDone: boolean
-  ) => void
+  changeTaskStatus: (taskId: string, todolistId: string) => void
   deleteTask: (id: string, todolistsId: string) => void
   deleteTodolist: (todolistId: string) => void
-  editTask: (taskId: string, todolistsId: string, newTask: string) => void
+  updateTask: (taskId: string, todolistId: string, newTitle: string) => void
+  checkExistingTask: (taskTitle: string, todolistId: string) => boolean
 }
 
 export const Todolist: FC<TodolistPropsType> = (props) => {
+  // Props
   const {
     id,
     title,
@@ -33,21 +31,15 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
     changeTaskFilter,
     deleteTask,
     deleteTodolist,
-    editTask,
+    updateTask,
+    checkExistingTask,
   } = props
 
-  // Local State
-  const [inputValue, setInputValue] = useState<string>('')
-  const [maxTaskLength, setMaxTaskLength] = useState<boolean>(false)
-
   // Add Task Handler
-  const addTaskHandler = () => {
-    if (tasks.find((t) => t.title === inputValue.toLowerCase())) {
-      window.alert(`Task ${inputValue} already exists!`)
-      setInputValue('')
+  const addTaskHandler = (title: string) => {
+    if (checkExistingTask(title, id)) {
     } else {
-      createTask(inputValue, id)
-      setInputValue('')
+      createTask(title, id)
     }
   }
 
@@ -75,28 +67,12 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
         <h3 className="todolist__title">{title}</h3>
         <Button
           className="btn_danger"
-          onClickHandler={deleteTodolistHandler}
+          onClick={deleteTodolistHandler}
           tooltip={'Delete Todolist'}
         />
       </div>
-      <div className="todolist__field">
-        <Input
-          value={inputValue}
-          onChange={setInputValue}
-          onKeyPress={addTaskHandler}
-          maxTaskLength={setMaxTaskLength}
-        />
-        <Button
-          className="btn_primary"
-          tooltip="Add Task"
-          onClickHandler={addTaskHandler}
-          disabled={!inputValue || maxTaskLength}
-        />
-      </div>
-
-      {maxTaskLength && (
-        <span className="error">Max task length is 15 chars!</span>
-      )}
+      
+      <Form action={addTaskHandler} />
 
       {tasks.length ? (
         <ul className="todolist__list">
@@ -109,9 +85,8 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
               isDone={task.isDone}
               changeTaskStatus={changeTaskStatus}
               deleteTask={deleteTask}
-              editTask={editTask}
-              tasks={tasks}
-              maxTaskLength={setMaxTaskLength}
+              updateTask={updateTask}
+              checkExistingTask={checkExistingTask}
             />
           ))}
         </ul>
@@ -125,17 +100,17 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
         <Button
           className={`btn_success ${filter === 'all' && 'active'}`}
           title={'All'}
-          onClickHandler={onAllClickHandler}
+          onClick={onAllClickHandler}
         />
         <Button
           className={`btn_success ${filter === 'active' && 'active'}`}
           title={'Active'}
-          onClickHandler={onActiveClickHandler}
+          onClick={onActiveClickHandler}
         />
         <Button
           className={`btn_success ${filter === 'completed' && 'active'}`}
           title={'Completed'}
-          onClickHandler={onCompletedClickHandler}
+          onClick={onCompletedClickHandler}
         />
       </div>
     </div>

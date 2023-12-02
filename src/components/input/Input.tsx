@@ -4,41 +4,31 @@ import { ChangeEvent, KeyboardEvent, FC } from 'react'
 type InputPropsType = {
   value: string
   onChange: (value: string) => void
-  onKeyPress: () => void
-  onBlur?: (focused: boolean) => void
+  onKeyPress: (key: string) => void
+  onBlur?: () => void
   autoFocus?: boolean
-  maxTaskLength: (value: boolean) => void
 }
 
 export const Input: FC<InputPropsType> = (props) => {
-  const { value, onChange, onKeyPress, onBlur, autoFocus, maxTaskLength } =
-    props
+  const { value, onChange, onKeyPress, onBlur, autoFocus } = props
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    e.currentTarget.value.length > 15
-      ? maxTaskLength(true)
-      : maxTaskLength(false)
     onChange(e.currentTarget.value.trimStart())
   }
 
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && value.length < 16 && value) onKeyPress()
-  }
-
-  const onBlurHandler = () => {
-    onBlur && onBlur(false)
+    onKeyPress(e.key)
   }
 
   return (
     <input
-      className={`input ${value.length > 15 && 'input_error'}`}
-      type="text"
-      placeholder="Task to be done..."
+      className={`input ${value.length > 20 && 'input_error'}`}
+      placeholder='Enter a task...'
       value={value}
       onChange={onChangeHandler}
       onKeyUp={onKeyPressHandler}
-      onBlur={onBlurHandler}
-      maxLength={16}
+      maxLength={21}
+      onBlur={onBlur}
       autoFocus={autoFocus}
     />
   )

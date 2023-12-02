@@ -1,23 +1,34 @@
 import './Button.styles.scss'
-import { FC } from 'react'
+import { MouseEvent, FC } from 'react'
 
 type ButtonType = {
   className?: string
   title?: string
   tooltip?: string
   disabled?: boolean
-  onClickHandler: () => void
+  onClick: () => void
+  onMouseDown?: () => void
 }
 
 export const Button: FC<ButtonType> = (props) => {
-  const { className, title, disabled, tooltip, onClickHandler } = props
+  const { className, title, disabled, tooltip, onClick, onMouseDown } = props
+
+  const onClickHandler = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    onClick()
+  }
+
+  const onMouseDownHandler = () => {
+    onMouseDown && onMouseDown()
+  }
 
   return (
     <button
       className={`btn ${className}`}
       title={tooltip}
-      onClick={onClickHandler}
       disabled={disabled}
+      onClick={onClickHandler}
+      onMouseUp={onMouseDownHandler}
     >
       {title}
     </button>
