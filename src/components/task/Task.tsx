@@ -1,8 +1,8 @@
 import './Task.styles.scss'
-import { ChangeEvent, FC, useState } from 'react'
+import { FC } from 'react'
 import { Button } from '../button/Button'
 import { Checkbox } from '../checkbox/Checkbox'
-import { Input } from '../input/Input'
+import { EditableTask } from '../editableTask/EditableTask'
 
 type TaskPropsType = {
   id: string
@@ -28,10 +28,6 @@ export const Task: FC<TaskPropsType> = (props) => {
     checkExistingTask,
   } = props
 
-  // Local State
-  const [inputValue, setInputValue] = useState<string>('')
-  const [isInputVisible, setInputVisible] = useState<boolean>(false)
-
   // Change task status handler
   const changeTaskStatusHandler = () => {
     changeTaskStatus(id, todolistId)
@@ -39,61 +35,29 @@ export const Task: FC<TaskPropsType> = (props) => {
 
   // Delete task handler
   const deleteTaskHandler = () => {
-    if (window.confirm(`Do you want to delete a task ${task}?`)) {
+    if (window.confirm(`Do you want to delete a task ${task.toUpperCase()}?`)) {
       deleteTask(id, todolistId)
     }
   }
 
   // Update task handler
-  const updateTaskHandler = () => {
-    if (checkExistingTask(inputValue, todolistId)) {
-      setInputValue('')
-    } else {
-      updateTask(id, todolistId, inputValue)
-      setInputVisible(false)
-    }
-  }
-
-  // Enter key press handler
-  const onEnterKeyPressHandler = (key: string) => {
-    if (inputValue.length < 21 && inputValue && key === 'Enter') {
-      updateTaskHandler()
-    }
+  const updateTaskHandler = (title: string) => {
+    if (checkExistingTask(title, todolistId)) {
+      return
+    } else updateTask(id, todolistId, title)
   }
 
   return (
     <li className="task">
-      <label className={`task__item ${isDone && 'is-done'}`}>
+      <div className={`task__item ${isDone && 'is-done'}`}>
         <Checkbox checked={isDone} onChange={changeTaskStatusHandler} />
-        {isInputVisible ? (
-          <Input
-            value={inputValue}
-            onChange={setInputValue}
-            onKeyPress={onEnterKeyPressHandler}
-            onBlur={() => setInputVisible(false)}
-            autoFocus={isInputVisible}
-          />
-        ) : (
-          task
-        )}
-      </label>
+        <EditableTask
+          title={task}
+          onChange={updateTaskHandler}
+          isDone={isDone}
+        />
+      </div>
       <div className="task__controls">
-        {isInputVisible ? (
-          <Button
-            className="btn_primary"
-            tooltip="Update Task"
-            onClick={updateTaskHandler}
-            onMouseDown={updateTaskHandler}
-            disabled={!inputValue || inputValue.length > 20}
-          />
-        ) : (
-          <Button
-            className="btn_edit"
-            tooltip="Edit Task"
-            disabled={isDone}
-            onClick={() => setInputVisible(true)}
-          />
-        )}
         <Button
           className="btn_danger"
           tooltip="Delete Task"

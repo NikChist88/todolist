@@ -3,6 +3,7 @@ import { ChangeEvent, KeyboardEvent, FC } from 'react'
 
 type InputPropsType = {
   value: string
+  placeholder?: string
   onChange: (value: string) => void
   onKeyPress: (key: string) => void
   onBlur?: () => void
@@ -10,7 +11,7 @@ type InputPropsType = {
 }
 
 export const Input: FC<InputPropsType> = (props) => {
-  const { value, onChange, onKeyPress, onBlur, autoFocus } = props
+  const { value, placeholder, onChange, onKeyPress, onBlur, autoFocus } = props
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.currentTarget.value.trimStart())
@@ -23,7 +24,7 @@ export const Input: FC<InputPropsType> = (props) => {
   return (
     <input
       className={`input ${value.length > 20 && 'input_error'}`}
-      placeholder='Enter a task...'
+      placeholder={placeholder}
       value={value}
       onChange={onChangeHandler}
       onKeyUp={onKeyPressHandler}

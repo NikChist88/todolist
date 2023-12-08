@@ -45,7 +45,7 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
 
   // Delete Todolist Handler
   const deleteTodolistHandler = () => {
-    if (window.confirm(`Delete Todolist ${title}?`)) {
+    if (window.confirm(`Delete Todolist ${title.toUpperCase()}?`)) {
       deleteTodolist(id)
     }
   }
@@ -71,7 +71,7 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
           tooltip={'Delete Todolist'}
         />
       </div>
-      
+
       <Form action={addTaskHandler} />
 
       {tasks.length ? (

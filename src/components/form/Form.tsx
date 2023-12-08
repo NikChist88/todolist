@@ -1,25 +1,28 @@
 import './Form.styles.scss'
-import { ChangeEvent, KeyboardEvent, FC, useState } from 'react'
+import { FC, useState } from 'react'
+import { Input } from '../input/Input'
+import { Button } from '../button/Button'
 
 type FormPropsType = {
+  title?: string
   action: (title: string) => void
 }
 
 export const Form: FC<FormPropsType> = (props) => {
   // Props
-  const { action } = props
+  const { title, action } = props
 
   // Local State
   const [inputValue, setInputValue] = useState<string>('')
 
   // Input Change Handler
-  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.currentTarget.value.trimStart())
+  const onChangeHandler = (value: string) => {
+    setInputValue(value)
   }
 
   // Key Press Handler
-  const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.length < 21 && inputValue) {
+  const onKeyPressHandler = (key: string) => {
+    if (key === 'Enter' && inputValue.length < 21 && inputValue) {
       action(inputValue)
       setInputValue('')
     }
@@ -33,26 +36,22 @@ export const Form: FC<FormPropsType> = (props) => {
 
   return (
     <div className="form">
+      {title}
       <div className="form__body">
-        <input
-          className={`form__input ${
-            inputValue.length > 20 && 'form__input_error'
-          }`}
+        <Input
           value={inputValue}
-          maxLength={21}
           onChange={onChangeHandler}
-          onKeyUp={onKeyPressHandler}
+          onKeyPress={onKeyPressHandler}
+          placeholder="Type here..."
         />
-        <button
-          className="form__btn"
+        <Button
+          title={'Add'}
           disabled={!inputValue || inputValue.length > 20}
           onClick={onClickHandler}
-        >
-          Add
-        </button>
+        />
       </div>
       {inputValue.length > 20 && (
-        <span className="error">Max input value length is 20 chars!</span>
+        <span className="form__error">Max input value length is 20 chars!</span>
       )}
     </div>
   )

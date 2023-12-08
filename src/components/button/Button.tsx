@@ -1,5 +1,5 @@
 import './Button.styles.scss'
-import { MouseEvent, FC } from 'react'
+import { FC } from 'react'
 
 type ButtonType = {
   className?: string
@@ -7,19 +7,13 @@ type ButtonType = {
   tooltip?: string
   disabled?: boolean
   onClick: () => void
-  onMouseDown?: () => void
 }
 
 export const Button: FC<ButtonType> = (props) => {
-  const { className, title, disabled, tooltip, onClick, onMouseDown } = props
+  const { className, title, disabled, tooltip, onClick } = props
 
-  const onClickHandler = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+  const onClickHandler = () => {
     onClick()
-  }
-
-  const onMouseDownHandler = () => {
-    onMouseDown && onMouseDown()
   }
 
   return (
@@ -28,7 +22,6 @@ export const Button: FC<ButtonType> = (props) => {
       title={tooltip}
       disabled={disabled}
       onClick={onClickHandler}
-      onMouseUp={onMouseDownHandler}
     >
       {title}
     </button>

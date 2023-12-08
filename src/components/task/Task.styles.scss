@@ -5,10 +5,10 @@
 
 .task__item {
   width: 100%;
-  padding-right: 15px;
+  padding-right: 10px;
   display: flex;
   align-items: center;
-  gap: 0 15px;
+  gap: 0 10px;
   text-transform: uppercase;
 
   &.is-done {

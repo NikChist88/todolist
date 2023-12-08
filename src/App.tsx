@@ -28,7 +28,7 @@ export const App: FC<AppPropsType> = (props) => {
       title: title.toLowerCase(),
       isDone: false,
     }
-    const updatedTasks: TaskType[] = [...tasks[todoListId], newTask]
+    const updatedTasks: TaskType[] = [newTask, ...tasks[todoListId]]
     setTasks({ ...tasks, [todoListId]: updatedTasks })
   }
 
@@ -70,9 +70,9 @@ export const App: FC<AppPropsType> = (props) => {
 
   // Delete Task
   const deleteTask = (id: string, todolistId: string) => {
-    const updatedTask: TaskType[] = (tasks[todolistId] = tasks[
-      todolistId
-    ].filter((t: TaskType) => t.id !== id))
+    const updatedTask: TaskType[] = tasks[todolistId].filter(
+      (t: TaskType) => t.id !== id
+    )
     setTasks({ ...tasks, [todolistId]: updatedTask })
   }
 
@@ -96,7 +96,7 @@ export const App: FC<AppPropsType> = (props) => {
 
   return (
     <div className="app">
-      <Form action={createTodolist} />
+      <Form title='Create todolist' action={createTodolist} />
       <div className="wrapper">
         {todolists.map((tl) => {
           // Filtered Tasks
