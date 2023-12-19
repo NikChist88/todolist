@@ -1,28 +1,28 @@
-import './Form.styles.scss'
-import { FC, useState } from 'react'
-import { Input } from '../input/Input'
+import './FormControl.styles.scss'
+import { ChangeEvent, KeyboardEvent, FC, useState } from 'react'
 import { Button } from '../button/Button'
+import { TextField } from '@mui/material'
 
 type FormPropsType = {
-  title?: string
+  label?: string
   action: (title: string) => void
 }
 
-export const Form: FC<FormPropsType> = (props) => {
+export const FormControl: FC<FormPropsType> = (props) => {
   // Props
-  const { title, action } = props
+  const { label, action } = props
 
   // Local State
   const [inputValue, setInputValue] = useState<string>('')
 
   // Input Change Handler
-  const onChangeHandler = (value: string) => {
-    setInputValue(value)
+  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.currentTarget.value)
   }
 
   // Key Press Handler
-  const onKeyPressHandler = (key: string) => {
-    if (key === 'Enter' && inputValue.length < 21 && inputValue) {
+  const onKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && inputValue.length < 21 && inputValue) {
       action(inputValue)
       setInputValue('')
     }
@@ -36,13 +36,14 @@ export const Form: FC<FormPropsType> = (props) => {
 
   return (
     <div className="form">
-      {title}
       <div className="form__body">
-        <Input
+        <TextField
+          id="standard-basic"
           value={inputValue}
+          label={label}
+          variant="standard"
           onChange={onChangeHandler}
-          onKeyPress={onKeyPressHandler}
-          placeholder="Type here..."
+          onKeyUp={onKeyUpHandler}
         />
         <Button
           title={'Add'}

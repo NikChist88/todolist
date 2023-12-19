@@ -19,11 +19,11 @@ export type TodolistType = {
 }
 
 const todolistId_1: string = v1()
-const todolistId_2: string = v1()
+// const todolistId_2: string = v1()
 
 export const todolists: TodolistType[] = [
-  { id: todolistId_1, title: 'What to learn', filter: 'all' },
-  { id: todolistId_2, title: 'What to buy', filter: 'all' },
+  { id: todolistId_1, title: 'what to learn', filter: 'all' },
+  // { id: todolistId_2, title: 'what to buy', filter: 'all' },
 ]
 
 export const tasks: TasksType = {
@@ -32,9 +32,9 @@ export const tasks: TasksType = {
     { id: v1(), title: 'css', isDone: false },
     { id: v1(), title: 'js', isDone: false },
   ],
-  [todolistId_2]: [
-    { id: v1(), title: 'beer', isDone: false },
-    { id: v1(), title: 'milk', isDone: false },
-    { id: v1(), title: 'meet', isDone: false },
-  ],
+  // [todolistId_2]: [
+  //   { id: v1(), title: 'beer', isDone: false },
+  //   { id: v1(), title: 'milk', isDone: false },
+  //   { id: v1(), title: 'meet', isDone: false },
+  // ],
 }

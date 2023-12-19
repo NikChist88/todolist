@@ -1,9 +1,9 @@
 import './App.scss'
 import { FC, useState } from 'react'
 import { Todolist } from './components/todoList/TodoList'
-import { TaskType, TasksType, TodolistType, FilterType } from './data/store'
+import { TaskType, TasksType, TodolistType, FilterType } from './store/store'
 import { v1 } from 'uuid'
-import { Form } from './components/form/Form'
+import { FormControl } from './components/formControl/FormControl'
 
 type AppPropsType = {
   initTodolists: TodolistType[]
@@ -17,9 +17,6 @@ export const App: FC<AppPropsType> = (props) => {
   // Global State
   const [todolists, setTodolists] = useState<TodolistType[]>(initTodolists)
   const [tasks, setTasks] = useState<TasksType>(initTasks)
-
-  console.log(todolists)
-  console.log(tasks)
 
   // Create Task
   const createTask = (title: string, todoListId: string) => {
@@ -36,10 +33,10 @@ export const App: FC<AppPropsType> = (props) => {
   const createTodolist = (title: string) => {
     const newTodolist: TodolistType = {
       id: v1(),
-      title: title,
+      title: title.toLowerCase(),
       filter: 'all',
     }
-    setTodolists([...todolists, newTodolist])
+    setTodolists([newTodolist, ...todolists])
     setTasks({ ...tasks, [newTodolist.id]: [] })
   }
 
@@ -86,17 +83,9 @@ export const App: FC<AppPropsType> = (props) => {
     setTasks(tasks)
   }
 
-  // Check Existing Task
-  const checkExistingTask = (taskTitle: string, todolistId: string) => {
-    if (tasks[todolistId].find((t) => t.title === taskTitle)) {
-      window.alert(`Task ${taskTitle.toUpperCase()} already exists!`)
-      return true
-    } else return false
-  }
-
   return (
     <div className="app">
-      <Form title='Create todolist' action={createTodolist} />
+      <FormControl label="New todolist" action={createTodolist} />
       <div className="wrapper">
         {todolists.map((tl) => {
           // Filtered Tasks
@@ -119,7 +108,6 @@ export const App: FC<AppPropsType> = (props) => {
               deleteTask={deleteTask}
               deleteTodolist={deleteTodolist}
               updateTask={updateTask}
-              checkExistingTask={checkExistingTask}
             />
           )
         })}

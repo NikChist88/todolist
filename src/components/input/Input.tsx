@@ -6,7 +6,7 @@ type InputPropsType = {
   placeholder?: string
   onChange: (value: string) => void
   onKeyPress: (key: string) => void
-  onBlur?: () => void
+  onBlur?: (e: ChangeEvent<HTMLInputElement>) => void
   autoFocus?: boolean
 }
 
@@ -28,8 +28,8 @@ export const Input: FC<InputPropsType> = (props) => {
       value={value}
       onChange={onChangeHandler}
       onKeyUp={onKeyPressHandler}
-      maxLength={21}
       onBlur={onBlur}
+      maxLength={21}
       autoFocus={autoFocus}
     />
   )

@@ -1,12 +1,12 @@
 import '../input/Input.styles.scss'
-import { FC, useState } from 'react'
+import { ChangeEvent, FC, useState } from 'react'
 import { Button } from '../button/Button'
 import { Input } from '../input/Input'
 
 type EditableTaskPropsType = {
   title: string
-  onChange: (newTitle: string) => void
   isDone: boolean
+  onChange: (newTitle: string) => void
 }
 
 export const EditableTask: FC<EditableTaskPropsType> = (props) => {
@@ -25,8 +25,12 @@ export const EditableTask: FC<EditableTaskPropsType> = (props) => {
 
   // View Mode
   const activateViewMode = () => {
-    setEditMode(false)
-    onChange(inputValue)
+    if (!inputValue) {
+      window.alert('Title is requaried!')
+    } else {
+      setEditMode(false)
+      onChange(inputValue)
+    }
   }
 
   // Change Title Handler
@@ -39,17 +43,28 @@ export const EditableTask: FC<EditableTaskPropsType> = (props) => {
     if (key === 'Enter' && inputValue && inputValue.length < 21) {
       activateViewMode()
     }
+    if (key === 'Escape') {
+      setEditMode(false)
+    }
   }
 
   return editMode ? (
-    <Input
-      value={inputValue}
-      placeholder='Enter a task'
-      onChange={onChangeTitleHandler}
-      onKeyPress={onKeyPressHandler}
-      onBlur={activateViewMode}
-      autoFocus
-    />
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+      }}
+    >
+      <Input
+        value={inputValue}
+        placeholder="Enter a task"
+        onChange={onChangeTitleHandler}
+        onKeyPress={onKeyPressHandler}
+        autoFocus
+      />
+      <Button className="btn_primary" onClick={activateViewMode} />
+    </div>
   ) : (
     <div
       style={{

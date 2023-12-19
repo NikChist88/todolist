@@ -1,9 +1,12 @@
 import './TodoList.styles.scss'
+import { useState, MouseEvent } from 'react'
+import { ToggleButtonGroup, ToggleButton } from '@mui/material'
 import { Task } from '../task/Task'
-import { Button } from '../button/Button'
-import { TaskType, FilterType } from '../../data/store'
+import { TaskType, FilterType } from '../../store/store'
 import { FC } from 'react'
-import { Form } from '../form/Form'
+import { FormControl } from '../formControl/FormControl'
+import { IconButton } from '@mui/material'
+import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined'
 
 type TodolistPropsType = {
   id: string
@@ -16,7 +19,6 @@ type TodolistPropsType = {
   deleteTask: (id: string, todolistsId: string) => void
   deleteTodolist: (todolistId: string) => void
   updateTask: (taskId: string, todolistId: string, newTitle: string) => void
-  checkExistingTask: (taskTitle: string, todolistId: string) => boolean
 }
 
 export const Todolist: FC<TodolistPropsType> = (props) => {
@@ -32,15 +34,22 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
     deleteTask,
     deleteTodolist,
     updateTask,
-    checkExistingTask,
   } = props
+
+  const [alignment, setAlignment] = useState('all')
+
+  const handleChange = (
+    event: MouseEvent<HTMLElement>,
+    newAlignment: string
+  ) => {
+    setAlignment(newAlignment)
+  }
 
   // Add Task Handler
   const addTaskHandler = (title: string) => {
-    if (checkExistingTask(title, id)) {
-    } else {
-      createTask(title, id)
-    }
+    if (tasks.find((t: TaskType) => t.title === title.toLowerCase())) {
+      window.alert(`Task ${title.toUpperCase()} already exists!`)
+    } else createTask(title, id)
   }
 
   // Delete Todolist Handler
@@ -65,14 +74,12 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
     <div className="todolist">
       <div className="todolist__header">
         <h3 className="todolist__title">{title}</h3>
-        <Button
-          className="btn_danger"
-          onClick={deleteTodolistHandler}
-          tooltip={'Delete Todolist'}
-        />
+        <IconButton aria-label="delete" onClick={deleteTodolistHandler}>
+          <HighlightOffOutlinedIcon color="error" sx={{ fontSize: 30 }} />
+        </IconButton>
       </div>
 
-      <Form action={addTaskHandler} />
+      <FormControl label="New task" action={addTaskHandler} />
 
       {tasks.length ? (
         <ul className="todolist__list">
@@ -86,7 +93,6 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
               changeTaskStatus={changeTaskStatus}
               deleteTask={deleteTask}
               updateTask={updateTask}
-              checkExistingTask={checkExistingTask}
             />
           ))}
         </ul>
@@ -97,21 +103,24 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
       )}
 
       <div className="todolist__controls">
-        <Button
-          className={`btn_success ${filter === 'all' && 'active'}`}
-          title={'All'}
-          onClick={onAllClickHandler}
-        />
-        <Button
-          className={`btn_success ${filter === 'active' && 'active'}`}
-          title={'Active'}
-          onClick={onActiveClickHandler}
-        />
-        <Button
-          className={`btn_success ${filter === 'completed' && 'active'}`}
-          title={'Completed'}
-          onClick={onCompletedClickHandler}
-        />
+        <ToggleButtonGroup
+          color="primary"
+          size="small"
+          value={alignment}
+          exclusive
+          onChange={handleChange}
+          aria-label="Platform"
+        >
+          <ToggleButton value="all" onClick={onAllClickHandler}>
+            All
+          </ToggleButton>
+          <ToggleButton value="active" onClick={onActiveClickHandler}>
+            Active
+          </ToggleButton>
+          <ToggleButton value="completed" onClick={onCompletedClickHandler}>
+            Completed
+          </ToggleButton>
+        </ToggleButtonGroup>
       </div>
     </div>
   )

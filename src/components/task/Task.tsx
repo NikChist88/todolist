@@ -1,5 +1,5 @@
 import './Task.styles.scss'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Button } from '../button/Button'
 import { Checkbox } from '../checkbox/Checkbox'
 import { EditableTask } from '../editableTask/EditableTask'
@@ -12,7 +12,6 @@ type TaskPropsType = {
   changeTaskStatus: (taskId: string, todolistId: string) => void
   deleteTask: (id: string, todolistId: string) => void
   updateTask: (taskId: string, todolistId: string, newTitle: string) => void
-  checkExistingTask: (taskTitle: string, todolistId: string) => boolean
 }
 
 export const Task: FC<TaskPropsType> = (props) => {
@@ -25,7 +24,6 @@ export const Task: FC<TaskPropsType> = (props) => {
     changeTaskStatus,
     deleteTask,
     updateTask,
-    checkExistingTask,
   } = props
 
   // Change task status handler
@@ -42,9 +40,7 @@ export const Task: FC<TaskPropsType> = (props) => {
 
   // Update task handler
   const updateTaskHandler = (title: string) => {
-    if (checkExistingTask(title, todolistId)) {
-      return
-    } else updateTask(id, todolistId, title)
+    updateTask(id, todolistId, title)
   }
 
   return (
