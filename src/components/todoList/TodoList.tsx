@@ -59,6 +59,19 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
     }
   }
 
+  // Update Task Handler
+  const updateTaskHandler = (
+    taskId: string,
+    todolistId: string,
+    newTitle: string
+  ) => {
+    if (tasks.find((t) => t.title === newTitle.toLowerCase())) {
+      window.alert(`Task ${newTitle.toUpperCase()} already exists!`)
+    } else {
+      updateTask(taskId, todolistId, newTitle)
+    }
+  }
+
   // Change task filter handlers
   const onAllClickHandler = () => {
     changeTaskFilter('all', id)
@@ -92,7 +105,7 @@ export const Todolist: FC<TodolistPropsType> = (props) => {
               isDone={task.isDone}
               changeTaskStatus={changeTaskStatus}
               deleteTask={deleteTask}
-              updateTask={updateTask}
+              updateTask={updateTaskHandler}
             />
           ))}
         </ul>

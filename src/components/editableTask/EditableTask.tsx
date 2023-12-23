@@ -1,5 +1,5 @@
 import '../input/Input.styles.scss'
-import { ChangeEvent, FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { Button } from '../button/Button'
 import { Input } from '../input/Input'
 

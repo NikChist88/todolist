@@ -1,9 +1,11 @@
-import { todolistsReducer } from './todolistsReducer'
-import { TodolistType } from '../store'
-import { FilterType } from '../store'
-import { RemoveTodolistAC } from './todolistsReducer'
-import { CreateTodolistAC } from './todolistsReducer'
-import { ChangeTodolistFilterAC } from './todolistsReducer'
+import {
+  todolistsReducer,
+  RemoveTodolistAC,
+  CreateTodolistAC,
+  ChangeTodolistFilterAC,
+} from './todolistsReducer'
+import { TodolistType } from '../../store'
+import { FilterType } from '../../store'
 import { v1 } from 'uuid'
 
 // Delete Todolist

@@ -1,5 +1,5 @@
-import { TasksType } from '../store'
-import { TaskType } from '../store'
+import { TasksType } from '../../store'
+import { TaskType } from '../../store'
 
 type RemoveTaskActionType = {
   type: 'REMOVE-TASK'

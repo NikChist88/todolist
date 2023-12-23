@@ -1,10 +1,12 @@
-import { TasksType } from '../store'
-import { TaskType } from '../store'
-import { tasksReducer } from './tasksReducer'
-import { RemoveTaskAC } from './tasksReducer'
-import { AddTaskAC } from './tasksReducer'
-import { UpdateTaskTitleAC } from './tasksReducer'
-import { ChangeTaskStatusAC } from './tasksReducer'
+import { TasksType } from '../../store'
+import { TaskType } from '../../store'
+import {
+  tasksReducer,
+  RemoveTaskAC,
+  AddTaskAC,
+  UpdateTaskTitleAC,
+  ChangeTaskStatusAC,
+} from './tasksReducer'
 import { v1 } from 'uuid'
 
 // Delete Task

@@ -1,5 +1,5 @@
-import { TodolistType } from '../store'
-import { FilterType } from '../store'
+import { TodolistType } from '../../store'
+import { FilterType } from '../../store'
 import { v1 } from 'uuid'
 
 type RemoveTodolistActionType = {
