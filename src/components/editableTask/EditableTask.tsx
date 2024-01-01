@@ -1,4 +1,5 @@
 import '../input/Input.styles.scss'
+import './EditableTask.styles.scss'
 import { FC, useState } from 'react'
 import { Button } from '../button/Button'
 import { Input } from '../input/Input'
@@ -9,9 +10,12 @@ type EditableTaskPropsType = {
   onChange: (newTitle: string) => void
 }
 
-export const EditableTask: FC<EditableTaskPropsType> = (props) => {
-  // Props
-  const { title, isDone, onChange } = props
+export const EditableTask: FC<EditableTaskPropsType> = ({
+  title,
+  isDone,
+  onChange,
+}) => {
+  console.log('Editable Task render')
 
   // Local State
   const [editMode, setEditMode] = useState<boolean>(false)
@@ -49,13 +53,7 @@ export const EditableTask: FC<EditableTaskPropsType> = (props) => {
   }
 
   return editMode ? (
-    <div
-      style={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-      }}
-    >
+    <div className="field">
       <Input
         value={inputValue}
         placeholder="Enter a task"
@@ -66,15 +64,7 @@ export const EditableTask: FC<EditableTaskPropsType> = (props) => {
       <Button className="btn_primary" onClick={activateViewMode} />
     </div>
   ) : (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '0 10px',
-        width: '100%',
-      }}
-    >
+    <div className="body">
       <span>{title}</span>
       <Button
         className="btn_edit"

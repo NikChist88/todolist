@@ -1,47 +1,54 @@
 import './Task.styles.scss'
-import { FC, useState } from 'react'
+import { FC, useCallback } from 'react'
 import { Button } from '../button/Button'
 import { Checkbox } from '../checkbox/Checkbox'
 import { EditableTask } from '../editableTask/EditableTask'
+import { AppRootStateType } from '../../store/store'
+import { TasksType, TaskType } from '../../store/types/tasks'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  updateTaskAC,
+  removeTaskAC,
+  changeTaskStatusAC,
+} from '../../store/actionCreators/tasksActionCreators'
 
 type TaskPropsType = {
   id: string
   todolistId: string
   task: string
   isDone: boolean
-  changeTaskStatus: (taskId: string, todolistId: string) => void
-  deleteTask: (id: string, todolistId: string) => void
-  updateTask: (taskId: string, todolistId: string, newTitle: string) => void
 }
 
-export const Task: FC<TaskPropsType> = (props) => {
-  // Props
-  const {
-    id,
-    todolistId,
-    task,
-    isDone,
-    changeTaskStatus,
-    deleteTask,
-    updateTask,
-  } = props
+export const Task: FC<TaskPropsType> = ({ id, todolistId, task, isDone }) => {
+  console.log('Task render')
 
-  // Change task status handler
-  const changeTaskStatusHandler = () => {
-    changeTaskStatus(id, todolistId)
-  }
+  const tasks = useSelector<AppRootStateType, TasksType>((state) => state.tasks)
+  const dispatch = useDispatch()
 
-  // Delete task handler
+  // Update Task Title Handler
+  const updateTaskHandler = useCallback((newTitle: string) => {
+    if (
+      tasks[todolistId].find(
+        (t: TaskType) => t.title === newTitle.toLowerCase()
+      )
+    ) {
+      window.alert(`Task ${newTitle.toUpperCase()} already exists!`)
+    } else {
+      dispatch(updateTaskAC(id, todolistId, newTitle))
+    }
+  }, [id, todolistId])
+
+  // Delete Task
   const deleteTaskHandler = () => {
     if (window.confirm(`Do you want to delete a task ${task.toUpperCase()}?`)) {
-      deleteTask(id, todolistId)
+      dispatch(removeTaskAC(id, todolistId))
     }
   }
 
-  // Update task handler
-  const updateTaskHandler = (title: string) => {
-    updateTask(id, todolistId, title)
-  }
+  // Change Task Status
+  const changeTaskStatusHandler = useCallback(() => {
+    dispatch(changeTaskStatusAC(id, todolistId, isDone))
+  }, [id, todolistId, isDone])
 
   return (
     <li className="task">

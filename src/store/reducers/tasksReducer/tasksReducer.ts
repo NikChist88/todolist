@@ -1,104 +1,81 @@
-import { TasksType } from '../../store'
-import { TaskType } from '../../store'
+import {
+  TasksType,
+  TasksActionsType,
+  UserTaskActionTypes,
+  TaskType,
+} from '../../types/tasks'
+import { UserTodolistsActionTypes } from '../../types/todolists'
 
-type RemoveTaskActionType = {
-  type: 'REMOVE-TASK'
-  id: string
-  todolistId: string
-}
-
-type AddTaskActionType = {
-  type: 'ADD-TASK'
-  newTask: TaskType
-  todolistId: string
-}
-
-type UpdateTaskTitleActionType = {
-  type: 'UPDATE-TASK-TITLE'
-  newTaskTitle: string
-  taskId: string
-  todolistId: string
-}
-
-type ChangeTaskStatusActionType = {
-  type: 'CHANGE-TASK-STATUS'
-  taskId: string
-  todolistId: string
-}
-
-type ActionsType =
-  | RemoveTaskActionType
-  | AddTaskActionType
-  | UpdateTaskTitleActionType
-  | ChangeTaskStatusActionType
-
-export const RemoveTaskAC = (
-  id: string,
-  todolistId: string
-): RemoveTaskActionType => {
-  return { type: 'REMOVE-TASK', id: id, todolistId: todolistId }
-}
-
-export const AddTaskAC = (
-  newTask: TaskType,
-  todolistId: string
-): AddTaskActionType => {
-  return { type: 'ADD-TASK', newTask: newTask, todolistId: todolistId }
-}
-
-export const UpdateTaskTitleAC = (
-  newTaskTitle: string,
-  taskId: string,
-  todolistId: string
-): UpdateTaskTitleActionType => {
-  return {
-    type: 'UPDATE-TASK-TITLE',
-    newTaskTitle: newTaskTitle,
-    taskId: taskId,
-    todolistId: todolistId,
-  }
-}
-
-export const ChangeTaskStatusAC = (
-  taskId: string,
-  todolistId: string
-): ChangeTaskStatusActionType => {
-  return { type: 'CHANGE-TASK-STATUS', taskId: taskId, todolistId: todolistId }
-}
+const initialState: TasksType = {}
 
 export const tasksReducer = (
-  state: TasksType,
-  action: ActionsType
+  state: TasksType = initialState,
+  action: TasksActionsType
 ): TasksType => {
   switch (action.type) {
-    case 'REMOVE-TASK': {
-      const updatedTasks = state[action.todolistId].filter(
-        (t) => t.id !== action.id
-      )
-      return { ...state, [action.todolistId]: updatedTasks }
-    }
-
-    case 'ADD-TASK':
-      return {
-        ...state,
-        [action.todolistId]: [action.newTask, ...state[action.todolistId]],
+    // Create Task
+    case UserTaskActionTypes.CREATE_TASK: {
+      const newTask: TaskType = {
+        id: action.payload.taskId,
+        title: action.payload.taskTitle,
+        isDone: false,
       }
 
-    case 'UPDATE-TASK-TITLE': {
-      const updatedTasks = state[action.todolistId].map((t) =>
-        t.id === action.taskId ? { ...t, title: action.newTaskTitle } : t
-      )
-      return { ...state, [action.todolistId]: updatedTasks }
+      const updatedTasks: TaskType[] = [
+        newTask,
+        ...state[action.payload.todolistId],
+      ]
+
+      return {
+        ...state,
+        [action.payload.todolistId]: updatedTasks,
+      }
     }
 
-    case 'CHANGE-TASK-STATUS': {
-      const updatedTasks = state[action.todolistId].map((t) =>
-        t.id === action.taskId ? { ...t, isDone: true } : t
+    // Remove Task
+    case UserTaskActionTypes.REMOVE_TASK: {
+      const filteredTasks = state[action.payload.todolistId].filter(
+        (t: TaskType) => t.id !== action.payload.taskId
       )
-      return { ...state, [action.todolistId]: updatedTasks }
+
+      return { ...state, [action.payload.todolistId]: filteredTasks }
     }
 
+    // Update Task Title
+    case UserTaskActionTypes.UPDATE_TASK_TITLE: {
+      const updatedTasks = state[action.payload.todolistId].map((t: TaskType) =>
+        t.id === action.payload.taskId
+          ? { ...t, title: action.payload.newTaskTitle }
+          : t
+      )
+
+      return { ...state, [action.payload.todolistId]: updatedTasks }
+    }
+
+    // Change Task Status
+    case UserTaskActionTypes.CHANGE_TASK_STATUS: {
+      const updatedTasks = state[action.payload.todolistId].map((t: TaskType) =>
+        t.id === action.payload.taskId
+          ? { ...t, isDone: !action.payload.isDone }
+          : t
+      )
+
+      return { ...state, [action.payload.todolistId]: updatedTasks }
+    }
+
+    // Create Todolist
+    case UserTodolistsActionTypes.CREATE_TODOLIST: {
+      return { ...state, [action.payload.todolistId]: [] }
+    }
+
+    // Remove Todolist
+    case UserTodolistsActionTypes.REMOVE_TODOLIST: {
+      delete state[action.payload.todolistId]
+      return state
+    }
+
+    // Default
     default:
-      throw new Error('Wrong action type!')
+      return state
   }
 }

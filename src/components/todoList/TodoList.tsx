@@ -1,140 +1,120 @@
 import './TodoList.styles.scss'
-import { useState, MouseEvent } from 'react'
-import { ToggleButtonGroup, ToggleButton } from '@mui/material'
+import { FC, memo, useCallback } from 'react'
 import { Task } from '../task/Task'
-import { TaskType, FilterType } from '../../store/store'
-import { FC } from 'react'
-import { FormControl } from '../formControl/FormControl'
-import { IconButton } from '@mui/material'
-import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined'
+import { TaskType } from '../../store/types/tasks'
+import { FilterType } from '../../store/types/todolists'
+import { AppRootStateType } from '../../store/store'
+import { FormControlMemo } from '../formControl/FormControl'
+import { createTaskAC } from '../../store/actionCreators/tasksActionCreators'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button } from '../button/Button'
+import { changeTodolistFilterAC } from '../../store/actionCreators/todolistsActionCreator'
 
 type TodolistPropsType = {
   id: string
   title: string
-  tasks: TaskType[]
   filter: FilterType
-  createTask: (task: string, todoListId: string) => void
-  changeTaskFilter: (value: FilterType, todoListId: string) => void
-  changeTaskStatus: (taskId: string, todolistId: string) => void
-  deleteTask: (id: string, todolistsId: string) => void
   deleteTodolist: (todolistId: string) => void
-  updateTask: (taskId: string, todolistId: string, newTitle: string) => void
 }
 
-export const Todolist: FC<TodolistPropsType> = (props) => {
-  // Props
-  const {
-    id,
-    title,
-    tasks,
-    filter,
-    createTask,
-    changeTaskStatus,
-    changeTaskFilter,
-    deleteTask,
-    deleteTodolist,
-    updateTask,
-  } = props
+export const Todolist: FC<TodolistPropsType> = ({
+  id,
+  title,
+  filter,
+  deleteTodolist,
+}) => {
+  console.log('Todolist render')
 
-  const [alignment, setAlignment] = useState('all')
+  const tasks = useSelector<AppRootStateType, TaskType[]>(
+    (state) => state.tasks[id]
+  )
+  const dispatch = useDispatch()
 
-  const handleChange = (
-    event: MouseEvent<HTMLElement>,
-    newAlignment: string
-  ) => {
-    setAlignment(newAlignment)
-  }
-
-  // Add Task Handler
-  const addTaskHandler = (title: string) => {
-    if (tasks.find((t: TaskType) => t.title === title.toLowerCase())) {
-      window.alert(`Task ${title.toUpperCase()} already exists!`)
-    } else createTask(title, id)
-  }
+  // Add Task
+  const addTask = useCallback(
+    (title: string) => {
+      if (
+        tasks &&
+        tasks.find((t: TaskType) => t.title === title.toLowerCase())
+      ) {
+        window.alert(`Task ${title.toUpperCase()} already exists!`)
+      } else dispatch(createTaskAC(title, id))
+    },
+    [id]
+  )
 
   // Delete Todolist Handler
-  const deleteTodolistHandler = () => {
+  const deleteTodolistHandler = useCallback(() => {
     if (window.confirm(`Delete Todolist ${title.toUpperCase()}?`)) {
       deleteTodolist(id)
     }
-  }
+  }, [id, deleteTodolist])
 
-  // Update Task Handler
-  const updateTaskHandler = (
-    taskId: string,
-    todolistId: string,
-    newTitle: string
-  ) => {
-    if (tasks.find((t) => t.title === newTitle.toLowerCase())) {
-      window.alert(`Task ${newTitle.toUpperCase()} already exists!`)
-    } else {
-      updateTask(taskId, todolistId, newTitle)
-    }
-  }
+  // Change Todolist Filter
+  const changeFilter = useCallback(
+    (filter: FilterType, id: string) => {
+      dispatch(changeTodolistFilterAC(filter, id))
+    },
+    [filter, id]
+  )
 
-  // Change task filter handlers
-  const onAllClickHandler = () => {
-    changeTaskFilter('all', id)
-  }
-  const onActiveClickHandler = () => {
-    changeTaskFilter('active', id)
-  }
-  const onCompletedClickHandler = () => {
-    changeTaskFilter('completed', id)
-  }
+  // Filtered Tasks
+  let filteredTasks = tasks
+  if (filter === 'active')
+    filteredTasks = filteredTasks.filter((t: TaskType) => t.isDone === false)
+  if (filter === 'completed')
+    filteredTasks = filteredTasks.filter((t: TaskType) => t.isDone === true)
 
   return (
     <div className="todolist">
       <div className="todolist__header">
         <h3 className="todolist__title">{title}</h3>
-        <IconButton aria-label="delete" onClick={deleteTodolistHandler}>
-          <HighlightOffOutlinedIcon color="error" sx={{ fontSize: 30 }} />
-        </IconButton>
+        <Button
+          className={'btn_danger'}
+          tooltip="Delete Todolist"
+          onClick={deleteTodolistHandler}
+        />
       </div>
 
-      <FormControl label="New task" action={addTaskHandler} />
+      <FormControlMemo label="New task" action={addTask} />
 
-      {tasks.length ? (
-        <ul className="todolist__list">
-          {tasks.map((task) => (
+      <ul className="todolist__list">
+        {filteredTasks && filteredTasks.length ? (
+          filteredTasks.map((task: TaskType) => (
             <Task
               key={task.id}
               id={task.id}
               todolistId={id}
               task={task.title}
               isDone={task.isDone}
-              changeTaskStatus={changeTaskStatus}
-              deleteTask={deleteTask}
-              updateTask={updateTaskHandler}
             />
-          ))}
-        </ul>
-      ) : (
-        <span>
-          {filter === 'all' ? 'You have no tasks' : `No ${filter} tasks`}
-        </span>
-      )}
+          ))
+        ) : (
+          <span>
+            {filter === 'all' ? 'You have no tasks' : `No ${filter} tasks`}
+          </span>
+        )}
+      </ul>
 
       <div className="todolist__controls">
-        <ToggleButtonGroup
-          color="primary"
-          size="small"
-          value={alignment}
-          exclusive
-          onChange={handleChange}
-          aria-label="Platform"
-        >
-          <ToggleButton value="all" onClick={onAllClickHandler}>
-            All
-          </ToggleButton>
-          <ToggleButton value="active" onClick={onActiveClickHandler}>
-            Active
-          </ToggleButton>
-          <ToggleButton value="completed" onClick={onCompletedClickHandler}>
-            Completed
-          </ToggleButton>
-        </ToggleButtonGroup>
+        <Button
+          className={`btn_success ${filter === 'all' && 'active'}`}
+          title="ALL"
+          onClick={() => changeFilter('all', id)}
+        />
+        <Button
+          className={`btn_success ${filter === 'active' && 'active'}`}
+          title="ACTIVE"
+          onClick={() => changeFilter('active', id)}
+        />
+        <Button
+          className={`btn_success ${filter === 'completed' && 'active'}`}
+          title="COMPLETED"
+          onClick={() => changeFilter('completed', id)}
+        />
       </div>
     </div>
   )
 }
+
+export const TodolistMemo = memo<TodolistPropsType>(Todolist)

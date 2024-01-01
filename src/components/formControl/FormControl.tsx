@@ -1,16 +1,15 @@
 import './FormControl.styles.scss'
-import { ChangeEvent, KeyboardEvent, FC, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, FC, useState, memo } from 'react'
 import { Button } from '../button/Button'
 import { TextField } from '@mui/material'
 
 type FormPropsType = {
   label?: string
-  action: (title: string) => void
+  action: (value: string) => void
 }
 
-export const FormControl: FC<FormPropsType> = (props) => {
-  // Props
-  const { label, action } = props
+export const FormControl: FC<FormPropsType> = ({ label, action }) => {
+  console.log('FormControl render')
 
   // Local State
   const [inputValue, setInputValue] = useState<string>('')
@@ -57,3 +56,5 @@ export const FormControl: FC<FormPropsType> = (props) => {
     </div>
   )
 }
+
+export const FormControlMemo = memo<FormPropsType>(FormControl)
