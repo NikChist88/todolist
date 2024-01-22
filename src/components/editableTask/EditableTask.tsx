@@ -1,8 +1,9 @@
 import '../input/Input.styles.scss'
 import './EditableTask.styles.scss'
-import { FC, useState } from 'react'
+import { FC, memo } from 'react'
 import { Button } from '../button/Button'
 import { Input } from '../input/Input'
+import { useEditableTask } from './hooks/useEditableTask'
 
 type EditableTaskPropsType = {
   title: string
@@ -10,67 +11,38 @@ type EditableTaskPropsType = {
   onChange: (newTitle: string) => void
 }
 
-export const EditableTask: FC<EditableTaskPropsType> = ({
-  title,
-  isDone,
-  onChange,
-}) => {
-  console.log('Editable Task render')
+export const EditableTask: FC<EditableTaskPropsType> = memo(
+  ({ title, isDone, onChange }) => {
+    
+    const {
+      editMode,
+      inputValue,
+      activateEditMode,
+      activateViewMode,
+      onChangeTitleHandler,
+      onKeyPressHandler,
+    } = useEditableTask(title, onChange)
 
-  // Local State
-  const [editMode, setEditMode] = useState<boolean>(false)
-  const [inputValue, setInputValue] = useState<string>('')
-
-  // Edit Mode
-  const activateEditMode = () => {
-    setEditMode(true)
-    setInputValue(title)
+    return editMode ? (
+      <div className="field">
+        <Input
+          value={inputValue}
+          placeholder="Enter a task"
+          onChange={onChangeTitleHandler}
+          onKeyPress={onKeyPressHandler}
+          autoFocus
+        />
+        <Button className="btn_primary" onClick={activateViewMode} />
+      </div>
+    ) : (
+      <div className="body">
+        <span>{title}</span>
+        <Button
+          className="btn_edit"
+          disabled={isDone}
+          onClick={activateEditMode}
+        />
+      </div>
+    )
   }
-
-  // View Mode
-  const activateViewMode = () => {
-    if (!inputValue) {
-      window.alert('Title is requaried!')
-    } else {
-      setEditMode(false)
-      onChange(inputValue)
-    }
-  }
-
-  // Change Title Handler
-  const onChangeTitleHandler = (value: string) => {
-    setInputValue(value)
-  }
-
-  // Key Press handler
-  const onKeyPressHandler = (key: string) => {
-    if (key === 'Enter' && inputValue && inputValue.length < 21) {
-      activateViewMode()
-    }
-    if (key === 'Escape') {
-      setEditMode(false)
-    }
-  }
-
-  return editMode ? (
-    <div className="field">
-      <Input
-        value={inputValue}
-        placeholder="Enter a task"
-        onChange={onChangeTitleHandler}
-        onKeyPress={onKeyPressHandler}
-        autoFocus
-      />
-      <Button className="btn_primary" onClick={activateViewMode} />
-    </div>
-  ) : (
-    <div className="body">
-      <span>{title}</span>
-      <Button
-        className="btn_edit"
-        disabled={isDone}
-        onClick={activateEditMode}
-      />
-    </div>
-  )
-}
+)

@@ -1,48 +1,44 @@
 import './App.scss'
-import { FC, useCallback } from 'react'
-import { TodolistMemo } from './components/todoList/TodoList'
+import { FC, useCallback, memo } from 'react'
+import { Todolist } from './components/todoList/TodoList'
 import { AppRootStateType } from './store/store'
-import { TodolistType } from './store/types/todolists'
-import { FormControlMemo } from './components/formControl/FormControl'
-import {
-  createTodolistAC,
-  removeTodolistAC,
-} from './store/actionCreators/todolistsActionCreator'
+import { TodolistType } from './store/types/todolistsTypes'
+import { FormControl } from './components/formControl/FormControl'
+import { createTodolistAC } from './store/actionCreators/todolistsActionCreator'
 import { useDispatch, useSelector } from 'react-redux'
 
-export const App: FC = () => {
+export const App: FC = memo(() => {
+
   const todolists = useSelector<AppRootStateType, TodolistType[]>(
     (state) => state.todolists
   )
+  
   const dispatch = useDispatch()
 
   // Create Todolist
-  const createTodolist = useCallback((title: string) => {
-    dispatch(createTodolistAC(title))
-  }, [])
-
-  // Delete Todolist
-  const deleteTodolist = useCallback((todolistId: string) => {
-    dispatch(removeTodolistAC(todolistId))
-  }, [])
+  const createTodolist = useCallback(
+    (title: string) => {
+      dispatch(createTodolistAC(title))
+    },
+    [dispatch]
+  )
 
   return (
     <div className="app">
-      <FormControlMemo label="New todolist" action={createTodolist} />
+      <FormControl label="New todolist" action={createTodolist} />
       <div className="wrapper">
         {todolists &&
           todolists.map((tl) => {
             return (
-              <TodolistMemo
+              <Todolist
                 key={tl.id}
                 id={tl.id}
                 title={tl.title}
                 filter={tl.filter}
-                deleteTodolist={deleteTodolist}
               />
             )
           })}
       </div>
     </div>
   )
-}
+})

@@ -3,8 +3,8 @@ import {
   TasksActionsType,
   UserTaskActionTypes,
   TaskType,
-} from '../../types/tasks'
-import { UserTodolistsActionTypes } from '../../types/todolists'
+} from '../../types/tasksTypes'
+import { UserTodolistsActionTypes } from '../../types/todolistsTypes'
 
 const initialState: TasksType = {}
 
@@ -35,7 +35,7 @@ export const tasksReducer = (
     // Remove Task
     case UserTaskActionTypes.REMOVE_TASK: {
       const filteredTasks = state[action.payload.todolistId].filter(
-        (t: TaskType) => t.id !== action.payload.taskId
+        (task: TaskType) => task.id !== action.payload.taskId
       )
 
       return { ...state, [action.payload.todolistId]: filteredTasks }
@@ -43,10 +43,11 @@ export const tasksReducer = (
 
     // Update Task Title
     case UserTaskActionTypes.UPDATE_TASK_TITLE: {
-      const updatedTasks = state[action.payload.todolistId].map((t: TaskType) =>
-        t.id === action.payload.taskId
-          ? { ...t, title: action.payload.newTaskTitle }
-          : t
+      const updatedTasks = state[action.payload.todolistId].map(
+        (task: TaskType) =>
+          task.id === action.payload.taskId
+            ? { ...task, title: action.payload.newTaskTitle }
+            : task
       )
 
       return { ...state, [action.payload.todolistId]: updatedTasks }
@@ -54,10 +55,11 @@ export const tasksReducer = (
 
     // Change Task Status
     case UserTaskActionTypes.CHANGE_TASK_STATUS: {
-      const updatedTasks = state[action.payload.todolistId].map((t: TaskType) =>
-        t.id === action.payload.taskId
-          ? { ...t, isDone: !action.payload.isDone }
-          : t
+      const updatedTasks = state[action.payload.todolistId].map(
+        (task: TaskType) =>
+          task.id === action.payload.taskId
+            ? { ...task, isDone: !action.payload.isDone }
+            : task
       )
 
       return { ...state, [action.payload.todolistId]: updatedTasks }

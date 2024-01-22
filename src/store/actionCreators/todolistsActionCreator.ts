@@ -1,11 +1,11 @@
 import { v1 } from 'uuid'
-import { FilterType } from '../types/todolists'
+import { FilterType } from '../types/todolistsTypes'
 import {
   RemoveTodolistActionType,
   CreateTodolistActionType,
   ChangeTodolistFilterActionType,
   UserTodolistsActionTypes,
-} from '../types/todolists'
+} from '../types/todolistsTypes'
 
 export const removeTodolistAC = (
   todolistId: string

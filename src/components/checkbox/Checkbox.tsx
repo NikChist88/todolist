@@ -1,13 +1,12 @@
 import './Checkbox.styles.scss'
-import { FC } from 'react'
+import { FC, memo } from 'react'
 
 type CheckboxPropsType = {
   checked: boolean
   onChange: () => void
 }
 
-export const Checkbox: FC<CheckboxPropsType> = (props) => {
-  const { checked, onChange } = props
+export const Checkbox: FC<CheckboxPropsType> = memo(({ checked, onChange }) => {
 
   const onChangeHandler = () => {
     onChange()
@@ -21,4 +20,4 @@ export const Checkbox: FC<CheckboxPropsType> = (props) => {
       onChange={onChangeHandler}
     />
   )
-}
+})

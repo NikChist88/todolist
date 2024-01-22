@@ -2,7 +2,7 @@ import {
   TodolistType,
   TodolistsActionsTypes,
   UserTodolistsActionTypes,
-} from '../../types/todolists'
+} from '../../types/todolistsTypes'
 
 const initialState: TodolistType[] = []
 

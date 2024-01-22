@@ -1,7 +1,7 @@
 import './Button.styles.scss'
-import { FC } from 'react'
+import { FC, memo } from 'react'
 
-type ButtonType = {
+type ButtonPropsType = {
   className?: string
   title?: string
   tooltip?: string
@@ -9,21 +9,22 @@ type ButtonType = {
   onClick: () => void
 }
 
-export const Button: FC<ButtonType> = (props) => {
-  const { className, title, disabled, tooltip, onClick } = props
+export const Button: FC<ButtonPropsType> = memo(
+  ({ className, title, disabled, tooltip, onClick }) => {
+    
+    const onClickHandler = () => {
+      onClick()
+    }
 
-  const onClickHandler = () => {
-    onClick()
+    return (
+      <button
+        className={`btn ${className}`}
+        title={tooltip}
+        disabled={disabled}
+        onClick={onClickHandler}
+      >
+        {title}
+      </button>
+    )
   }
-
-  return (
-    <button
-      className={`btn ${className}`}
-      title={tooltip}
-      disabled={disabled}
-      onClick={onClickHandler}
-    >
-      {title}
-    </button>
-  )
-}
+)

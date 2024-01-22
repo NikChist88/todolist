@@ -1,6 +1,11 @@
-import { TasksType } from '../../types/tasks'
+import { TasksType } from '../../types/tasksTypes'
 import { tasksReducer } from './tasksReducer'
-import { createTaskAC, removeTaskAC, updateTaskAC, changeTaskStatusAC } from '../../actionCreators/tasksActionCreators'
+import {
+  createTaskAC,
+  removeTaskAC,
+  updateTaskAC,
+  changeTaskStatusAC,
+} from '../../actionCreators/tasksActionCreators'
 import { v1 } from 'uuid'
 
 // Delete Task

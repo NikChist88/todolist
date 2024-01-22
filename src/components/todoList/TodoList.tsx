@@ -1,69 +1,22 @@
 import './TodoList.styles.scss'
-import { FC, memo, useCallback } from 'react'
+import { FC, memo } from 'react'
 import { Task } from '../task/Task'
-import { TaskType } from '../../store/types/tasks'
-import { FilterType } from '../../store/types/todolists'
-import { AppRootStateType } from '../../store/store'
-import { FormControlMemo } from '../formControl/FormControl'
-import { createTaskAC } from '../../store/actionCreators/tasksActionCreators'
-import { useDispatch, useSelector } from 'react-redux'
+import { TaskType } from '../../store/types/tasksTypes'
+import { FilterType } from '../../store/types/todolistsTypes'
+import { FormControl } from '../formControl/FormControl'
 import { Button } from '../button/Button'
-import { changeTodolistFilterAC } from '../../store/actionCreators/todolistsActionCreator'
+import { useTodoList } from './hooks/useTodoList'
 
 type TodolistPropsType = {
   id: string
   title: string
   filter: FilterType
-  deleteTodolist: (todolistId: string) => void
 }
 
-export const Todolist: FC<TodolistPropsType> = ({
-  id,
-  title,
-  filter,
-  deleteTodolist,
-}) => {
-  console.log('Todolist render')
-
-  const tasks = useSelector<AppRootStateType, TaskType[]>(
-    (state) => state.tasks[id]
-  )
-  const dispatch = useDispatch()
-
-  // Add Task
-  const addTask = useCallback(
-    (title: string) => {
-      if (
-        tasks &&
-        tasks.find((t: TaskType) => t.title === title.toLowerCase())
-      ) {
-        window.alert(`Task ${title.toUpperCase()} already exists!`)
-      } else dispatch(createTaskAC(title, id))
-    },
-    [id]
-  )
-
-  // Delete Todolist Handler
-  const deleteTodolistHandler = useCallback(() => {
-    if (window.confirm(`Delete Todolist ${title.toUpperCase()}?`)) {
-      deleteTodolist(id)
-    }
-  }, [id, deleteTodolist])
-
-  // Change Todolist Filter
-  const changeFilter = useCallback(
-    (filter: FilterType, id: string) => {
-      dispatch(changeTodolistFilterAC(filter, id))
-    },
-    [filter, id]
-  )
-
-  // Filtered Tasks
-  let filteredTasks = tasks
-  if (filter === 'active')
-    filteredTasks = filteredTasks.filter((t: TaskType) => t.isDone === false)
-  if (filter === 'completed')
-    filteredTasks = filteredTasks.filter((t: TaskType) => t.isDone === true)
+export const Todolist: FC<TodolistPropsType> = memo(({ id, title, filter }) => {
+  
+  const { filteredTasks, addTask, deleteTodolistHandler, changeFilter } =
+    useTodoList(id, title, filter)
 
   return (
     <div className="todolist">
@@ -76,7 +29,7 @@ export const Todolist: FC<TodolistPropsType> = ({
         />
       </div>
 
-      <FormControlMemo label="New task" action={addTask} />
+      <FormControl label="New task" action={addTask} />
 
       <ul className="todolist__list">
         {filteredTasks && filteredTasks.length ? (
@@ -115,6 +68,4 @@ export const Todolist: FC<TodolistPropsType> = ({
       </div>
     </div>
   )
-}
-
-export const TodolistMemo = memo<TodolistPropsType>(Todolist)
+})

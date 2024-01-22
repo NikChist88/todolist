@@ -4,7 +4,7 @@ import {
   AddTaskActionType,
   ChangeTaskStatusActionType,
   UserTaskActionTypes,
-} from '../types/tasks'
+} from '../types/tasksTypes'
 import { v1 } from 'uuid'
 
 export const removeTaskAC = (

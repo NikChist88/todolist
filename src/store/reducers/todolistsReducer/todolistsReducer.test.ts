@@ -1,6 +1,10 @@
 import { todolistsReducer } from './todolistsReducer'
-import { removeTodolistAC, changeTodolistFilterAC, createTodolistAC } from '../../actionCreators/todolistsActionCreator'
-import { FilterType, TodolistType } from '../../types/todolists'
+import {
+  removeTodolistAC,
+  changeTodolistFilterAC,
+  createTodolistAC,
+} from '../../actionCreators/todolistsActionCreator'
+import { FilterType, TodolistType } from '../../types/todolistsTypes'
 
 // Delete Todolist
 test('removed todolist', () => {
@@ -18,7 +22,9 @@ test('removed todolist', () => {
 
 // Add Todolist
 test('create todolist', () => {
-  const startState: TodolistType[] = [{ id: '1', title: 'what to learn', filter: 'all' }]
+  const startState: TodolistType[] = [
+    { id: '1', title: 'what to learn', filter: 'all' },
+  ]
 
   const title: string = 'home work'
   const action = createTodolistAC(title)

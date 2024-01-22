@@ -1,4 +1,7 @@
-import { CreateTodolistActionType, RemoveTodolistActionType } from './todolists'
+import {
+  CreateTodolistActionType,
+  RemoveTodolistActionType,
+} from './todolistsTypes'
 
 export type TaskType = {
   id: string
