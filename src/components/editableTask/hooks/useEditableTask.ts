@@ -4,6 +4,7 @@ export const useEditableTask = (
   title: string,
   onChange: (newTitle: string) => void
 ) => {
+  
   // Local State
   const [editMode, setEditMode] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')

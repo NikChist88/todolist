@@ -10,6 +10,7 @@ type FormPropsType = {
 }
 
 export const FormControl: FC<FormPropsType> = memo(({ label, action }) => {
+  
   const { inputValue, onChangeHandler, onKeyUpHandler, onClickHandler } =
     useFormControl(action)
 
