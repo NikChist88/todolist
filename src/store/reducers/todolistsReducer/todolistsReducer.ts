@@ -10,8 +10,6 @@ export type TodolistDomainType = TodolistType & {
   filter: FilterType
 }
 
-// const initialState: TodolistDomainType[] = []
-
 export const todolistsReducer = (
   state: TodolistDomainType[] = [],
   action: TodolistsActionsTypes

@@ -10,8 +10,6 @@ export type TasksType = {
   [todolistId: string]: TaskType[]
 }
 
-// const initialState: TasksType = {}
-
 export const tasksReducer = (
   state: TasksType = {},
   action: TasksActionsType
