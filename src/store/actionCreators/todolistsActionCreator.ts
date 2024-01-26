@@ -1,5 +1,5 @@
 import { v1 } from 'uuid'
-import { FilterType } from '../types/todolistsTypes'
+import { FilterType } from '../reducers/todolistsReducer/todolistsReducer'
 import {
   RemoveTodolistActionType,
   CreateTodolistActionType,

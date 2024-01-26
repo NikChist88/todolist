@@ -1,20 +1,15 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useCallback } from 'react'
 import { AppRootStateType } from '../../../store/store'
-import { TasksType, TaskType } from '../../../store/types/tasksTypes'
+import { TasksType } from '../../../store/reducers/tasksReducer/tasksReducer'
 import {
   updateTaskAC,
   removeTaskAC,
   changeTaskStatusAC,
 } from '../../../store/actionCreators/tasksActionCreators'
+import { TaskStatuses, TaskType } from '../../../api/todolistsAPI'
 
-export const useTask = (
-  id: string,
-  todolistId: string,
-  task: string,
-  isDone: boolean
-) => {
-
+export const useTask = (id: string, todolistId: string, task: string) => {
   const tasks = useSelector<AppRootStateType, TasksType>((state) => state.tasks)
   const dispatch = useDispatch()
 
@@ -42,13 +37,22 @@ export const useTask = (
   }, [id, todolistId, task, dispatch])
 
   // Change Task Status
-  const changeTaskStatusHandler = useCallback(() => {
-    dispatch(changeTaskStatusAC(id, todolistId, isDone))
-  }, [id, todolistId, isDone, dispatch])
+  const changeTaskStatusHandler = useCallback(
+    (status: boolean) => {
+      dispatch(
+        changeTaskStatusAC(
+          id,
+          todolistId,
+          status ? TaskStatuses.Completed : TaskStatuses.New
+        )
+      )
+    },
+    [id, todolistId, dispatch]
+  )
 
   return {
     updateTaskHandler,
     deleteTaskHandler,
-    changeTaskStatusHandler
+    changeTaskStatusHandler,
   }
 }

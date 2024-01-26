@@ -6,11 +6,10 @@ import {
 } from '../../../store/actionCreators/todolistsActionCreator'
 import { createTaskAC } from '../../../store/actionCreators/tasksActionCreators'
 import { AppRootStateType } from '../../../store/store'
-import { TaskType } from '../../../store/types/tasksTypes'
-import { FilterType } from '../../../store/types/todolistsTypes'
+import { TaskType, TaskStatuses } from '../../../api/todolistsAPI'
+import { FilterType } from '../../../store/reducers/todolistsReducer/todolistsReducer'
 
 export const useTodoList = (id: string, title: string, filter: FilterType) => {
-
   const tasks = useSelector<AppRootStateType, TaskType[]>(
     (state) => state.tasks[id]
   )
@@ -48,9 +47,13 @@ export const useTodoList = (id: string, title: string, filter: FilterType) => {
   // Filtered Tasks
   let filteredTasks = tasks
   if (filter === 'active')
-    filteredTasks = filteredTasks.filter((t: TaskType) => t.isDone === false)
+    filteredTasks = filteredTasks.filter(
+      (t: TaskType) => t.status === TaskStatuses.New
+    )
   if (filter === 'completed')
-    filteredTasks = filteredTasks.filter((t: TaskType) => t.isDone === true)
+    filteredTasks = filteredTasks.filter(
+      (t: TaskType) => t.status === TaskStatuses.Completed
+    )
 
   return {
     filteredTasks,

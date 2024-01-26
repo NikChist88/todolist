@@ -1,10 +1,4 @@
-export type FilterType = 'all' | 'active' | 'completed'
-
-export type TodolistType = {
-  id: string
-  title: string
-  filter: FilterType
-}
+import { FilterType } from "../reducers/todolistsReducer/todolistsReducer"
 
 export enum UserTodolistsActionTypes {
   REMOVE_TODOLIST = 'REMOVE_TODOLIST',

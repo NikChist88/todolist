@@ -2,14 +2,14 @@ import './App.scss'
 import { FC, useCallback, memo } from 'react'
 import { Todolist } from './components/todoList/TodoList'
 import { AppRootStateType } from './store/store'
-import { TodolistType } from './store/types/todolistsTypes'
+import { TodolistDomainType } from './store/reducers/todolistsReducer/todolistsReducer'
 import { FormControl } from './components/formControl/FormControl'
 import { createTodolistAC } from './store/actionCreators/todolistsActionCreator'
 import { useDispatch, useSelector } from 'react-redux'
 
 export const App: FC = memo(() => {
 
-  const todolists = useSelector<AppRootStateType, TodolistType[]>(
+  const todolists = useSelector<AppRootStateType, TodolistDomainType[]>(
     (state) => state.todolists
   )
   

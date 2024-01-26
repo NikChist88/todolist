@@ -4,13 +4,13 @@ import {
   changeTodolistFilterAC,
   createTodolistAC,
 } from '../../actionCreators/todolistsActionCreator'
-import { FilterType, TodolistType } from '../../types/todolistsTypes'
+import { TodolistDomainType, FilterType } from './todolistsReducer'
 
 // Delete Todolist
 test('removed todolist', () => {
-  const startState: TodolistType[] = [
-    { id: '1', title: 'what to learn', filter: 'all' },
-    { id: '2', title: 'what to buy', filter: 'all' },
+  const startState: TodolistDomainType[] = [
+    { id: '1', title: 'what to learn', filter: 'all', addedDate: '', order: 0 },
+    { id: '2', title: 'what to buy', filter: 'all', addedDate: '', order: 0 },
   ]
 
   const action = removeTodolistAC(startState[0].id)
@@ -22,8 +22,8 @@ test('removed todolist', () => {
 
 // Add Todolist
 test('create todolist', () => {
-  const startState: TodolistType[] = [
-    { id: '1', title: 'what to learn', filter: 'all' },
+  const startState: TodolistDomainType[] = [
+    { id: '1', title: 'what to learn', filter: 'all', addedDate: '', order: 0 },
   ]
 
   const title: string = 'home work'
@@ -36,9 +36,9 @@ test('create todolist', () => {
 
 // Change Todolist Filter
 test('change todolist filter', () => {
-  const startState: TodolistType[] = [
-    { id: '1', title: 'what to learn', filter: 'all' },
-    { id: '2', title: 'what to buy', filter: 'all' },
+  const startState: TodolistDomainType[] = [
+    { id: '1', title: 'what to learn', filter: 'all', addedDate: '', order: 0 },
+    { id: '2', title: 'what to buy', filter: 'all', addedDate: '', order: 0 },
   ]
 
   const newFilter: FilterType = 'active'

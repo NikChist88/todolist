@@ -1,17 +1,8 @@
+import { TaskStatuses } from '../../api/todolistsAPI';
 import {
   CreateTodolistActionType,
   RemoveTodolistActionType,
 } from './todolistsTypes'
-
-export type TaskType = {
-  id: string
-  title: string
-  isDone: boolean
-}
-
-export type TasksType = {
-  [todolistId: string]: TaskType[]
-}
 
 export enum UserTaskActionTypes {
   REMOVE_TASK = 'REMOVE_TASK',
@@ -39,7 +30,7 @@ export type UpdateTaskTitleActionType = {
 
 export type ChangeTaskStatusActionType = {
   type: UserTaskActionTypes.CHANGE_TASK_STATUS
-  payload: { taskId: string; todolistId: string; isDone: boolean }
+  payload: { taskId: string; todolistId: string; status: TaskStatuses }
 }
 
 export type TasksActionsType =

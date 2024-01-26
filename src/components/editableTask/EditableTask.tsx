@@ -7,12 +7,12 @@ import { useEditableTask } from './hooks/useEditableTask'
 
 type EditableTaskPropsType = {
   title: string
-  isDone: boolean
+  status: boolean
   onChange: (newTitle: string) => void
 }
 
 export const EditableTask: FC<EditableTaskPropsType> = memo(
-  ({ title, isDone, onChange }) => {
+  ({ title, status, onChange }) => {
     
     const {
       editMode,
@@ -39,7 +39,7 @@ export const EditableTask: FC<EditableTaskPropsType> = memo(
         <span>{title}</span>
         <Button
           className="btn_edit"
-          disabled={isDone}
+          disabled={status}
           onClick={activateEditMode}
         />
       </div>

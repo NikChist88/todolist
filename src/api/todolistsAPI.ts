@@ -15,23 +15,38 @@ export type TodolistType = {
   order: number
 }
 
-type ResponseType<Data = {}> = {
-  resultCode: number
-  messages: string[]
-  data: Data
+export enum TaskStatuses {
+  New = 0,
+  InProgress = 1,
+  Completed = 2,
+  Draft = 3
 }
 
-type TaskType = {
+export enum TaskPriorities {
+  Low = 0,
+  Middle = 1,
+  Hi = 2,
+  Urgently = 3,
+  Later = 4
+}
+
+export type TaskType = {
   description: string
   title: string
-  status: number
-  priority: number
+  status: TaskStatuses
+  priority: TaskPriorities
   startDate: string
   deadline: string
   id: string
   todoListId: string
   order: number
   addedDate: string
+}
+
+type ResponseType<Data = {}> = {
+  resultCode: number
+  messages: string[]
+  data: Data
 }
 
 type GetTaskResponse = {
@@ -71,7 +86,7 @@ export const todolistsAPI = {
 
   // Tasks
   getTasks(todolistId: string) {
-    return instance.get<GetTaskResponse>(`todo-lists/${todolistId}/tasks`)
+    return instance.get<GetTaskResponse>(`todo-lists/${todolistId}/tasks/`)
   },
 
   deleteTask(todolistId: string, taskId: string) {

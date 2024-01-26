@@ -1,24 +1,36 @@
 import {
-  TasksType,
-  TasksActionsType,
-  UserTaskActionTypes,
   TaskType,
-} from '../../types/tasksTypes'
+  TaskStatuses,
+  TaskPriorities,
+} from '../../../api/todolistsAPI'
+import { TasksActionsType, UserTaskActionTypes } from '../../types/tasksTypes'
 import { UserTodolistsActionTypes } from '../../types/todolistsTypes'
 
-const initialState: TasksType = {}
+export type TasksType = {
+  [todolistId: string]: TaskType[]
+}
+
+// const initialState: TasksType = {}
 
 export const tasksReducer = (
-  state: TasksType = initialState,
+  state: TasksType = {},
   action: TasksActionsType
 ): TasksType => {
   switch (action.type) {
+
     // Create Task
     case UserTaskActionTypes.CREATE_TASK: {
       const newTask: TaskType = {
         id: action.payload.taskId,
         title: action.payload.taskTitle,
-        isDone: false,
+        status: TaskStatuses.New,
+        description: '',
+        priority: TaskPriorities.Low,
+        startDate: '',
+        deadline: '',
+        todoListId: action.payload.todolistId,
+        order: 0,
+        addedDate: '',
       }
 
       const updatedTasks: TaskType[] = [
@@ -58,7 +70,7 @@ export const tasksReducer = (
       const updatedTasks = state[action.payload.todolistId].map(
         (task: TaskType) =>
           task.id === action.payload.taskId
-            ? { ...task, isDone: !action.payload.isDone }
+            ? { ...task, status: action.payload.status }
             : task
       )
 

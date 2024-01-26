@@ -1,15 +1,15 @@
 import './Checkbox.styles.scss'
-import { FC, memo } from 'react'
+import { ChangeEvent, FC, memo } from 'react'
 
 type CheckboxPropsType = {
   checked: boolean
-  onChange: () => void
+  onChange: (status: boolean) => void
 }
 
 export const Checkbox: FC<CheckboxPropsType> = memo(({ checked, onChange }) => {
 
-  const onChangeHandler = () => {
-    onChange()
+  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e.currentTarget.checked)
   }
 
   return (

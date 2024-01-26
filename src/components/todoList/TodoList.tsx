@@ -1,8 +1,8 @@
 import './TodoList.styles.scss'
 import { FC, memo } from 'react'
 import { Task } from '../task/Task'
-import { TaskType } from '../../store/types/tasksTypes'
-import { FilterType } from '../../store/types/todolistsTypes'
+import { TaskType } from '../../api/todolistsAPI'
+import { FilterType } from '../../store/reducers/todolistsReducer/todolistsReducer'
 import { FormControl } from '../formControl/FormControl'
 import { Button } from '../button/Button'
 import { useTodoList } from './hooks/useTodoList'
@@ -14,7 +14,6 @@ type TodolistPropsType = {
 }
 
 export const Todolist: FC<TodolistPropsType> = memo(({ id, title, filter }) => {
-  
   const { filteredTasks, addTask, deleteTodolistHandler, changeFilter } =
     useTodoList(id, title, filter)
 
@@ -39,7 +38,7 @@ export const Todolist: FC<TodolistPropsType> = memo(({ id, title, filter }) => {
               id={task.id}
               todolistId={id}
               task={task.title}
-              isDone={task.isDone}
+              status={task.status}
             />
           ))
         ) : (
