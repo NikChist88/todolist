@@ -49,7 +49,7 @@ type ResponseType<Data = {}> = {
   data: Data
 }
 
-type GetTaskResponse = {
+export type GetTaskResponse = {
   error: string | null
   totalCount: number
   items: TaskType[]

@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useCallback } from 'react'
-import { AppRootStateType } from '../../../store/store'
+import { RootStateType } from '../../../store/store'
 import { TasksType } from '../../../store/reducers/tasksReducer/tasksReducer'
 import {
   updateTaskAC,
@@ -10,7 +10,7 @@ import {
 import { TaskStatuses, TaskType } from '../../../api/todolistsAPI'
 
 export const useTask = (id: string, todolistId: string, task: string) => {
-  const tasks = useSelector<AppRootStateType, TasksType>((state) => state.tasks)
+  const tasks = useSelector<RootStateType, TasksType>((state) => state.tasks)
   const dispatch = useDispatch()
 
   // Update Task Title Handler

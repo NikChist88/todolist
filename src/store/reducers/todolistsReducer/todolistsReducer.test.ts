@@ -1,10 +1,10 @@
-import { todolistsReducer } from './todolistsReducer'
+import { todolistsReducer, TodolistDomainType } from './todolistsReducer'
 import {
   removeTodolistAC,
   changeTodolistFilterAC,
   createTodolistAC,
+  setTodolistsAC,
 } from '../../actionCreators/todolistsActionCreator'
-import { TodolistDomainType } from './todolistsReducer'
 
 let startState: TodolistDomainType[] = []
 
@@ -40,4 +40,12 @@ test('change todolist filter', () => {
 
   expect(endState[0].filter).toBe('active')
   expect(endState[1].filter).toBe('all')
+})
+
+// Set Todolists
+test('set todolists to state', () => {
+  const action = setTodolistsAC(startState)
+  const endState = todolistsReducer([], action)
+
+  expect(endState.length).toBe(2)
 })

@@ -1,8 +1,11 @@
-import { TodolistType } from '../../../api/todolistsAPI'
+import { Dispatch } from 'redux'
+import { TodolistType, todolistsAPI } from '../../../api/todolistsAPI'
 import {
+  SetTodolistsActionType,
   TodolistsActionsTypes,
   UserTodolistsActionTypes,
 } from '../../types/todolistsTypes'
+import { setTodolistsAC } from '../../actionCreators/todolistsActionCreator'
 
 export type FilterType = 'all' | 'active' | 'completed'
 
@@ -15,7 +18,6 @@ export const todolistsReducer = (
   action: TodolistsActionsTypes
 ): TodolistDomainType[] => {
   switch (action.type) {
-
     // Create Todolist
     case UserTodolistsActionTypes.CREATE_TODOLIST: {
       const newTodolist: TodolistDomainType = {
@@ -23,7 +25,7 @@ export const todolistsReducer = (
         title: action.payload.title,
         filter: 'all',
         addedDate: '',
-        order: 0
+        order: 0,
       }
 
       return [newTodolist, ...state]
@@ -45,8 +47,29 @@ export const todolistsReducer = (
       )
     }
 
+    // Set Todolists
+    case UserTodolistsActionTypes.SET_TODOLISTS: {
+      return action.payload.todolists.map((tl: TodolistType) => {
+        return { ...tl, filter: 'all' }
+      })
+    }
+
     // Default
     default:
       return state
   }
 }
+
+export const fetchTodolistsTC = () => {
+  return (dispatch: Dispatch<SetTodolistsActionType>) => {
+    todolistsAPI.getTodolists().then((res) => {
+      dispatch(setTodolistsAC(res.data))
+    })
+  }
+}
+
+// export const fetchTodolists = (dispatch: Dispatch) => {
+//   todolistsAPI.getTodolists().then((res) => {
+//     dispatch(setTodolistsAC(res.data))
+//   })
+// }

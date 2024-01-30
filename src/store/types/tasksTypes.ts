@@ -1,7 +1,8 @@
-import { TaskStatuses } from '../../api/todolistsAPI';
+import { TaskStatuses, TaskType } from '../../api/todolistsAPI'
 import {
   CreateTodolistActionType,
   RemoveTodolistActionType,
+  SetTodolistsActionType,
 } from './todolistsTypes'
 
 export enum UserTaskActionTypes {
@@ -9,6 +10,7 @@ export enum UserTaskActionTypes {
   CREATE_TASK = 'CREATE_TASK',
   UPDATE_TASK_TITLE = 'UPDATE_TASK_TITLE',
   CHANGE_TASK_STATUS = 'CHANGE_TASK_STATUS',
+  SET_TASKS = 'SET_TASKS',
   CREATE_TODOLIST = 'CREATE_TODOLIST',
   REMOVE_TODOLIST = 'REMOVE_TODOLIST',
 }
@@ -33,6 +35,11 @@ export type ChangeTaskStatusActionType = {
   payload: { taskId: string; todolistId: string; status: TaskStatuses }
 }
 
+export type SetTasksActionType = {
+  type: UserTaskActionTypes.SET_TASKS
+  payload: { todolistId: string; tasks: TaskType[] }
+}
+
 export type TasksActionsType =
   | RemoveTaskActionType
   | AddTaskActionType
@@ -40,3 +47,5 @@ export type TasksActionsType =
   | ChangeTaskStatusActionType
   | CreateTodolistActionType
   | RemoveTodolistActionType
+  | SetTodolistsActionType
+  | SetTasksActionType

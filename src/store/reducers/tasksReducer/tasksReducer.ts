@@ -1,10 +1,18 @@
+import { Dispatch } from 'redux'
 import {
   TaskType,
   TaskStatuses,
   TaskPriorities,
+  TodolistType,
+  todolistsAPI,
 } from '../../../api/todolistsAPI'
-import { TasksActionsType, UserTaskActionTypes } from '../../types/tasksTypes'
+import {
+  SetTasksActionType,
+  TasksActionsType,
+  UserTaskActionTypes,
+} from '../../types/tasksTypes'
 import { UserTodolistsActionTypes } from '../../types/todolistsTypes'
+import { setTasksAC } from '../../actionCreators/tasksActionCreators'
 
 export type TasksType = {
   [todolistId: string]: TaskType[]
@@ -15,7 +23,6 @@ export const tasksReducer = (
   action: TasksActionsType
 ): TasksType => {
   switch (action.type) {
-
     // Create Task
     case UserTaskActionTypes.CREATE_TASK: {
       const newTask: TaskType = {
@@ -86,8 +93,40 @@ export const tasksReducer = (
       return state
     }
 
+    // Set Todolists
+    case UserTodolistsActionTypes.SET_TODOLISTS: {
+      const copyState = { ...state }
+      action.payload.todolists.forEach((tl: TodolistType) => {
+        copyState[tl.id] = []
+      })
+      return copyState
+    }
+
+    // Set Tasks
+    case UserTaskActionTypes.SET_TASKS: {
+      // const copyState = { ...state }
+      // copyState[action.payload.todolistId] = action.payload.tasks
+      // return copyState
+
+      return { ...state, [action.payload.todolistId]: action.payload.tasks }
+    }
+
     // Default
     default:
       return state
+  }
+}
+
+// export const fetchTasks = (todolistId: string, dispatch: Dispatch) => {
+//   todolistsAPI.getTasks(todolistId).then((res) => {
+//     dispatch(setTasksAC(todolistId, res.data.items))
+//   })
+// }
+
+export const fetchTasksTC = (todolistId: string) => {
+  return (dispatch: Dispatch<SetTasksActionType>) => {
+    todolistsAPI.getTasks(todolistId).then((res) => {
+      dispatch(setTasksAC(todolistId, res.data.items))
+    })
   }
 }

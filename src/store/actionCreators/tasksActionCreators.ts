@@ -4,8 +4,9 @@ import {
   AddTaskActionType,
   ChangeTaskStatusActionType,
   UserTaskActionTypes,
+  SetTasksActionType,
 } from '../types/tasksTypes'
-import { TaskStatuses } from '../../api/todolistsAPI'
+import { TaskStatuses, TaskType } from '../../api/todolistsAPI'
 import { v1 } from 'uuid'
 
 export const removeTaskAC = (
@@ -47,5 +48,15 @@ export const changeTaskStatusAC = (
   return {
     type: UserTaskActionTypes.CHANGE_TASK_STATUS,
     payload: { taskId, todolistId, status },
+  }
+}
+
+export const setTasksAC = (
+  todolistId: string,
+  tasks: TaskType[]
+): SetTasksActionType => {
+  return {
+    type: UserTaskActionTypes.SET_TASKS,
+    payload: { todolistId, tasks },
   }
 }

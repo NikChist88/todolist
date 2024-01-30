@@ -18,9 +18,6 @@ export const Task: FC<TaskPropsType> = memo(
     const { updateTaskHandler, deleteTaskHandler, changeTaskStatusHandler } =
       useTask(id, todolistId, task)
 
-      console.log(status);
-      
-
     return (
       <li className="task">
         <div

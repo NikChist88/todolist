@@ -6,6 +6,7 @@ import {
   changeTaskStatusAC,
 } from '../../actionCreators/tasksActionCreators'
 import { TaskPriorities, TaskStatuses } from '../../../api/todolistsAPI'
+import { setTodolistsAC } from '../../actionCreators/todolistsActionCreator'
 
 let startState: TasksType = {}
 
@@ -126,4 +127,18 @@ test('change task status', () => {
 
   expect(endState['todolistId_1'][1].status).toBe(TaskStatuses.Completed)
   expect(endState['todolistId_2'][1].status).toBe(TaskStatuses.New)
+})
+
+// Empty array tasks when we set todolists
+test('empty array tasks when we set todolists', () => {
+  const action = setTodolistsAC([
+    { id: '1', title: 'what to learn', addedDate: '', order: 0 },
+    { id: '2', title: 'what to buy', addedDate: '', order: 0 },
+  ])
+  const endState = tasksReducer({}, action)
+  const keys = Object.keys(endState)
+
+  expect(keys.length).toBe(2)
+  expect(endState['1']).toStrictEqual([])
+  expect(endState['2']).toStrictEqual([])
 })

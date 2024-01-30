@@ -5,12 +5,12 @@ import {
   changeTodolistFilterAC,
 } from '../../../store/actionCreators/todolistsActionCreator'
 import { createTaskAC } from '../../../store/actionCreators/tasksActionCreators'
-import { AppRootStateType } from '../../../store/store'
+import { RootStateType } from '../../../store/store'
 import { TaskType, TaskStatuses } from '../../../api/todolistsAPI'
 import { FilterType } from '../../../store/reducers/todolistsReducer/todolistsReducer'
 
 export const useTodoList = (id: string, title: string, filter: FilterType) => {
-  const tasks = useSelector<AppRootStateType, TaskType[]>(
+  const tasks = useSelector<RootStateType, TaskType[]>(
     (state) => state.tasks[id]
   )
 

@@ -4,7 +4,6 @@ export const useEditableTask = (
   title: string,
   onChange: (newTitle: string) => void
 ) => {
-  
   // Local State
   const [editMode, setEditMode] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
@@ -24,6 +23,17 @@ export const useEditableTask = (
       onChange(inputValue)
     }
   }, [inputValue, onChange])
+
+  // Blur Handler
+  const onBlurHandler = useCallback(() => {
+    const timeoutId: NodeJS.Timeout = setTimeout(() => {
+      setEditMode(false)
+    }, 250)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  }, [])
 
   // Change Title Handler
   const onChangeTitleHandler = useCallback((value: string) => {
@@ -50,5 +60,6 @@ export const useEditableTask = (
     activateViewMode,
     onChangeTitleHandler,
     onKeyPressHandler,
+    onBlurHandler,
   }
 }

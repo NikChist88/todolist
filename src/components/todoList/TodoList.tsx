@@ -1,11 +1,16 @@
 import './TodoList.styles.scss'
-import { FC, memo } from 'react'
+import { FC, memo, useEffect } from 'react'
 import { Task } from '../task/Task'
 import { TaskType } from '../../api/todolistsAPI'
 import { FilterType } from '../../store/reducers/todolistsReducer/todolistsReducer'
 import { FormControl } from '../formControl/FormControl'
 import { Button } from '../button/Button'
 import { useTodoList } from './hooks/useTodoList'
+import { useDispatch } from 'react-redux'
+import { fetchTasksTC } from '../../store/reducers/tasksReducer/tasksReducer'
+import { ThunkDispatch } from 'redux-thunk'
+import { RootStateType } from '../../store/store'
+import { SetTodolistsActionType } from '../../store/types/todolistsTypes'
 
 type TodolistPropsType = {
   id: string
@@ -16,6 +21,17 @@ type TodolistPropsType = {
 export const Todolist: FC<TodolistPropsType> = memo(({ id, title, filter }) => {
   const { filteredTasks, addTask, deleteTodolistHandler, changeFilter } =
     useTodoList(id, title, filter)
+
+  const dispatch: ThunkDispatch<RootStateType, any, SetTodolistsActionType> =
+    useDispatch()
+
+  // useEffect(() => {
+  //   fetchTasks(id, dispatch)
+  // }, [id, dispatch])
+
+  useEffect(() => {
+    dispatch(fetchTasksTC(id))
+  }, [])
 
   return (
     <div className="todolist">

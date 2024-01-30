@@ -4,8 +4,10 @@ import {
   RemoveTodolistActionType,
   CreateTodolistActionType,
   ChangeTodolistFilterActionType,
+  SetTodolistsActionType,
   UserTodolistsActionTypes,
 } from '../types/todolistsTypes'
+import { TodolistType } from '../../api/todolistsAPI'
 
 export const removeTodolistAC = (
   todolistId: string
@@ -30,5 +32,14 @@ export const changeTodolistFilterAC = (
   return {
     type: UserTodolistsActionTypes.CHANGE_TODOLIST_FILTER,
     payload: { todolistId, filter },
+  }
+}
+
+export const setTodolistsAC = (
+  todolists: TodolistType[]
+): SetTodolistsActionType => {
+  return {
+    type: UserTodolistsActionTypes.SET_TODOLISTS,
+    payload: { todolists },
   }
 }
