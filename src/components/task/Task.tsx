@@ -38,7 +38,7 @@ export const Task: FC<TaskPropsType> = memo(
         <div className="task__controls">
           <Button
             className="btn_danger"
-            tooltip="Delete Task"
+            title="Delete Task"
             onClick={deleteTaskHandler}
           />
         </div>

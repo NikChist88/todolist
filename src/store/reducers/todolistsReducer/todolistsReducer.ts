@@ -4,8 +4,8 @@ import {
   SetTodolistsActionType,
   TodolistsActionsTypes,
   UserTodolistsActionTypes,
-} from '../../types/todolistsTypes'
-import { setTodolistsAC } from '../../actionCreators/todolistsActionCreator'
+} from './todolistsTypes'
+import { setTodolistsAC } from './todolistsActionCreator'
 
 export type FilterType = 'all' | 'active' | 'completed'
 
@@ -67,9 +67,3 @@ export const fetchTodolistsTC = () => {
     })
   }
 }
-
-// export const fetchTodolists = (dispatch: Dispatch) => {
-//   todolistsAPI.getTodolists().then((res) => {
-//     dispatch(setTodolistsAC(res.data))
-//   })
-// }

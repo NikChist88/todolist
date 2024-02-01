@@ -4,9 +4,9 @@ import {
   removeTaskAC,
   updateTaskAC,
   changeTaskStatusAC,
-} from '../../actionCreators/tasksActionCreators'
+} from './tasksActionCreators'
 import { TaskPriorities, TaskStatuses } from '../../../api/todolistsAPI'
-import { setTodolistsAC } from '../../actionCreators/todolistsActionCreator'
+import { setTodolistsAC } from '../todolistsReducer/todolistsActionCreator'
 
 let startState: TasksType = {}
 

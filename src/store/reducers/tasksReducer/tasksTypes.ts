@@ -1,9 +1,9 @@
-import { TaskStatuses, TaskType } from '../../api/todolistsAPI'
+import { TaskStatuses, TaskType } from '../../../api/todolistsAPI'
 import {
   CreateTodolistActionType,
   RemoveTodolistActionType,
   SetTodolistsActionType,
-} from './todolistsTypes'
+} from '../todolistsReducer/todolistsTypes'
 
 export enum UserTaskActionTypes {
   REMOVE_TASK = 'REMOVE_TASK',

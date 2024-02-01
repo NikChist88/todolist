@@ -1,13 +1,13 @@
 import { v1 } from 'uuid'
-import { FilterType } from '../reducers/todolistsReducer/todolistsReducer'
+import { FilterType } from './todolistsReducer'
 import {
   RemoveTodolistActionType,
   CreateTodolistActionType,
   ChangeTodolistFilterActionType,
   SetTodolistsActionType,
   UserTodolistsActionTypes,
-} from '../types/todolistsTypes'
-import { TodolistType } from '../../api/todolistsAPI'
+} from './todolistsTypes'
+import { TodolistType } from '../../../api/todolistsAPI'
 
 export const removeTodolistAC = (
   todolistId: string

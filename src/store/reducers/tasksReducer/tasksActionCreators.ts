@@ -5,8 +5,8 @@ import {
   ChangeTaskStatusActionType,
   UserTaskActionTypes,
   SetTasksActionType,
-} from '../types/tasksTypes'
-import { TaskStatuses, TaskType } from '../../api/todolistsAPI'
+} from './tasksTypes'
+import { TaskStatuses, TaskType } from '../../../api/todolistsAPI'
 import { v1 } from 'uuid'
 
 export const removeTaskAC = (

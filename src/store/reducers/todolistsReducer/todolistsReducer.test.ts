@@ -4,7 +4,7 @@ import {
   changeTodolistFilterAC,
   createTodolistAC,
   setTodolistsAC,
-} from '../../actionCreators/todolistsActionCreator'
+} from './todolistsActionCreator'
 
 let startState: TodolistDomainType[] = []
 

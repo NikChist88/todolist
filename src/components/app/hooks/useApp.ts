@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { createTodolistAC } from '../../../store/actionCreators/todolistsActionCreator'
+import { createTodolistAC } from '../../../store/reducers/todolistsReducer/todolistsActionCreator'
 
 export const useApp = () => {
   const dispatch = useDispatch()

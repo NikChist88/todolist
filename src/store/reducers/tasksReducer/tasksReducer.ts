@@ -10,9 +10,9 @@ import {
   SetTasksActionType,
   TasksActionsType,
   UserTaskActionTypes,
-} from '../../types/tasksTypes'
-import { UserTodolistsActionTypes } from '../../types/todolistsTypes'
-import { setTasksAC } from '../../actionCreators/tasksActionCreators'
+} from './tasksTypes'
+import { UserTodolistsActionTypes } from '../todolistsReducer/todolistsTypes'
+import { setTasksAC } from './tasksActionCreators'
 
 export type TasksType = {
   [todolistId: string]: TaskType[]
@@ -104,10 +104,6 @@ export const tasksReducer = (
 
     // Set Tasks
     case UserTaskActionTypes.SET_TASKS: {
-      // const copyState = { ...state }
-      // copyState[action.payload.todolistId] = action.payload.tasks
-      // return copyState
-
       return { ...state, [action.payload.todolistId]: action.payload.tasks }
     }
 
@@ -116,12 +112,6 @@ export const tasksReducer = (
       return state
   }
 }
-
-// export const fetchTasks = (todolistId: string, dispatch: Dispatch) => {
-//   todolistsAPI.getTasks(todolistId).then((res) => {
-//     dispatch(setTasksAC(todolistId, res.data.items))
-//   })
-// }
 
 export const fetchTasksTC = (todolistId: string) => {
   return (dispatch: Dispatch<SetTasksActionType>) => {

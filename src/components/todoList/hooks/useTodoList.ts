@@ -3,8 +3,8 @@ import { useCallback } from 'react'
 import {
   removeTodolistAC,
   changeTodolistFilterAC,
-} from '../../../store/actionCreators/todolistsActionCreator'
-import { createTaskAC } from '../../../store/actionCreators/tasksActionCreators'
+} from '../../../store/reducers/todolistsReducer/todolistsActionCreator'
+import { createTaskAC } from '../../../store/reducers/tasksReducer/tasksActionCreators'
 import { RootStateType } from '../../../store/store'
 import { TaskType, TaskStatuses } from '../../../api/todolistsAPI'
 import { FilterType } from '../../../store/reducers/todolistsReducer/todolistsReducer'

@@ -1,5 +1,5 @@
-import { TodolistType } from '../../api/todolistsAPI'
-import { FilterType } from '../reducers/todolistsReducer/todolistsReducer'
+import { TodolistType } from '../../../api/todolistsAPI'
+import { FilterType } from './todolistsReducer'
 
 export enum UserTodolistsActionTypes {
   REMOVE_TODOLIST = 'REMOVE_TODOLIST',

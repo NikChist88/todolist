@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux'
 import { fetchTasksTC } from '../../store/reducers/tasksReducer/tasksReducer'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootStateType } from '../../store/store'
-import { SetTodolistsActionType } from '../../store/types/todolistsTypes'
+import { SetTasksActionType } from '../../store/reducers/tasksReducer/tasksTypes'
 
 type TodolistPropsType = {
   id: string
@@ -22,16 +22,12 @@ export const Todolist: FC<TodolistPropsType> = memo(({ id, title, filter }) => {
   const { filteredTasks, addTask, deleteTodolistHandler, changeFilter } =
     useTodoList(id, title, filter)
 
-  const dispatch: ThunkDispatch<RootStateType, any, SetTodolistsActionType> =
+  const dispatch: ThunkDispatch<RootStateType, any, SetTasksActionType> =
     useDispatch()
-
-  // useEffect(() => {
-  //   fetchTasks(id, dispatch)
-  // }, [id, dispatch])
 
   useEffect(() => {
     dispatch(fetchTasksTC(id))
-  }, [])
+  }, [id, dispatch])
 
   return (
     <div className="todolist">
@@ -39,7 +35,7 @@ export const Todolist: FC<TodolistPropsType> = memo(({ id, title, filter }) => {
         <h3 className="todolist__title">{title}</h3>
         <Button
           className={'btn_danger'}
-          tooltip="Delete Todolist"
+          title="Delete Todolist"
           onClick={deleteTodolistHandler}
         />
       </div>
@@ -67,17 +63,17 @@ export const Todolist: FC<TodolistPropsType> = memo(({ id, title, filter }) => {
       <div className="todolist__controls">
         <Button
           className={`btn_success ${filter === 'all' && 'active'}`}
-          title="ALL"
+          text="ALL"
           onClick={() => changeFilter('all', id)}
         />
         <Button
           className={`btn_success ${filter === 'active' && 'active'}`}
-          title="ACTIVE"
+          text="ACTIVE"
           onClick={() => changeFilter('active', id)}
         />
         <Button
           className={`btn_success ${filter === 'completed' && 'active'}`}
-          title="COMPLETED"
+          text="COMPLETED"
           onClick={() => changeFilter('completed', id)}
         />
       </div>

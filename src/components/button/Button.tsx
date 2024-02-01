@@ -1,29 +1,18 @@
 import './Button.styles.scss'
-import { FC, memo } from 'react'
+import { FC, HTMLAttributes, memo } from 'react'
 
-type ButtonPropsType = {
+interface IButtonComponent extends HTMLAttributes<HTMLButtonElement> {
   className?: string
-  title?: string
-  tooltip?: string
+  text?: string
   disabled?: boolean
-  onClick: () => void
 }
 
-export const Button: FC<ButtonPropsType> = memo(
-  ({ className, title, disabled, tooltip, onClick }) => {
+export const Button: FC<IButtonComponent> = memo(
+  ({ className, text, disabled, ...props }) => {
     
-    const onClickHandler = () => {
-      onClick()
-    }
-
     return (
-      <button
-        className={`btn ${className}`}
-        title={tooltip}
-        disabled={disabled}
-        onClick={onClickHandler}
-      >
-        {title}
+      <button className={`btn ${className}`} disabled={disabled} {...props}>
+        {text}
       </button>
     )
   }

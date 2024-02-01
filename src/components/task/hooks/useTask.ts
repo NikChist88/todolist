@@ -6,7 +6,7 @@ import {
   updateTaskAC,
   removeTaskAC,
   changeTaskStatusAC,
-} from '../../../store/actionCreators/tasksActionCreators'
+} from '../../../store/reducers/tasksReducer/tasksActionCreators'
 import { TaskStatuses, TaskType } from '../../../api/todolistsAPI'
 
 export const useTask = (id: string, todolistId: string, task: string) => {

@@ -9,25 +9,20 @@ import {
 import { FormControl } from './components/formControl/FormControl'
 import { useDispatch, useSelector } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { SetTodolistsActionType } from './store/types/todolistsTypes'
+import { SetTodolistsActionType } from './store/reducers/todolistsReducer/todolistsTypes'
 import { useApp } from './components/app/hooks/useApp'
 
 export const App: FC = memo(() => {
+  const { createTodolist } = useApp()
   const todolists = useSelector<RootStateType, TodolistDomainType[]>(
     (state) => state.todolists
   )
   const dispatch: ThunkDispatch<RootStateType, any, SetTodolistsActionType> =
     useDispatch()
 
-  const { createTodolist } = useApp()
-
-  // useEffect(() => {
-  //   fetchTodolists(dispatch)
-  // }, [dispatch])
-
   useEffect(() => {
     dispatch(fetchTodolistsTC())
-  }, [])
+  }, [dispatch])
 
   return (
     <div className="app">
