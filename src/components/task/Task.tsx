@@ -4,7 +4,7 @@ import { Button } from '../button/Button'
 import { Checkbox } from '../checkbox/Checkbox'
 import { EditableTask } from '../editableTask/EditableTask'
 import { useTask } from './hooks/useTask'
-import { TaskStatuses } from '../../api/todolistsAPI'
+import { TaskStatuses } from '../../api/types'
 
 type TaskPropsType = {
   id: string
@@ -15,8 +15,11 @@ type TaskPropsType = {
 
 export const Task: FC<TaskPropsType> = memo(
   ({ id, todolistId, task, status }) => {
-    const { updateTaskHandler, deleteTaskHandler, changeTaskStatusHandler } =
-      useTask(id, todolistId, task)
+    const {
+      updateTaskTitleHandler,
+      deleteTaskHandler,
+      changeTaskStatusHandler,
+    } = useTask(id, todolistId, task)
 
     return (
       <li className="task">
@@ -31,7 +34,7 @@ export const Task: FC<TaskPropsType> = memo(
           />
           <EditableTask
             title={task}
-            onChange={updateTaskHandler}
+            onChange={updateTaskTitleHandler}
             status={status === TaskStatuses.Completed}
           />
         </div>

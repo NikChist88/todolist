@@ -3,18 +3,20 @@ import { useCallback } from 'react'
 import { RootStateType } from '../../../store/store'
 import { TasksType } from '../../../store/reducers/tasksReducer/tasksReducer'
 import {
-  updateTaskAC,
-  removeTaskAC,
-  changeTaskStatusAC,
+  updateTaskTC,
+  deleteTaskTC,
 } from '../../../store/reducers/tasksReducer/tasksActionCreators'
-import { TaskStatuses, TaskType } from '../../../api/todolistsAPI'
+import { TaskStatuses, TaskType } from '../../../api/types'
+import { ThunkDispatch } from 'redux-thunk'
+import { TasksActionsType } from '../../../store/reducers/tasksReducer/tasksTypes'
 
 export const useTask = (id: string, todolistId: string, task: string) => {
   const tasks = useSelector<RootStateType, TasksType>((state) => state.tasks)
-  const dispatch = useDispatch()
+  const dispatch: ThunkDispatch<RootStateType, any, TasksActionsType> =
+    useDispatch()
 
   // Update Task Title Handler
-  const updateTaskHandler = useCallback(
+  const updateTaskTitleHandler = useCallback(
     (newTitle: string) => {
       if (
         tasks[todolistId].find(
@@ -23,7 +25,7 @@ export const useTask = (id: string, todolistId: string, task: string) => {
       ) {
         window.alert(`Task ${newTitle.toUpperCase()} already exists!`)
       } else {
-        dispatch(updateTaskAC(id, todolistId, newTitle))
+        dispatch(updateTaskTC(todolistId, id, { title: newTitle }))
       }
     },
     [id, todolistId, tasks, dispatch]
@@ -32,7 +34,7 @@ export const useTask = (id: string, todolistId: string, task: string) => {
   // Delete Task
   const deleteTaskHandler = useCallback(() => {
     if (window.confirm(`Do you want to delete a task ${task.toUpperCase()}?`)) {
-      dispatch(removeTaskAC(id, todolistId))
+      dispatch(deleteTaskTC(todolistId, id))
     }
   }, [id, todolistId, task, dispatch])
 
@@ -40,18 +42,16 @@ export const useTask = (id: string, todolistId: string, task: string) => {
   const changeTaskStatusHandler = useCallback(
     (status: boolean) => {
       dispatch(
-        changeTaskStatusAC(
-          id,
-          todolistId,
-          status ? TaskStatuses.Completed : TaskStatuses.New
-        )
+        updateTaskTC(todolistId, id, {
+          status: status ? TaskStatuses.Completed : TaskStatuses.New,
+        })
       )
     },
     [id, todolistId, dispatch]
   )
 
   return {
-    updateTaskHandler,
+    updateTaskTitleHandler,
     deleteTaskHandler,
     changeTaskStatusHandler,
   }

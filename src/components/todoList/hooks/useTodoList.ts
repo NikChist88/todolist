@@ -1,20 +1,22 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useCallback } from 'react'
 import {
-  removeTodolistAC,
+  deleteTodolistTC,
   changeTodolistFilterAC,
 } from '../../../store/reducers/todolistsReducer/todolistsActionCreator'
-import { createTaskAC } from '../../../store/reducers/tasksReducer/tasksActionCreators'
+import { createTaskTC } from '../../../store/reducers/tasksReducer/tasksActionCreators'
 import { RootStateType } from '../../../store/store'
-import { TaskType, TaskStatuses } from '../../../api/todolistsAPI'
+import { TaskType, TaskStatuses } from '../../../api/types'
 import { FilterType } from '../../../store/reducers/todolistsReducer/todolistsReducer'
+import { ThunkDispatch } from 'redux-thunk'
+import { TodolistsActionsTypes } from '../../../store/reducers/todolistsReducer/todolistsTypes'
 
 export const useTodoList = (id: string, title: string, filter: FilterType) => {
   const tasks = useSelector<RootStateType, TaskType[]>(
     (state) => state.tasks[id]
   )
-
-  const dispatch = useDispatch()
+  const dispatch: ThunkDispatch<RootStateType, any, TodolistsActionsTypes> =
+    useDispatch()
 
   // Add Task
   const addTask = useCallback(
@@ -24,7 +26,9 @@ export const useTodoList = (id: string, title: string, filter: FilterType) => {
         tasks.find((t: TaskType) => t.title === title.toLowerCase())
       ) {
         window.alert(`Task ${title.toUpperCase()} already exists!`)
-      } else dispatch(createTaskAC(title, id))
+      } else {
+        dispatch(createTaskTC(id, title))
+      }
     },
     [id, tasks, dispatch]
   )
@@ -32,7 +36,7 @@ export const useTodoList = (id: string, title: string, filter: FilterType) => {
   // Delete Todolist Handler
   const deleteTodolistHandler = useCallback(() => {
     if (window.confirm(`Delete Todolist ${title.toUpperCase()}?`)) {
-      dispatch(removeTodolistAC(id))
+      dispatch(deleteTodolistTC(id))
     }
   }, [id, title, dispatch])
 

@@ -1,14 +1,18 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { createTodolistAC } from '../../../store/reducers/todolistsReducer/todolistsActionCreator'
+import { createTodolistTC } from '../../../store/reducers/todolistsReducer/todolistsActionCreator'
+import { ThunkDispatch } from 'redux-thunk'
+import { TodolistsActionsTypes } from '../../../store/reducers/todolistsReducer/todolistsTypes'
+import { RootStateType } from '../../../store/store'
 
 export const useApp = () => {
-  const dispatch = useDispatch()
+  const dispatch: ThunkDispatch<RootStateType, any, TodolistsActionsTypes> =
+    useDispatch()
 
   // Create Todolist
   const createTodolist = useCallback(
     (title: string) => {
-      dispatch(createTodolistAC(title))
+      dispatch(createTodolistTC(title))
     },
     [dispatch]
   )

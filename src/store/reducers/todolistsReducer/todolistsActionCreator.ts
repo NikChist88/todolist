@@ -1,27 +1,31 @@
-import { v1 } from 'uuid'
 import { FilterType } from './todolistsReducer'
 import {
-  RemoveTodolistActionType,
+  DeleteTodolistActionType,
   CreateTodolistActionType,
   ChangeTodolistFilterActionType,
   SetTodolistsActionType,
   UserTodolistsActionTypes,
 } from './todolistsTypes'
-import { TodolistType } from '../../../api/todolistsAPI'
+import { TodolistType } from '../../../api/types'
+import { todolistsAPI } from '../../../api/todolistsAPI'
+import { Dispatch } from 'react'
 
-export const removeTodolistAC = (
-  todolistId: string
-): RemoveTodolistActionType => {
+// Actions
+export const createTodolistAC = (
+  todolist: TodolistType
+): CreateTodolistActionType => {
   return {
-    type: UserTodolistsActionTypes.REMOVE_TODOLIST,
-    payload: { todolistId },
+    type: UserTodolistsActionTypes.CREATE_TODOLIST,
+    payload: { todolist },
   }
 }
 
-export const createTodolistAC = (title: string): CreateTodolistActionType => {
+export const deleteTodolistAC = (
+  todolistId: string
+): DeleteTodolistActionType => {
   return {
-    type: UserTodolistsActionTypes.CREATE_TODOLIST,
-    payload: { title, todolistId: v1() },
+    type: UserTodolistsActionTypes.DELETE_TODOLIST,
+    payload: { todolistId },
   }
 }
 
@@ -41,5 +45,45 @@ export const setTodolistsAC = (
   return {
     type: UserTodolistsActionTypes.SET_TODOLISTS,
     payload: { todolists },
+  }
+}
+
+// Thunks
+export const fetchTodolistsTC = () => {
+  return (dispatch: Dispatch<SetTodolistsActionType>) => {
+    todolistsAPI
+      .getTodolists()
+      .then((res) => {
+        dispatch(setTodolistsAC(res.data))
+      })
+      .catch((err: string) => {
+        console.error(err)
+      })
+  }
+}
+
+export const createTodolistTC = (title: string) => {
+  return (dispatch: Dispatch<CreateTodolistActionType>) => {
+    todolistsAPI
+      .createTodolist(title)
+      .then(({ status, data }) => {
+        status === 200 && dispatch(createTodolistAC(data.data.item))
+      })
+      .catch((err: string) => {
+        console.error(err)
+      })
+  }
+}
+
+export const deleteTodolistTC = (id: string) => {
+  return (dispatch: Dispatch<DeleteTodolistActionType>) => {
+    todolistsAPI
+      .deleteTodolist(id)
+      .then((res) => {
+        res.status === 200 && dispatch(deleteTodolistAC(id))
+      })
+      .catch((err: string) => {
+        console.error(err)
+      })
   }
 }

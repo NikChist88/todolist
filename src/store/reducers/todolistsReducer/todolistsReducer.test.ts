@@ -1,6 +1,6 @@
 import { todolistsReducer, TodolistDomainType } from './todolistsReducer'
 import {
-  removeTodolistAC,
+  deleteTodolistAC,
   changeTodolistFilterAC,
   createTodolistAC,
   setTodolistsAC,
@@ -17,7 +17,7 @@ beforeEach(() => {
 
 // Delete Todolist
 test('removed todolist', () => {
-  const action = removeTodolistAC(startState[0].id)
+  const action = deleteTodolistAC(startState[0].id)
   const endState = todolistsReducer(startState, action)
 
   expect(endState.length).toBe(1)
@@ -26,7 +26,14 @@ test('removed todolist', () => {
 
 // Add Todolist
 test('create todolist', () => {
-  const action = createTodolistAC('home work')
+  const todolist = {
+    id: '3',
+    title: 'home work',
+    filter: 'all',
+    addedDate: '',
+    order: 0,
+  }
+  const action = createTodolistAC(todolist)
   const endState = todolistsReducer(startState, action)
 
   expect(endState.length).toBe(3)

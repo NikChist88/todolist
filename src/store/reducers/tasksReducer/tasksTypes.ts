@@ -1,38 +1,45 @@
-import { TaskStatuses, TaskType } from '../../../api/todolistsAPI'
+import { TaskPriorities, TaskStatuses, TaskType } from '../../../api/types'
 import {
   CreateTodolistActionType,
-  RemoveTodolistActionType,
+  DeleteTodolistActionType,
   SetTodolistsActionType,
 } from '../todolistsReducer/todolistsTypes'
 
 export enum UserTaskActionTypes {
-  REMOVE_TASK = 'REMOVE_TASK',
   CREATE_TASK = 'CREATE_TASK',
-  UPDATE_TASK_TITLE = 'UPDATE_TASK_TITLE',
-  CHANGE_TASK_STATUS = 'CHANGE_TASK_STATUS',
   SET_TASKS = 'SET_TASKS',
+  UPDATE_TASK = 'UPDATE_TASK',
+  DELETE_TASK = 'DELETE_TASK',
   CREATE_TODOLIST = 'CREATE_TODOLIST',
-  REMOVE_TODOLIST = 'REMOVE_TODOLIST',
+  DELETE_TODOLIST = 'DELETE_TODOLIST',
 }
 
-export type RemoveTaskActionType = {
-  type: UserTaskActionTypes.REMOVE_TASK
-  payload: { taskId: string; todolistId: string }
-}
-
-export type AddTaskActionType = {
+export type CreateTaskActionType = {
   type: UserTaskActionTypes.CREATE_TASK
-  payload: { taskTitle: string; todolistId: string; taskId: string }
+  payload: { task: TaskType }
 }
 
-export type UpdateTaskTitleActionType = {
-  type: UserTaskActionTypes.UPDATE_TASK_TITLE
-  payload: { newTaskTitle: string; taskId: string; todolistId: string }
+export type DeleteTaskActionType = {
+  type: UserTaskActionTypes.DELETE_TASK
+  payload: { todolistId: string; taskId: string }
 }
 
-export type ChangeTaskStatusActionType = {
-  type: UserTaskActionTypes.CHANGE_TASK_STATUS
-  payload: { taskId: string; todolistId: string; status: TaskStatuses }
+export type UpdateDomainModelTaskType = {
+  description?: string
+  title?: string
+  status?: TaskStatuses
+  priority?: TaskPriorities
+  startDate?: string
+  deadline?: string
+}
+
+export type UpdateTaskActionType = {
+  type: UserTaskActionTypes.UPDATE_TASK
+  payload: {
+    todolistId: string
+    taskId: string
+    model: UpdateDomainModelTaskType
+  }
 }
 
 export type SetTasksActionType = {
@@ -41,11 +48,10 @@ export type SetTasksActionType = {
 }
 
 export type TasksActionsType =
-  | RemoveTaskActionType
-  | AddTaskActionType
-  | UpdateTaskTitleActionType
-  | ChangeTaskStatusActionType
+  | CreateTaskActionType
+  | DeleteTaskActionType
+  | UpdateTaskActionType
   | CreateTodolistActionType
-  | RemoveTodolistActionType
+  | DeleteTodolistActionType
   | SetTodolistsActionType
   | SetTasksActionType

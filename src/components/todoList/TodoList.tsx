@@ -1,16 +1,16 @@
 import './TodoList.styles.scss'
 import { FC, memo, useEffect } from 'react'
 import { Task } from '../task/Task'
-import { TaskType } from '../../api/todolistsAPI'
+import { TaskType } from '../../api/types'
 import { FilterType } from '../../store/reducers/todolistsReducer/todolistsReducer'
 import { FormControl } from '../formControl/FormControl'
 import { Button } from '../button/Button'
 import { useTodoList } from './hooks/useTodoList'
 import { useDispatch } from 'react-redux'
-import { fetchTasksTC } from '../../store/reducers/tasksReducer/tasksReducer'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootStateType } from '../../store/store'
-import { SetTasksActionType } from '../../store/reducers/tasksReducer/tasksTypes'
+import { TasksActionsType } from '../../store/reducers/tasksReducer/tasksTypes'
+import { fetchTasksTC } from '../../store/reducers/tasksReducer/tasksActionCreators'
 
 type TodolistPropsType = {
   id: string
@@ -22,7 +22,7 @@ export const Todolist: FC<TodolistPropsType> = memo(({ id, title, filter }) => {
   const { filteredTasks, addTask, deleteTodolistHandler, changeFilter } =
     useTodoList(id, title, filter)
 
-  const dispatch: ThunkDispatch<RootStateType, any, SetTasksActionType> =
+  const dispatch: ThunkDispatch<RootStateType, any, TasksActionsType> =
     useDispatch()
 
   useEffect(() => {

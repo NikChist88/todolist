@@ -2,22 +2,20 @@ import './App.scss'
 import { FC, memo, useEffect } from 'react'
 import { Todolist } from './components/todoList/TodoList'
 import { RootStateType } from './store/store'
-import {
-  TodolistDomainType,
-  fetchTodolistsTC,
-} from './store/reducers/todolistsReducer/todolistsReducer'
+import { TodolistDomainType } from './store/reducers/todolistsReducer/todolistsReducer'
 import { FormControl } from './components/formControl/FormControl'
 import { useDispatch, useSelector } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { SetTodolistsActionType } from './store/reducers/todolistsReducer/todolistsTypes'
+import { TodolistsActionsTypes } from './store/reducers/todolistsReducer/todolistsTypes'
 import { useApp } from './components/app/hooks/useApp'
+import { fetchTodolistsTC } from './store/reducers/todolistsReducer/todolistsActionCreator'
 
 export const App: FC = memo(() => {
   const { createTodolist } = useApp()
   const todolists = useSelector<RootStateType, TodolistDomainType[]>(
     (state) => state.todolists
   )
-  const dispatch: ThunkDispatch<RootStateType, any, SetTodolistsActionType> =
+  const dispatch: ThunkDispatch<RootStateType, any, TodolistsActionsTypes> =
     useDispatch()
 
   useEffect(() => {
