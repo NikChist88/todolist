@@ -72,9 +72,11 @@
     "@storybook/react": "^7.6.8",
     "@storybook/react-webpack5": "^7.6.8",
     "@storybook/test": "^7.6.8",
+    "add": "^2.0.6",
     "eslint-plugin-storybook": "^0.6.15",
     "prop-types": "^15.8.1",
     "storybook": "^7.6.8",
-    "webpack": "^5.89.0"
+    "webpack": "^5.89.0",
+    "yarn": "^1.22.21"
   }
 }
