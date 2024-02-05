@@ -33,10 +33,10 @@ export enum TaskPriorities {
   Later = 4,
 }
 
-export type ResponseType<Data = {}> = {
+export type ResponseType<D = {}> = {
   resultCode: number
   messages: string[]
-  data: Data
+  data: D
 }
 
 export type GetTaskResponse = {

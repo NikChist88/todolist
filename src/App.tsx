@@ -6,9 +6,11 @@ import { TodolistDomainType } from './store/reducers/todolistsReducer/todolistsR
 import { FormControl } from './components/formControl/FormControl'
 import { useDispatch, useSelector } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { TodolistsActionsTypes } from './store/reducers/todolistsReducer/todolistsTypes'
 import { useApp } from './components/app/hooks/useApp'
-import { fetchTodolistsTC } from './store/reducers/todolistsReducer/todolistsActionCreator'
+import {
+  fetchTodolistsTC,
+  TodolistsActionsTypes,
+} from './store/reducers/todolistsReducer/todolistsActionCreator'
 
 export const App: FC = memo(() => {
   const { createTodolist } = useApp()
@@ -24,7 +26,11 @@ export const App: FC = memo(() => {
 
   return (
     <div className="app">
-      <FormControl label="New todolist" action={createTodolist} />
+      <FormControl
+        className="form_shadow"
+        label="New todolist"
+        action={createTodolist}
+      />
       <div className="wrapper">
         {todolists &&
           todolists.map((tl) => {

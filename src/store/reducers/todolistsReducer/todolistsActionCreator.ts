@@ -1,56 +1,33 @@
 import { FilterType } from './todolistsReducer'
-import {
-  DeleteTodolistActionType,
-  CreateTodolistActionType,
-  ChangeTodolistFilterActionType,
-  SetTodolistsActionType,
-  UserTodolistsActionTypes,
-} from './todolistsTypes'
 import { TodolistType } from '../../../api/types'
 import { todolistsAPI } from '../../../api/todolistsAPI'
 import { Dispatch } from 'react'
 
-// Actions
-export const createTodolistAC = (
-  todolist: TodolistType
-): CreateTodolistActionType => {
-  return {
-    type: UserTodolistsActionTypes.CREATE_TODOLIST,
-    payload: { todolist },
-  }
-}
+// types
+export type TodolistsActionsTypes =
+  | ReturnType<typeof createTodolistAC>
+  | ReturnType<typeof deleteTodolistAC>
+  | ReturnType<typeof changeTodolistFilterAC>
+  | ReturnType<typeof setTodolistsAC>
 
-export const deleteTodolistAC = (
-  todolistId: string
-): DeleteTodolistActionType => {
-  return {
-    type: UserTodolistsActionTypes.DELETE_TODOLIST,
-    payload: { todolistId },
-  }
-}
 
-export const changeTodolistFilterAC = (
-  filter: FilterType,
-  todolistId: string
-): ChangeTodolistFilterActionType => {
-  return {
-    type: UserTodolistsActionTypes.CHANGE_TODOLIST_FILTER,
-    payload: { todolistId, filter },
-  }
-}
+// actions
+export const createTodolistAC = (todolist: TodolistType) =>
+  ({ type: 'CREATE_TODOLIST', payload: { todolist } } as const)
 
-export const setTodolistsAC = (
-  todolists: TodolistType[]
-): SetTodolistsActionType => {
-  return {
-    type: UserTodolistsActionTypes.SET_TODOLISTS,
-    payload: { todolists },
-  }
-}
+export const deleteTodolistAC = (id: string) =>
+  ({ type: 'DELETE_TODOLIST', payload: { id } } as const)
 
-// Thunks
-export const fetchTodolistsTC = () => {
-  return (dispatch: Dispatch<SetTodolistsActionType>) => {
+export const changeTodolistFilterAC = (filter: FilterType, id: string) =>
+  ({ type: 'CHANGE_TODOLIST_FILTER', payload: { id, filter } } as const)
+
+export const setTodolistsAC = (todolists: TodolistType[]) =>
+  ({ type: 'SET_TODOLISTS', payload: { todolists } } as const)
+
+  
+// thunks
+export const fetchTodolistsTC =
+  () => (dispatch: Dispatch<TodolistsActionsTypes>) => {
     todolistsAPI
       .getTodolists()
       .then((res) => {
@@ -60,10 +37,9 @@ export const fetchTodolistsTC = () => {
         console.error(err)
       })
   }
-}
 
-export const createTodolistTC = (title: string) => {
-  return (dispatch: Dispatch<CreateTodolistActionType>) => {
+export const createTodolistTC =
+  (title: string) => (dispatch: Dispatch<TodolistsActionsTypes>) => {
     todolistsAPI
       .createTodolist(title)
       .then(({ status, data }) => {
@@ -73,10 +49,9 @@ export const createTodolistTC = (title: string) => {
         console.error(err)
       })
   }
-}
 
-export const deleteTodolistTC = (id: string) => {
-  return (dispatch: Dispatch<DeleteTodolistActionType>) => {
+export const deleteTodolistTC =
+  (id: string) => (dispatch: Dispatch<TodolistsActionsTypes>) => {
     todolistsAPI
       .deleteTodolist(id)
       .then((res) => {
@@ -86,4 +61,3 @@ export const deleteTodolistTC = (id: string) => {
         console.error(err)
       })
   }
-}

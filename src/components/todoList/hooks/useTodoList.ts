@@ -3,13 +3,13 @@ import { useCallback } from 'react'
 import {
   deleteTodolistTC,
   changeTodolistFilterAC,
+  TodolistsActionsTypes,
 } from '../../../store/reducers/todolistsReducer/todolistsActionCreator'
 import { createTaskTC } from '../../../store/reducers/tasksReducer/tasksActionCreators'
 import { RootStateType } from '../../../store/store'
 import { TaskType, TaskStatuses } from '../../../api/types'
 import { FilterType } from '../../../store/reducers/todolistsReducer/todolistsReducer'
 import { ThunkDispatch } from 'redux-thunk'
-import { TodolistsActionsTypes } from '../../../store/reducers/todolistsReducer/todolistsTypes'
 
 export const useTodoList = (id: string, title: string, filter: FilterType) => {
   const tasks = useSelector<RootStateType, TaskType[]>(

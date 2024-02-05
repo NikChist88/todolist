@@ -9,8 +9,10 @@ import { useTodoList } from './hooks/useTodoList'
 import { useDispatch } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootStateType } from '../../store/store'
-import { TasksActionsType } from '../../store/reducers/tasksReducer/tasksTypes'
-import { fetchTasksTC } from '../../store/reducers/tasksReducer/tasksActionCreators'
+import {
+  fetchTasksTC,
+  TasksActionsTypes,
+} from '../../store/reducers/tasksReducer/tasksActionCreators'
 
 type TodolistPropsType = {
   id: string
@@ -22,7 +24,7 @@ export const Todolist: FC<TodolistPropsType> = memo(({ id, title, filter }) => {
   const { filteredTasks, addTask, deleteTodolistHandler, changeFilter } =
     useTodoList(id, title, filter)
 
-  const dispatch: ThunkDispatch<RootStateType, any, TasksActionsType> =
+  const dispatch: ThunkDispatch<RootStateType, any, TasksActionsTypes> =
     useDispatch()
 
   useEffect(() => {

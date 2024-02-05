@@ -5,14 +5,14 @@ import { TasksType } from '../../../store/reducers/tasksReducer/tasksReducer'
 import {
   updateTaskTC,
   deleteTaskTC,
+  TasksActionsTypes,
 } from '../../../store/reducers/tasksReducer/tasksActionCreators'
 import { TaskStatuses, TaskType } from '../../../api/types'
 import { ThunkDispatch } from 'redux-thunk'
-import { TasksActionsType } from '../../../store/reducers/tasksReducer/tasksTypes'
 
 export const useTask = (id: string, todolistId: string, task: string) => {
   const tasks = useSelector<RootStateType, TasksType>((state) => state.tasks)
-  const dispatch: ThunkDispatch<RootStateType, any, TasksActionsType> =
+  const dispatch: ThunkDispatch<RootStateType, any, TasksActionsTypes> =
     useDispatch()
 
   // Update Task Title Handler
@@ -33,7 +33,7 @@ export const useTask = (id: string, todolistId: string, task: string) => {
 
   // Delete Task
   const deleteTaskHandler = useCallback(() => {
-    if (window.confirm(`Do you want to delete a task ${task.toUpperCase()}?`)) {
+    if (window.confirm(`Delete a task ${task.toUpperCase()}?`)) {
       dispatch(deleteTaskTC(todolistId, id))
     }
   }, [id, todolistId, task, dispatch])

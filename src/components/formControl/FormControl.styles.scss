@@ -9,10 +9,9 @@
   border-radius: 10px;
   background-color: #fff;
   margin-bottom: 15px;
-  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
 
-  .bsn {
-    box-shadow: none;
+  &_shadow {
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
   }
 
   &__body {

@@ -1,57 +1,50 @@
 import {
-  DeleteTaskActionType,
-  UpdateTaskActionType,
-  CreateTaskActionType,
-  UserTaskActionTypes,
-  SetTasksActionType,
-  UpdateDomainModelTaskType,
-} from './tasksTypes'
-import { TaskType, UpdateTaskModelType } from '../../../api/types'
+  TaskPriorities,
+  TaskStatuses,
+  TaskType,
+  UpdateTaskModelType,
+} from '../../../api/types'
 import { todolistsAPI } from '../../../api/todolistsAPI'
 import { Dispatch } from 'react'
 import { RootStateType } from '../../store'
 
-export const createTaskAC = (task: TaskType): CreateTaskActionType => {
-  return {
-    type: UserTaskActionTypes.CREATE_TASK,
-    payload: { task },
-  }
+// types
+export type TasksActionsTypes =
+  | ReturnType<typeof createTaskAC>
+  | ReturnType<typeof deleteTaskAC>
+  | ReturnType<typeof updateTaskAC>
+  | ReturnType<typeof setTasksAC>
+
+export type UpdateDomainModelTaskType = {
+  description?: string
+  title?: string
+  status?: TaskStatuses
+  priority?: TaskPriorities
+  startDate?: string
+  deadline?: string
 }
 
-export const deleteTaskAC = (
-  todolistId: string,
-  taskId: string,
-): DeleteTaskActionType => {
-  return {
-    type: UserTaskActionTypes.DELETE_TASK,
-    payload: { todolistId, taskId },
-  }
-}
+
+// actions
+export const createTaskAC = (task: TaskType) =>
+  ({ type: 'CREATE_TASK', payload: { task } } as const)
+
+export const deleteTaskAC = (todolistId: string, taskId: string) =>
+  ({ type: 'DELETE_TASK', payload: { todolistId, taskId } } as const)
 
 export const updateTaskAC = (
   todolistId: string,
   taskId: string,
   model: UpdateDomainModelTaskType
-): UpdateTaskActionType => {
-  return {
-    type: UserTaskActionTypes.UPDATE_TASK,
-    payload: { todolistId, taskId, model },
-  }
-}
+) => ({ type: 'UPDATE_TASK', payload: { todolistId, taskId, model } } as const)
 
-export const setTasksAC = (
-  todolistId: string,
-  tasks: TaskType[]
-): SetTasksActionType => {
-  return {
-    type: UserTaskActionTypes.SET_TASKS,
-    payload: { todolistId, tasks },
-  }
-}
+export const setTasksAC = (todolistId: string, tasks: TaskType[]) =>
+  ({ type: 'SET_TASKS', payload: { todolistId, tasks } } as const)
 
-// ThunkCreators
-export const fetchTasksTC = (todolistId: string) => {
-  return (dispatch: Dispatch<SetTasksActionType>) => {
+  
+// thunks
+export const fetchTasksTC =
+  (todolistId: string) => (dispatch: Dispatch<TasksActionsTypes>) => {
     todolistsAPI
       .getTasks(todolistId)
       .then(({ status, data }) => {
@@ -61,10 +54,10 @@ export const fetchTasksTC = (todolistId: string) => {
         console.error(err)
       })
   }
-}
 
-export const createTaskTC = (todolistId: string, title: string) => {
-  return (dispatch: Dispatch<CreateTaskActionType>) => {
+export const createTaskTC =
+  (todolistId: string, title: string) =>
+  (dispatch: Dispatch<TasksActionsTypes>) => {
     todolistsAPI
       .createTask(todolistId, title)
       .then(({ status, data }) => {
@@ -74,10 +67,10 @@ export const createTaskTC = (todolistId: string, title: string) => {
         console.error(err)
       })
   }
-}
 
-export const deleteTaskTC = (todolistId: string, id: string) => {
-  return (dispatch: Dispatch<DeleteTaskActionType>) => {
+export const deleteTaskTC =
+  (todolistId: string, id: string) =>
+  (dispatch: Dispatch<TasksActionsTypes>) => {
     todolistsAPI
       .deleteTask(todolistId, id)
       .then((res) => {
@@ -87,23 +80,18 @@ export const deleteTaskTC = (todolistId: string, id: string) => {
         console.error(err)
       })
   }
-}
 
-export const updateTaskTC = (
-  todolistId: string,
-  id: string,
-  model: UpdateDomainModelTaskType
-) => {
-  return (
-    dispatch: Dispatch<UpdateTaskActionType>,
-    getState: () => RootStateType
-  ) => {
+export const updateTaskTC =
+  (todolistId: string, id: string, model: UpdateDomainModelTaskType) =>
+  (dispatch: Dispatch<TasksActionsTypes>, getState: () => RootStateType) => {
     const state = getState()
     const task = state.tasks[todolistId].find((t) => t.id === id)
+
     if (!task) {
       console.error('Task not found!')
       return
     }
+
     const apiModel: UpdateTaskModelType = {
       description: task.description,
       title: task.title,
@@ -113,6 +101,7 @@ export const updateTaskTC = (
       deadline: task.deadline,
       ...model,
     }
+
     todolistsAPI
       .updateTask(todolistId, id, apiModel)
       .then((res) => {
@@ -122,39 +111,3 @@ export const updateTaskTC = (
         console.error(err)
       })
   }
-}
-
-// export const changeTaskStatusTC = (
-//   todolistId: string,
-//   id: string,
-//   status: TaskStatuses
-// ) => {
-//   return (
-//     dispatch: Dispatch<ChangeTaskStatusActionType>,
-//     getState: () => RootStateType
-//   ) => {
-//     const state = getState()
-//     const task = state.tasks[todolistId].find((t) => t.id === id)
-//     if (!task) {
-//       console.error('Task not found!')
-//       return
-//     }
-//     const model: UpdateTaskModelType = {
-//       description: task.description,
-//       title: task.title,
-//       status: status,
-//       priority: task.priority,
-//       startDate: task.startDate,
-//       deadline: task.deadline,
-//     }
-//     todolistsAPI
-//       .updateTask(todolistId, id, model)
-//       .then((res) => {
-//         res.status === 200 &&
-//           dispatch(changeTaskStatusAC(todolistId, id, status))
-//       })
-//       .catch((err: string) => {
-//         console.error(err)
-//       })
-//   }
-// }
