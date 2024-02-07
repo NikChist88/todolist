@@ -13,16 +13,16 @@ export type TodolistsActionsTypes =
 
 // actions
 export const createTodolistAC = (todolist: TodolistType) =>
-  ({ type: 'CREATE_TODOLIST', payload: { todolist } } as const)
+  ({ type: 'CREATE_TODOLIST', todolist } as const)
 
 export const deleteTodolistAC = (id: string) =>
-  ({ type: 'DELETE_TODOLIST', payload: { id } } as const)
+  ({ type: 'DELETE_TODOLIST', id } as const)
 
 export const changeTodolistFilterAC = (filter: FilterType, id: string) =>
-  ({ type: 'CHANGE_TODOLIST_FILTER', payload: { id, filter } } as const)
+  ({ type: 'CHANGE_TODOLIST_FILTER', id, filter } as const)
 
 export const setTodolistsAC = (todolists: TodolistType[]) =>
-  ({ type: 'SET_TODOLISTS', payload: { todolists } } as const)
+  ({ type: 'SET_TODOLISTS', todolists } as const)
 
   
 // thunks

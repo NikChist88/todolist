@@ -1,4 +1,4 @@
-import { TaskType, TodolistType } from '../../../api/types'
+import { TaskType } from '../../../api/types'
 import { TasksActionsTypes } from './tasksActionCreators'
 import { TodolistsActionsTypes } from '../todolistsReducer/todolistsActionCreator'
 
@@ -12,65 +12,54 @@ export const tasksReducer = (
 ): TasksType => {
   switch (action.type) {
     // Create Task
-    case 'CREATE_TASK': {
-      const newTask: TaskType = action.payload.task
-      const updatedTasks: TaskType[] = [newTask, ...state[newTask.todoListId]]
-
+    case 'CREATE_TASK':
       return {
         ...state,
-        [newTask.todoListId]: updatedTasks,
+        [action.task.todoListId]: [
+          action.task,
+          ...state[action.task.todoListId],
+        ],
       }
-    }
 
     // Delete Task
-    case 'DELETE_TASK': {
-      const filteredTasks = state[action.payload.todolistId].filter(
-        (task: TaskType) => task.id !== action.payload.taskId
-      )
-
-      return { ...state, [action.payload.todolistId]: filteredTasks }
-    }
+    case 'DELETE_TASK':
+      return {
+        ...state,
+        [action.todolistId]: state[action.todolistId].filter(
+          (t) => t.id !== action.id
+        ),
+      }
 
     // Update Task
-    case 'UPDATE_TASK': {
-      const updatedTasks = state[action.payload.todolistId].map(
-        (task: TaskType) =>
-          task.id === action.payload.taskId
-            ? {
-                ...task,
-                ...action.payload.model,
-              }
-            : task
-      )
-
-      return { ...state, [action.payload.todolistId]: updatedTasks }
-    }
+    case 'UPDATE_TASK':
+      return {
+        ...state,
+        [action.todolistId]: state[action.todolistId].map((t) =>
+          t.id === action.id ? { ...t, ...action.model } : t
+        ),
+      }
 
     // Create Todolist
-    case 'CREATE_TODOLIST': {
-      return { ...state, [action.payload.todolist.id]: [] }
-    }
+    case 'CREATE_TODOLIST':
+      return { ...state, [action.todolist.id]: [] }
 
     // Delete Todolist
     case 'DELETE_TODOLIST': {
-      delete state[action.payload.id]
-      return state
+      const copyState = { ...state }
+      delete copyState[action.id]
+      return copyState
     }
 
     // Set Todolists
     case 'SET_TODOLISTS': {
       const copyState = { ...state }
-      action.payload.todolists.forEach((tl: TodolistType) => {
-        copyState[tl.id] = []
-      })
-
+      action.todolists.forEach((tl) => (copyState[tl.id] = []))
       return copyState
     }
 
     // Set Tasks
-    case 'SET_TASKS': {
-      return { ...state, [action.payload.todolistId]: action.payload.tasks }
-    }
+    case 'SET_TASKS':
+      return { ...state, [action.todolistId]: action.tasks }
 
     // Default
     default:

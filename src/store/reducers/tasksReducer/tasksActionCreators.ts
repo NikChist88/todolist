@@ -27,19 +27,19 @@ export type UpdateDomainModelTaskType = {
 
 // actions
 export const createTaskAC = (task: TaskType) =>
-  ({ type: 'CREATE_TASK', payload: { task } } as const)
+  ({ type: 'CREATE_TASK', task } as const)
 
-export const deleteTaskAC = (todolistId: string, taskId: string) =>
-  ({ type: 'DELETE_TASK', payload: { todolistId, taskId } } as const)
+export const deleteTaskAC = (todolistId: string, id: string) =>
+  ({ type: 'DELETE_TASK', todolistId, id } as const)
 
 export const updateTaskAC = (
   todolistId: string,
-  taskId: string,
+  id: string,
   model: UpdateDomainModelTaskType
-) => ({ type: 'UPDATE_TASK', payload: { todolistId, taskId, model } } as const)
+) => ({ type: 'UPDATE_TASK', todolistId, id, model } as const)
 
 export const setTasksAC = (todolistId: string, tasks: TaskType[]) =>
-  ({ type: 'SET_TASKS', payload: { todolistId, tasks } } as const)
+  ({ type: 'SET_TASKS', todolistId, tasks } as const)
 
   
 // thunks
