@@ -5,21 +5,25 @@ import { Checkbox } from '../checkbox/Checkbox'
 import { EditableTask } from '../editableTask/EditableTask'
 import { useTask } from './hooks/useTask'
 import { TaskStatuses } from '../../api/types'
+import { FilterType } from '../../store/reducers/todolistsReducer/todolistsReducer'
 
 type TaskPropsType = {
   id: string
   todolistId: string
   task: string
   status: TaskStatuses
+  filter: FilterType
 }
 
 export const Task: FC<TaskPropsType> = memo(
-  ({ id, todolistId, task, status }) => {
-    const {
-      updateTaskTitleHandler,
-      deleteTaskHandler,
-      changeTaskStatusHandler,
-    } = useTask(id, todolistId, task)
+  ({ id, todolistId, task, status, filter }) => {
+
+    const { updateTaskTitle, deleteTask, changeTaskStatus } = useTask(
+      todolistId,
+      filter,
+      id,
+      task
+    )
 
     return (
       <li className="task">
@@ -30,11 +34,11 @@ export const Task: FC<TaskPropsType> = memo(
         >
           <Checkbox
             checked={status === TaskStatuses.Completed}
-            onChange={changeTaskStatusHandler}
+            onChange={changeTaskStatus}
           />
           <EditableTask
             title={task}
-            onChange={updateTaskTitleHandler}
+            onChange={updateTaskTitle}
             status={status === TaskStatuses.Completed}
           />
         </div>
@@ -42,7 +46,7 @@ export const Task: FC<TaskPropsType> = memo(
           <Button
             className="btn_danger"
             title="Delete Task"
-            onClick={deleteTaskHandler}
+            onClick={deleteTask}
           />
         </div>
       </li>

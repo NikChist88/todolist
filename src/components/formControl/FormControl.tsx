@@ -12,7 +12,8 @@ type FormPropsType = {
 
 export const FormControl: FC<FormPropsType> = memo(
   ({ className, label, action }) => {
-    const { inputValue, onChangeHandler, onKeyUpHandler, onClickHandler } =
+    
+    const { inputValue, handleChange, handleClick, handleKeyUp } =
       useFormControl(action)
 
     return (
@@ -23,13 +24,13 @@ export const FormControl: FC<FormPropsType> = memo(
             value={inputValue}
             label={label}
             variant="standard"
-            onChange={onChangeHandler}
-            onKeyUp={onKeyUpHandler}
+            onChange={handleChange}
+            onKeyUp={handleKeyUp}
           />
           <Button
             text={'Add'}
             disabled={!inputValue || inputValue.length > 20}
-            onClick={onClickHandler}
+            onClick={handleClick}
           />
         </div>
 

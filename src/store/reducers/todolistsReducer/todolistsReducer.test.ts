@@ -1,10 +1,11 @@
-import { todolistsReducer, TodolistDomainType } from './todolistsReducer'
 import {
+  todolistsReducer,
+  TodolistDomainType,
   deleteTodolistAC,
   changeTodolistFilterAC,
   createTodolistAC,
   setTodolistsAC,
-} from './todolistsActionCreator'
+} from './todolistsReducer'
 
 let startState: TodolistDomainType[] = []
 
@@ -15,7 +16,6 @@ beforeEach(() => {
   ]
 })
 
-// Delete Todolist
 test('removed todolist', () => {
   const action = deleteTodolistAC(startState[0].id)
   const endState = todolistsReducer(startState, action)
@@ -24,7 +24,6 @@ test('removed todolist', () => {
   expect(endState[0].id).toBe('2')
 })
 
-// Add Todolist
 test('create todolist', () => {
   const todolist = {
     id: '3',
@@ -40,7 +39,6 @@ test('create todolist', () => {
   expect(endState[0].title).toBe('home work')
 })
 
-// Change Todolist Filter
 test('change todolist filter', () => {
   const action = changeTodolistFilterAC('active', startState[0].id)
   const endState = todolistsReducer(startState, action)
@@ -49,7 +47,6 @@ test('change todolist filter', () => {
   expect(endState[1].filter).toBe('all')
 })
 
-// Set Todolists
 test('set todolists to state', () => {
   const action = setTodolistsAC(startState)
   const endState = todolistsReducer([], action)

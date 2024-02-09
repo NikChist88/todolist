@@ -19,9 +19,9 @@ export const EditableTask: FC<EditableTaskPropsType> = memo(
       inputValue,
       activateEditMode,
       activateViewMode,
-      onChangeTitleHandler,
-      onKeyPressHandler,
-      onBlurHandler
+      handleBlur,
+      handleChangeTitle,
+      handleKeyPress,
     } = useEditableTask(title, onChange)
 
     return editMode ? (
@@ -29,9 +29,9 @@ export const EditableTask: FC<EditableTaskPropsType> = memo(
         <Input
           value={inputValue}
           placeholder="Enter a task"
-          onChange={onChangeTitleHandler}
-          onKeyPress={onKeyPressHandler}
-          onBlur={onBlurHandler}
+          onChange={handleChangeTitle}
+          onKeyPress={handleKeyPress}
+          onBlur={handleBlur}
           autoFocus
         />
         <Button className="btn_primary" onClick={activateViewMode} />

@@ -4,17 +4,14 @@ export const useEditableTask = (
   title: string,
   onChange: (newTitle: string) => void
 ) => {
-  // Local State
   const [editMode, setEditMode] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
 
-  // Edit Mode
   const activateEditMode = useCallback(() => {
     setEditMode(true)
     setInputValue(title)
   }, [title])
 
-  // View Mode
   const activateViewMode = useCallback(() => {
     if (!inputValue) {
       window.alert('Title is requaried!')
@@ -24,26 +21,23 @@ export const useEditableTask = (
     }
   }, [inputValue, onChange])
 
-  // Blur Handler
-  const onBlurHandler = useCallback(() => {
+  const handleBlur = useCallback(() => {
     const timeoutId: NodeJS.Timeout = setTimeout(() => {
       setEditMode(false)
-    }, 250)
+    }, 200)
 
     return () => {
       clearTimeout(timeoutId)
     }
   }, [])
 
-  // Change Title Handler
-  const onChangeTitleHandler = useCallback((value: string) => {
+  const handleChangeTitle = useCallback((value: string) => {
     setInputValue(value)
   }, [])
 
-  // Key Press handler
-  const onKeyPressHandler = useCallback(
+  const handleKeyPress = useCallback(
     (key: string) => {
-      if (key === 'Enter' && inputValue && inputValue.length < 21) {
+      if (key === 'Enter' && inputValue.length <= 20) {
         activateViewMode()
       }
       if (key === 'Escape') {
@@ -58,8 +52,8 @@ export const useEditableTask = (
     inputValue,
     activateEditMode,
     activateViewMode,
-    onChangeTitleHandler,
-    onKeyPressHandler,
-    onBlurHandler,
+    handleChangeTitle,
+    handleKeyPress,
+    handleBlur,
   }
 }

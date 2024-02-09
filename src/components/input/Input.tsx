@@ -29,7 +29,6 @@ export const Input: FC<InputPropsType> = memo(
         onChange={onChangeHandler}
         onKeyUp={onKeyPressHandler}
         onBlur={onBlur}
-        maxLength={21}
         autoFocus={autoFocus}
       />
     )
