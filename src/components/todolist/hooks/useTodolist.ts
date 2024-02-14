@@ -10,17 +10,26 @@ import {
   createTodolistTC,
   deleteTodolistTC,
 } from '../../../store/reducers/todolistsReducer/todolistsThunks'
+import {
+  setErrorAC,
+  setMessageAC,
+} from '../../../store/reducers/appReducer/appReducer'
+import { useConfirm } from 'material-ui-confirm'
+import { AxiosError } from 'axios'
 
-export const useTodolist = (title?: string) => {
+export const useTodolist = (todolistId?: string, title?: string) => {
   const todolists = useSelector<RootState, TodolistDomainType[]>(
     (state) => state.todolists
   )
   const dispatch: AppDispatch = useDispatch()
+  const confirm = useConfirm()
 
   const createTodolist = useCallback(
     (title: string) => {
       if (todolists.some((tl) => tl.title === title)) {
-        window.alert(`Todolist ${title.toUpperCase()} already exists!`)
+        dispatch(
+          setMessageAC(`Todolist ${title.toUpperCase()} already exists!`, 'info')
+        )
       } else {
         dispatch(createTodolistTC(title))
       }
@@ -28,12 +37,18 @@ export const useTodolist = (title?: string) => {
     [todolists, dispatch]
   )
 
-  const deleteTodolist = useCallback((id: string) => {
-    if (window.confirm(`Delete Todolist ${title?.toUpperCase()}?`)) {
-      dispatch(deleteTodolistTC(id))
-    }
-  }, [title, dispatch]
-  )
+  const deleteTodolist = useCallback(() => {
+    confirm({ description: `Delete Todolist ${title?.toUpperCase()}?` })
+      .then(() => {
+        dispatch(deleteTodolistTC(todolistId!))
+        dispatch(
+          setMessageAC(`Todolist ${title?.toUpperCase()} successfully deleted!`, 'success')
+        )
+      })
+      .catch((err: AxiosError) => {
+        err && dispatch(setErrorAC(err.message))
+      })
+  }, [todolistId, title, dispatch, confirm])
 
   const changeFilter = useCallback(
     (filter: FilterType, id: string) => {

@@ -8,6 +8,7 @@ import { LinearProgress } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { RequestStatusType } from './store/reducers/appReducer/appReducer'
 import { RootState } from './store/store'
+import { ConfirmProvider } from 'material-ui-confirm'
 
 export const App: FC = memo(() => {
   const { createTodolist } = useTodolist()
@@ -16,15 +17,21 @@ export const App: FC = memo(() => {
   )
 
   return (
-    <div className="app">
-      {status === 'loading' && <LinearProgress />}
-      <Snackbar />
-      <FormControl
-        className="form_shadow"
-        label="New todolist"
-        action={createTodolist}
-      />
-      <Todolists />
-    </div>
+    <ConfirmProvider
+      defaultOptions={{
+        confirmationButtonProps: { autoFocus: true },
+      }}
+    >
+      <div className="app">
+        {status === 'loading' && <LinearProgress />}
+        <Snackbar />
+        <FormControl
+          className="form_shadow"
+          label="New todolist"
+          action={createTodolist}
+        />
+        <Todolists />
+      </div>
+    </ConfirmProvider>
   )
 })

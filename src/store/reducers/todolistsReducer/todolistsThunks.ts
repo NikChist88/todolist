@@ -12,14 +12,15 @@ export const fetchTodolistsTC = (): AppThunk => (dispatch) => {
   dispatch(setStatusAC('loading'))
   todolistsAPI
     .getTodolists()
-    .then((res) => {
-      if (res.status === 200) {
-        dispatch(setTodolistsAC(res.data))
+    .then(({ status, data }) => {
+      if (status === 200) {
+        dispatch(setTodolistsAC(data))
         dispatch(setStatusAC('succeeded'))
       }
     })
     .catch((err: AxiosError) => {
       dispatch(setErrorAC(err.message))
+      dispatch(setStatusAC('failed'))
     })
 }
 
@@ -29,9 +30,7 @@ export const createTodolistTC =
     todolistsAPI
       .createTodolist(title)
       .then(({ data }) => {
-        if (data.resultCode === 0) {
-          dispatch(createTodolistAC(data.data.item))
-        }
+        data.resultCode === 0 && dispatch(createTodolistAC(data.data.item))
       })
       .catch((err: AxiosError) => {
         dispatch(setErrorAC(err.message))

@@ -8,7 +8,7 @@ import {
 let startState: InitialStateType
 
 beforeEach(() => {
-  startState = { status: 'idle', error: null }
+  startState = { status: 'idle', error: null, message: null, severity: 'info' }
 })
 
 test('set error', () => {

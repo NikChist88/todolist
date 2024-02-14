@@ -9,7 +9,12 @@ import {
 } from '../../../store/reducers/tasksReducer/tasksThunks'
 import { FilterType } from '../../../store/reducers/todolistsReducer/todolistsReducer'
 import { TasksType } from '../../../store/reducers/tasksReducer/tasksReducer'
-import { setErrorAC } from '../../../store/reducers/appReducer/appReducer'
+import {
+  setErrorAC,
+  setMessageAC,
+} from '../../../store/reducers/appReducer/appReducer'
+import { useConfirm } from 'material-ui-confirm'
+import { AxiosError } from 'axios'
 
 export const useTask = (
   todolistId: string,
@@ -17,9 +22,9 @@ export const useTask = (
   id?: string,
   title?: string
 ) => {
-
   const tasks = useSelector<RootState, TasksType>((state) => state.tasks)
   const dispatch: AppDispatch = useDispatch()
+  const confirm = useConfirm()
 
   // Filtered Tasks
   let filteredTasks = tasks[todolistId]
@@ -30,33 +35,54 @@ export const useTask = (
       (t) => t.status === TaskStatuses.Completed
     )
 
-  const createTask = useCallback((title: string) => {
-    if (filteredTasks.some((t) => t.title === title)) {
-      dispatch(setErrorAC(`Task ${title.toUpperCase()} already exists!`))
-    } else {
-      dispatch(createTaskTC(todolistId, title))
-    }
-  }, [todolistId, filteredTasks, dispatch])
+  const createTask = useCallback(
+    (title: string) => {
+      if (filteredTasks.some((t) => t.title === title)) {
+        dispatch(setMessageAC(`Task ${title.toUpperCase()} already exists!`, 'info'))
+      } else {
+        dispatch(createTaskTC(todolistId, title))
+      }
+    },
+    [todolistId, filteredTasks, dispatch]
+  )
 
-  const updateTaskTitle = useCallback((newTitle: string) => {
-    if (filteredTasks.some((t) => t.title === newTitle)) {
-      dispatch(setErrorAC(`Task ${newTitle.toUpperCase()} already exists!`))
-    } else {
-      dispatch(updateTaskTC(todolistId, id!, { title: newTitle }))
-    }
-  }, [id, todolistId, filteredTasks, dispatch])
+  const updateTaskTitle = useCallback(
+    (newTitle: string) => {
+      if (filteredTasks.some((t) => t.title === newTitle)) {
+        dispatch(setMessageAC(`Task ${newTitle.toUpperCase()} already exists!`, 'info'))
+      } else {
+        dispatch(updateTaskTC(todolistId, id!, { title: newTitle }))
+      }
+    },
+    [id, todolistId, filteredTasks, dispatch]
+  )
 
-  const deleteTask = useCallback((todolistId: string, id: string) => {
-    if (window.confirm(`Delete Task ${title?.toUpperCase()}?`)) {
-      dispatch(deleteTaskTC(todolistId, id!))
-    }
-  }, [title, dispatch])
+  const deleteTask = useCallback(
+    (todolistId: string, id: string) => {
+      confirm({ description: `Delete Task ${title?.toUpperCase()}?` })
+        .then(() => {
+          dispatch(deleteTaskTC(todolistId, id!))
+          dispatch(
+            setMessageAC(`Task ${title?.toUpperCase()} successfully deleted!`, 'success')
+          )
+        })
+        .catch((err: AxiosError) => {
+          err && dispatch(setErrorAC(err.message))
+        })
+    },
+    [title, dispatch, confirm]
+  )
 
-  const changeTaskStatus = useCallback((status: boolean) => {
-    dispatch(updateTaskTC(todolistId, id!, {
-        status: status ? TaskStatuses.Completed : TaskStatuses.New,
-    }))
-  }, [id, todolistId, dispatch])
+  const changeTaskStatus = useCallback(
+    (status: boolean) => {
+      dispatch(
+        updateTaskTC(todolistId, id!, {
+          status: status ? TaskStatuses.Completed : TaskStatuses.New,
+        })
+      )
+    },
+    [id, todolistId, dispatch]
+  )
 
   return {
     filteredTasks,

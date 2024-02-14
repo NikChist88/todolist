@@ -1,6 +1,7 @@
+import { AxiosError } from 'axios'
 import { todolistsAPI, UpdateTaskModelType } from '../../../api/todolistsApi'
 import { AppThunk, RootState } from '../../store'
-import { setStatusAC } from '../appReducer/appReducer'
+import { setErrorAC, setStatusAC } from '../appReducer/appReducer'
 import {
   setTasksAC,
   createTaskAC,
@@ -21,8 +22,9 @@ export const fetchTasksTC =
           dispatch(setStatusAC('succeeded'))
         }
       })
-      .catch((err: string) => {
-        console.error(err)
+      .catch((err: AxiosError) => {
+        dispatch(setErrorAC(err.message))
+        dispatch(setStatusAC('failed'))
       })
   }
 
@@ -34,8 +36,8 @@ export const createTaskTC =
       .then(({ status, data }) => {
         status === 200 && dispatch(createTaskAC(data.data.item))
       })
-      .catch((err: string) => {
-        console.error(err)
+      .catch((err: AxiosError) => {
+        dispatch(setErrorAC(err.message))
       })
   }
 
@@ -44,11 +46,11 @@ export const deleteTaskTC =
   (dispatch) => {
     todolistsAPI
       .deleteTask(todolistId, id)
-      .then((res) => {
-        res.status === 200 && dispatch(deleteTaskAC(todolistId, id))
+      .then(({ status }) => {
+        status === 200 && dispatch(deleteTaskAC(todolistId, id))
       })
-      .catch((err: string) => {
-        console.error(err)
+      .catch((err: AxiosError) => {
+        dispatch(setErrorAC(err.message))
       })
   }
 
@@ -63,7 +65,7 @@ export const updateTaskTC =
     const task = state.tasks[todolistId].find((t) => t.id === id)
 
     if (!task) {
-      console.error('Task not found!')
+      dispatch(setErrorAC('Task not found!'))
       return
     }
 
@@ -79,10 +81,10 @@ export const updateTaskTC =
 
     todolistsAPI
       .updateTask(todolistId, id, apiModel)
-      .then((res) => {
-        res.status === 200 && dispatch(updateTaskAC(todolistId, id, model))
+      .then(({status}) => {
+        status === 200 && dispatch(updateTaskAC(todolistId, id, model))
       })
-      .catch((err: string) => {
-        console.error(err)
+      .catch((err: AxiosError) => {
+        dispatch(setErrorAC(err.message))
       })
   }
