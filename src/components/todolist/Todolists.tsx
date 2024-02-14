@@ -1,24 +1,19 @@
 import { FC, memo, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { TodolistDomainType } from '../../store/reducers/todolistsReducer/todolistsReducer'
-import { RootStateType } from '../../store/store'
+import { AppDispatch, RootState } from '../../store/store'
 import { Todolist } from './Todolist'
-import {
-  TodolistsActionsTypes,
-  fetchTodolistsTC,
-} from '../../store/reducers/todolistsReducer/todolistsReducer'
-import { ThunkDispatch } from 'redux-thunk'
+import { fetchTodolistsTC } from '../../store/reducers/todolistsReducer/todolistsThunks'
 
 export const Todolists: FC = memo(() => {
-  const todolists = useSelector<RootStateType, TodolistDomainType[]>(
+  const todolists = useSelector<RootState, TodolistDomainType[]>(
     (state) => state.todolists
   )
-  const dispatch: ThunkDispatch<RootStateType, any, TodolistsActionsTypes> =
-    useDispatch()
+  const dispatch: AppDispatch = useDispatch()
 
   useEffect(() => {
     dispatch(fetchTodolistsTC())
-  }, [dispatch])
+  }, [])
 
   return (
     <div className="wrapper">

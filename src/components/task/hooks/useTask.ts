@@ -1,16 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useCallback } from 'react'
-import { ThunkDispatch } from 'redux-thunk'
-import { RootStateType } from '../../../store/store'
-import { TaskStatuses } from '../../../api/types'
+import { AppDispatch, RootState } from '../../../store/store'
+import { TaskStatuses } from '../../../api/todolistsApi'
 import {
-  TasksType,
   updateTaskTC,
   deleteTaskTC,
-  TasksActionsTypes,
   createTaskTC,
-} from '../../../store/reducers/tasksReducer/tasksReducer'
+} from '../../../store/reducers/tasksReducer/tasksThunks'
 import { FilterType } from '../../../store/reducers/todolistsReducer/todolistsReducer'
+import { TasksType } from '../../../store/reducers/tasksReducer/tasksReducer'
+import { setErrorAC } from '../../../store/reducers/appReducer/appReducer'
 
 export const useTask = (
   todolistId: string,
@@ -19,9 +18,8 @@ export const useTask = (
   title?: string
 ) => {
 
-  const tasks = useSelector<RootStateType, TasksType>((state) => state.tasks)
-  const dispatch: ThunkDispatch<RootStateType, any, TasksActionsTypes> =
-    useDispatch()
+  const tasks = useSelector<RootState, TasksType>((state) => state.tasks)
+  const dispatch: AppDispatch = useDispatch()
 
   // Filtered Tasks
   let filteredTasks = tasks[todolistId]
@@ -34,7 +32,7 @@ export const useTask = (
 
   const createTask = useCallback((title: string) => {
     if (filteredTasks.some((t) => t.title === title)) {
-      window.alert(`Task ${title.toUpperCase()} already exists!`)
+      dispatch(setErrorAC(`Task ${title.toUpperCase()} already exists!`))
     } else {
       dispatch(createTaskTC(todolistId, title))
     }
@@ -42,17 +40,17 @@ export const useTask = (
 
   const updateTaskTitle = useCallback((newTitle: string) => {
     if (filteredTasks.some((t) => t.title === newTitle)) {
-      window.alert(`Task ${newTitle.toUpperCase()} already exists!`)
+      dispatch(setErrorAC(`Task ${newTitle.toUpperCase()} already exists!`))
     } else {
       dispatch(updateTaskTC(todolistId, id!, { title: newTitle }))
     }
   }, [id, todolistId, filteredTasks, dispatch])
 
-  const deleteTask = useCallback(() => {
-    if (window.confirm(`Delete task ${title?.toUpperCase()}?`)) {
+  const deleteTask = useCallback((todolistId: string, id: string) => {
+    if (window.confirm(`Delete Task ${title?.toUpperCase()}?`)) {
       dispatch(deleteTaskTC(todolistId, id!))
     }
-  }, [id, todolistId, title, dispatch])
+  }, [title, dispatch])
 
   const changeTaskStatus = useCallback((status: boolean) => {
     dispatch(updateTaskTC(todolistId, id!, {

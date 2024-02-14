@@ -15,7 +15,7 @@ type TodolistPropsType = {
 
 export const Todolist: FC<TodolistPropsType> = memo(
   ({ todolistId, title, filter }) => {
-
+    
     const { deleteTodolist, changeFilter } = useTodolist(title)
     const { createTask } = useTask(todolistId, filter)
 
@@ -24,8 +24,7 @@ export const Todolist: FC<TodolistPropsType> = memo(
         <div className="todolist__header">
           <h3 className="todolist__title">{title}</h3>
           <Button
-            className={'btn_danger'}
-            title="Delete Todolist"
+            className="btn_danger"
             onClick={() => deleteTodolist(todolistId)}
           />
         </div>

@@ -1,12 +1,14 @@
-import { SyntheticEvent } from 'react'
-import Snackbar from '@mui/material/Snackbar'
+import { FC, SyntheticEvent } from 'react'
+import SnackbarMui from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import { useSelector, useDispatch } from 'react-redux'
 import { setErrorAC } from '../../store/reducers/appReducer/appReducer'
-import { RootStateType } from '../../store/store'
+import { RootState } from '../../store/store'
 
-export const CustomSnackbar = () => {
-  const error = useSelector<RootStateType, string | null>(
+type SnackbarPropsType = {}
+
+export const Snackbar: FC<SnackbarPropsType> = () => {
+  const error = useSelector<RootState, string | null>(
     (state) => state.app.error
   )
   const dispatch = useDispatch()
@@ -21,7 +23,7 @@ export const CustomSnackbar = () => {
   const isOpen = error !== null
 
   return (
-    <Snackbar
+    <SnackbarMui
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       open={isOpen}
       autoHideDuration={3000}
@@ -29,12 +31,12 @@ export const CustomSnackbar = () => {
     >
       <Alert
         onClose={handleClose}
-        severity="info"
-        variant='filled'
+        severity='info'
+        variant="filled"
         sx={{ width: '100%' }}
       >
         {error}
       </Alert>
-    </Snackbar>
+    </SnackbarMui>
   )
 }

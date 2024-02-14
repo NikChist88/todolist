@@ -1,43 +1,38 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Dispatch, useCallback } from 'react'
-import { ThunkDispatch } from 'redux-thunk'
-import { RootStateType } from '../../../store/store'
+import { useCallback } from 'react'
+import { AppDispatch, RootState } from '../../../store/store'
 import {
   FilterType,
   TodolistDomainType,
-  deleteTodolistTC,
   changeTodolistFilterAC,
-  TodolistsActionsTypes,
-  createTodolistTC,
 } from '../../../store/reducers/todolistsReducer/todolistsReducer'
-import { AppActionsTypes, setErrorAC } from '../../../store/reducers/appReducer/appReducer'
+import {
+  createTodolistTC,
+  deleteTodolistTC,
+} from '../../../store/reducers/todolistsReducer/todolistsThunks'
 
 export const useTodolist = (title?: string) => {
-  const todolists = useSelector<RootStateType, TodolistDomainType[]>(
+  const todolists = useSelector<RootState, TodolistDomainType[]>(
     (state) => state.todolists
   )
-  const dispatch: Dispatch<TodolistsActionsTypes | AppActionsTypes> = useDispatch()
-  const thunkDispatch: ThunkDispatch<
-    RootStateType,
-    any,
-    TodolistsActionsTypes
-  > = useDispatch()
+  const dispatch: AppDispatch = useDispatch()
 
-  const createTodolist = useCallback((title: string) => {
-    if (todolists.some((tl) => tl.title === title)) {
-      dispatch(setErrorAC(`Todolist ${title.toUpperCase()} already exists!`))
-    } else {
-      thunkDispatch(createTodolistTC(title))
-    }
-  }, [todolists, dispatch, thunkDispatch])
-
-  const deleteTodolist = useCallback(
-    (id: string) => {
-      if (window.confirm(`Delete todolist ${title?.toUpperCase()}?`)) {
-        thunkDispatch(deleteTodolistTC(id))
+  const createTodolist = useCallback(
+    (title: string) => {
+      if (todolists.some((tl) => tl.title === title)) {
+        window.alert(`Todolist ${title.toUpperCase()} already exists!`)
+      } else {
+        dispatch(createTodolistTC(title))
       }
     },
-    [title, thunkDispatch]
+    [todolists, dispatch]
+  )
+
+  const deleteTodolist = useCallback((id: string) => {
+    if (window.confirm(`Delete Todolist ${title?.toUpperCase()}?`)) {
+      dispatch(deleteTodolistTC(id))
+    }
+  }, [title, dispatch]
   )
 
   const changeFilter = useCallback(

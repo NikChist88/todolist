@@ -1,14 +1,10 @@
 import { FC, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { RootStateType } from '../../store/store'
 import { Task } from './Task'
 import { FilterType } from '../../store/reducers/todolistsReducer/todolistsReducer'
-import { ThunkDispatch } from 'redux-thunk'
-import {
-  TasksActionsTypes,
-  fetchTasksTC,
-} from '../../store/reducers/tasksReducer/tasksReducer'
 import { useTask } from './hooks/useTask'
+import { useDispatch } from 'react-redux'
+import { fetchTasksTC } from '../../store/reducers/tasksReducer/tasksThunks'
+import { AppDispatch } from '../../store/store'
 
 type TasksPropsType = {
   todolistId: string
@@ -17,12 +13,11 @@ type TasksPropsType = {
 
 export const Tasks: FC<TasksPropsType> = ({ todolistId, filter }) => {
   const { filteredTasks } = useTask(todolistId, filter)
-  const dispatch: ThunkDispatch<RootStateType, any, TasksActionsTypes> =
-    useDispatch()
+  const dispatch: AppDispatch = useDispatch()
 
   useEffect(() => {
     dispatch(fetchTasksTC(todolistId))
-  }, [todolistId, dispatch])
+  }, [])
 
   return (
     <>

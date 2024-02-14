@@ -1,11 +1,11 @@
 import './Task.styles.scss'
 import { FC, memo } from 'react'
-import { Button } from '../button/Button'
 import { Checkbox } from '../checkbox/Checkbox'
 import { EditableTask } from '../editableTask/EditableTask'
 import { useTask } from './hooks/useTask'
-import { TaskStatuses } from '../../api/types'
+import { TaskStatuses } from '../../api/todolistsApi'
 import { FilterType } from '../../store/reducers/todolistsReducer/todolistsReducer'
+import { Button } from '../button/Button'
 
 type TaskPropsType = {
   id: string
@@ -45,8 +45,7 @@ export const Task: FC<TaskPropsType> = memo(
         <div className="task__controls">
           <Button
             className="btn_danger"
-            title="Delete Task"
-            onClick={deleteTask}
+            onClick={() => deleteTask(todolistId, id)}
           />
         </div>
       </li>

@@ -5,7 +5,7 @@ import {
   deleteTaskAC,
   updateTaskAC,
 } from './tasksReducer'
-import { TaskPriorities, TaskStatuses } from '../../../api/types'
+import { TaskPriorities, TaskStatuses } from '../../../api/todolistsApi'
 import { setTodolistsAC } from '../todolistsReducer/todolistsReducer'
 
 let startState: TasksType = {}
