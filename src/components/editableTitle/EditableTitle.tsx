@@ -1,9 +1,11 @@
 import '../input/Input.styles.scss'
 import './EditableTitle.styles.scss'
 import { FC, memo } from 'react'
-import { Button } from '../button/Button'
 import { Input } from '../input/Input'
 import { useEditableTitle } from './hooks/useEditableTitle'
+import { IconButton } from '@mui/material'
+import ModeEditIcon from '@mui/icons-material/ModeEdit'
+import AddIcon from '@mui/icons-material/Add'
 
 type EditableTitlePropsType = {
   title: string
@@ -13,7 +15,6 @@ type EditableTitlePropsType = {
 
 export const EditableTitle: FC<EditableTitlePropsType> = memo(
   ({ title, status, onChange }) => {
-    
     const {
       editMode,
       inputValue,
@@ -34,16 +35,24 @@ export const EditableTitle: FC<EditableTitlePropsType> = memo(
           onBlur={handleBlur}
           autoFocus
         />
-        <Button className="btn_primary" onClick={activateViewMode} />
+        <IconButton
+          color="primary"
+          disabled={!inputValue || inputValue.length > 20}
+          onClick={activateViewMode}
+        >
+          <AddIcon />
+        </IconButton>
       </div>
     ) : (
       <div className="body">
         <span>{title}</span>
-        <Button
-          className="btn_edit"
+        <IconButton
+          color="primary"
           disabled={status}
           onClick={activateEditMode}
-        />
+        >
+          <ModeEditIcon />
+        </IconButton>
       </div>
     )
   }

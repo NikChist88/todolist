@@ -5,7 +5,8 @@ import { EditableTitle } from '../editableTitle/EditableTitle'
 import { useTask } from './hooks/useTask'
 import { TaskStatuses, TaskType } from '../../api/todolistsApi'
 import { FilterType } from '../../store/reducers/todolistsReducer/todolistsReducer'
-import { Button } from '../button/Button'
+import { Divider, IconButton } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 type TaskItemPropsType = {
   task: TaskType
@@ -22,28 +23,30 @@ export const TaskItem: FC<TaskItemPropsType> = memo(({ task, filter }) => {
   )
 
   return (
-    <li className="task">
-      <div
-        className={`task__item ${
-          task.status === TaskStatuses.Completed ? 'is-done' : ''
-        }`}
-      >
-        <Checkbox
-          checked={task.status === TaskStatuses.Completed}
-          onChange={changeTaskStatus}
-        />
-        <EditableTitle
-          title={title}
-          onChange={updateTaskTitle}
-          status={task.status === TaskStatuses.Completed}
-        />
-      </div>
-      <div className="task__controls">
-        <Button
-          className="btn_danger"
-          onClick={() => deleteTask(todoListId, id)}
-        />
-      </div>
-    </li>
+    <>
+      <li className="task">
+        <div
+          className={`task__item ${
+            task.status === TaskStatuses.Completed ? 'is-done' : ''
+          }`}
+        >
+          <Checkbox
+            checked={task.status === TaskStatuses.Completed}
+            onChange={changeTaskStatus}
+          />
+          <EditableTitle
+            title={title}
+            onChange={updateTaskTitle}
+            status={task.status === TaskStatuses.Completed}
+          />
+        </div>
+        <div className="task__controls">
+          <IconButton color="error" onClick={() => deleteTask(todoListId, id)}>
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      </li>
+      <Divider />
+    </>
   )
 })

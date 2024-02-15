@@ -1,7 +1,7 @@
 import './FormControl.styles.scss'
 import { FC, memo } from 'react'
-import { Button } from '../button/Button'
-import { TextField } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
+import { TextField, IconButton } from '@mui/material'
 import { useFormControl } from './hooks/useFormControl'
 
 type FormPropsType = {
@@ -12,7 +12,6 @@ type FormPropsType = {
 
 export const FormControl: FC<FormPropsType> = memo(
   ({ className, label, action }) => {
-    
     const { inputValue, handleChange, handleClick, handleKeyUp } =
       useFormControl(action)
 
@@ -23,15 +22,18 @@ export const FormControl: FC<FormPropsType> = memo(
             id="standard-basic"
             value={inputValue}
             label={label}
+            size="small"
             variant="standard"
             onChange={handleChange}
             onKeyUp={handleKeyUp}
           />
-          <Button
-            text={'Add'}
+          <IconButton
+            color="primary"
             disabled={!inputValue || inputValue.length > 20}
             onClick={handleClick}
-          />
+          >
+            <AddIcon />
+          </IconButton>
         </div>
 
         {inputValue.length > 20 && (

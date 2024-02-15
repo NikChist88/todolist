@@ -4,8 +4,11 @@ import { TodolistDomainType } from '../../store/reducers/todolistsReducer/todoli
 import { AppDispatch, RootState } from '../../store/store'
 import { TodoItem } from './TodoItem'
 import { fetchTodolistsTC } from '../../store/reducers/todolistsReducer/todolistsThunks'
+import { FormControl } from '../formControl/FormControl'
+import { useTodolist } from './hooks/useTodolist'
 
 export const TodosList: FC = memo(() => {
+  const { createTodolist } = useTodolist()
   const todolists = useSelector<RootState, TodolistDomainType[]>(
     (state) => state.todolists
   )
@@ -16,10 +19,17 @@ export const TodosList: FC = memo(() => {
   }, [])
 
   return (
-    <div className="wrapper">
-      {todolists.map((item) => {
-        return <TodoItem key={item.id} item={item} />
-      })}
-    </div>
+    <>
+      <FormControl
+        className="form_shadow"
+        label="New todolist"
+        action={createTodolist}
+      />
+      <div className="wrapper">
+        {todolists.map((item) => {
+          return <TodoItem key={item.id} item={item} />
+        })}
+      </div>
+    </>
   )
 })
