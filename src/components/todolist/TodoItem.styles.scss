@@ -8,20 +8,20 @@
   height: 100%;
   padding: 15px;
   border-radius: 10px;
-  background-color: #fff;
+  background-color: #f1f3f4;
   box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
   overflow: hidden;
 
   &__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-  }
+    gap: 0 10px;
 
-  &__title {
-    font-size: 20px;
-    font-weight: 600;
-    text-transform: capitalize;
+    span {
+      font-size: 20px;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
   }
 
   &__field {
@@ -34,7 +34,7 @@
 .todolist__list {
   display: flex;
   flex-direction: column;
-  gap: 20px 0;
+  gap: 15px 0;
 }
 
 .todolist__controls {

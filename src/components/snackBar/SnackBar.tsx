@@ -1,15 +1,15 @@
 import { FC, SyntheticEvent } from 'react'
-import SnackbarMui from '@mui/material/Snackbar'
+import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   setErrorAC,
   setMessageAC,
-  SeverityType
+  SeverityType,
 } from '../../store/reducers/appReducer/appReducer'
 import { RootState } from '../../store/store'
 
-export const Snackbar: FC = () => {
+export const SnackBar: FC = () => {
   const error = useSelector<RootState, string | null>(
     (state) => state.app.error
   )
@@ -20,6 +20,7 @@ export const Snackbar: FC = () => {
     (state) => state.app.severity
   )
   const dispatch = useDispatch()
+  const isOpen = error !== null || message !== null
 
   const handleClose = (event?: SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -29,10 +30,8 @@ export const Snackbar: FC = () => {
     dispatch(setMessageAC(null, 'info'))
   }
 
-  const isOpen = error !== null || message !== null
-
   return (
-    <SnackbarMui
+    <Snackbar
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       open={isOpen}
       autoHideDuration={3000}
@@ -46,6 +45,6 @@ export const Snackbar: FC = () => {
       >
         {error || message}
       </Alert>
-    </SnackbarMui>
+    </Snackbar>
   )
 }

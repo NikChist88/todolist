@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react'
 
-export const useEditableTask = (
+export const useEditableTitle = (
   title: string,
   onChange: (newTitle: string) => void
 ) => {
+  
   const [editMode, setEditMode] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
 

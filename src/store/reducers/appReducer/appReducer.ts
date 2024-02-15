@@ -43,9 +43,9 @@ export const setMessageAC = (message: MessageType, severity: SeverityType) =>
 
 // types
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
+export type SeverityType = 'success' | 'info' | 'error'
 export type ErrorType = string | null
 export type MessageType = string | null
-export type SeverityType = 'success' | 'info' | 'error'
 
 export type InitialStateType = {
   status: RequestStatusType

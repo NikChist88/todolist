@@ -1,17 +1,17 @@
 import '../input/Input.styles.scss'
-import './EditableTask.styles.scss'
+import './EditableTitle.styles.scss'
 import { FC, memo } from 'react'
 import { Button } from '../button/Button'
 import { Input } from '../input/Input'
-import { useEditableTask } from './hooks/useEditableTask'
+import { useEditableTitle } from './hooks/useEditableTitle'
 
-type EditableTaskPropsType = {
+type EditableTitlePropsType = {
   title: string
-  status: boolean
+  status?: boolean
   onChange: (newTitle: string) => void
 }
 
-export const EditableTask: FC<EditableTaskPropsType> = memo(
+export const EditableTitle: FC<EditableTitlePropsType> = memo(
   ({ title, status, onChange }) => {
     
     const {
@@ -22,7 +22,7 @@ export const EditableTask: FC<EditableTaskPropsType> = memo(
       handleBlur,
       handleChangeTitle,
       handleKeyPress,
-    } = useEditableTask(title, onChange)
+    } = useEditableTitle(title, onChange)
 
     return editMode ? (
       <div className="field">

@@ -1,11 +1,12 @@
 import { AxiosError } from 'axios'
 import { todolistsAPI } from '../../../api/todolistsApi'
-import { AppThunk } from '../../store'
+import { AppThunk, RootState } from '../../store'
 import { setErrorAC, setStatusAC } from '../appReducer/appReducer'
 import {
   setTodolistsAC,
   createTodolistAC,
   deleteTodolistAC,
+  updateTitleAC
 } from './todolistsReducer'
 
 export const fetchTodolistsTC = (): AppThunk => (dispatch) => {
@@ -44,6 +45,27 @@ export const deleteTodolistTC =
       .deleteTodolist(id)
       .then(({ data }) => {
         data.resultCode === 0 && dispatch(deleteTodolistAC(id))
+      })
+      .catch((err: AxiosError) => {
+        dispatch(setErrorAC(err.message))
+      })
+  }
+
+export const updateTitleTC =
+  (todolistId: string, title: string): AppThunk =>
+  (dispatch, getState: () => RootState) => {
+    const state = getState()
+    const todolist = state.todolists.find((tl) => tl.id === todolistId)
+
+    if (!todolist) {
+      dispatch(setErrorAC('Todolist not found!'))
+      return
+    }
+
+    todolistsAPI
+      .updateTodolist(todolistId, title)
+      .then(({ status }) => {
+        status === 200 && dispatch(updateTitleAC(todolistId, title))
       })
       .catch((err: AxiosError) => {
         dispatch(setErrorAC(err.message))

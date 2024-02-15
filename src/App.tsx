@@ -1,9 +1,9 @@
 import './App.scss'
 import { FC, memo } from 'react'
 import { FormControl } from './components/formControl/FormControl'
-import { Todolists } from './components/todolist/Todolists'
+import { TodosList } from './components/todolist/TodosList'
 import { useTodolist } from './components/todolist/hooks/useTodolist'
-import { Snackbar } from './components/snackbar/Snackbar'
+import { SnackBar } from './components/snackBar/SnackBar'
 import { LinearProgress } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { RequestStatusType } from './store/reducers/appReducer/appReducer'
@@ -24,13 +24,13 @@ export const App: FC = memo(() => {
     >
       <div className="app">
         {status === 'loading' && <LinearProgress />}
-        <Snackbar />
+        <SnackBar />
         <FormControl
           className="form_shadow"
           label="New todolist"
           action={createTodolist}
         />
-        <Todolists />
+        <TodosList />
       </div>
     </ConfirmProvider>
   )

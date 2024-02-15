@@ -4,11 +4,12 @@ import { AppDispatch, RootState } from '../../../store/store'
 import {
   FilterType,
   TodolistDomainType,
-  changeTodolistFilterAC,
+  changeFilterAC,
 } from '../../../store/reducers/todolistsReducer/todolistsReducer'
 import {
   createTodolistTC,
   deleteTodolistTC,
+  updateTitleTC,
 } from '../../../store/reducers/todolistsReducer/todolistsThunks'
 import {
   setErrorAC,
@@ -28,7 +29,10 @@ export const useTodolist = (todolistId?: string, title?: string) => {
     (title: string) => {
       if (todolists.some((tl) => tl.title === title)) {
         dispatch(
-          setMessageAC(`Todolist ${title.toUpperCase()} already exists!`, 'info')
+          setMessageAC(
+            `Todolist ${title.toUpperCase()} already exists!`,
+            'info'
+          )
         )
       } else {
         dispatch(createTodolistTC(title))
@@ -38,11 +42,14 @@ export const useTodolist = (todolistId?: string, title?: string) => {
   )
 
   const deleteTodolist = useCallback(() => {
-    confirm({ description: `Delete Todolist ${title?.toUpperCase()}?` })
+    confirm({ description: `Delete todolist ${title?.toUpperCase()}?` })
       .then(() => {
         dispatch(deleteTodolistTC(todolistId!))
         dispatch(
-          setMessageAC(`Todolist ${title?.toUpperCase()} successfully deleted!`, 'success')
+          setMessageAC(
+            `Todolist ${title?.toUpperCase()} successfully deleted!`,
+            'success'
+          )
         )
       })
       .catch((err: AxiosError) => {
@@ -50,9 +57,25 @@ export const useTodolist = (todolistId?: string, title?: string) => {
       })
   }, [todolistId, title, dispatch, confirm])
 
+  const updateTitle = useCallback(
+    (newTitle: string) => {
+      if (todolists.some((tl) => tl.title === newTitle)) {
+        dispatch(
+          setMessageAC(
+            `Todolist ${newTitle.toUpperCase()} already exists!`,
+            'info'
+          )
+        )
+      } else {
+        dispatch(updateTitleTC(todolistId!, newTitle))
+      }
+    },
+    [todolists, todolistId, dispatch]
+  )
+
   const changeFilter = useCallback(
     (filter: FilterType, id: string) => {
-      dispatch(changeTodolistFilterAC(filter, id))
+      dispatch(changeFilterAC(filter, id))
     },
     [dispatch]
   )
@@ -60,6 +83,7 @@ export const useTodolist = (todolistId?: string, title?: string) => {
   return {
     createTodolist,
     deleteTodolist,
+    updateTitle,
     changeFilter,
   }
 }

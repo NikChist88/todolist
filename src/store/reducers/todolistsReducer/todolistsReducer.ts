@@ -1,4 +1,4 @@
-import { TodolistType } from "../../../api/todolistsApi"
+import { TodolistType } from '../../../api/todolistsApi'
 
 // reducer
 export const todolistsReducer = (
@@ -12,7 +12,12 @@ export const todolistsReducer = (
     case 'DELETE_TODOLIST':
       return state.filter((tl) => tl.id !== action.id)
 
-    case 'CHANGE_TODOLIST_FILTER':
+    case 'UPDATE_TITLE':
+      return state.map((tl) =>
+        tl.id === action.id ? { ...tl, title: action.title } : tl
+      )
+
+    case 'CHANGE_FILTER':
       return state.map((tl) =>
         tl.id === action.id ? { ...tl, filter: action.filter } : tl
       )
@@ -33,8 +38,15 @@ export const createTodolistAC = (todolist: TodolistType) =>
 export const deleteTodolistAC = (id: string) =>
   ({ type: 'DELETE_TODOLIST', id } as const)
 
-export const changeTodolistFilterAC = (filter: FilterType, id: string) =>
-  ({ type: 'CHANGE_TODOLIST_FILTER', id, filter } as const)
+export const updateTitleAC = (id: string, title: string) =>
+  ({
+    type: 'UPDATE_TITLE',
+    id,
+    title,
+  } as const)
+
+export const changeFilterAC = (filter: FilterType, id: string) =>
+  ({ type: 'CHANGE_FILTER', id, filter } as const)
 
 export const setTodolistsAC = (todolists: TodolistType[]) =>
   ({ type: 'SET_TODOLISTS', todolists } as const)
@@ -50,5 +62,6 @@ export type TodolistDomainType = TodolistType & {
 export type TodolistsActionsTypes =
   | ReturnType<typeof createTodolistAC>
   | ReturnType<typeof deleteTodolistAC>
-  | ReturnType<typeof changeTodolistFilterAC>
+  | ReturnType<typeof updateTitleAC>
+  | ReturnType<typeof changeFilterAC>
   | ReturnType<typeof setTodolistsAC>

@@ -18,7 +18,7 @@ import { AxiosError } from 'axios'
 
 export const useTask = (
   todolistId: string,
-  filter: FilterType,
+  filter?: FilterType,
   id?: string,
   title?: string
 ) => {
@@ -59,7 +59,7 @@ export const useTask = (
 
   const deleteTask = useCallback(
     (todolistId: string, id: string) => {
-      confirm({ description: `Delete Task ${title?.toUpperCase()}?` })
+      confirm({ description: `Delete task ${title?.toUpperCase()}?` })
         .then(() => {
           dispatch(deleteTaskTC(todolistId, id!))
           dispatch(

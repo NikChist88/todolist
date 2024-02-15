@@ -2,7 +2,7 @@ import {
   todolistsReducer,
   TodolistDomainType,
   deleteTodolistAC,
-  changeTodolistFilterAC,
+  changeFilterAC,
   createTodolistAC,
   setTodolistsAC,
 } from './todolistsReducer'
@@ -40,7 +40,7 @@ test('create todolist', () => {
 })
 
 test('change todolist filter', () => {
-  const action = changeTodolistFilterAC('active', startState[0].id)
+  const action = changeFilterAC('active', startState[0].id)
   const endState = todolistsReducer(startState, action)
 
   expect(endState[0].filter).toBe('active')

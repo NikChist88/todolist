@@ -1,17 +1,17 @@
 import { FC, useEffect } from 'react'
-import { Task } from './Task'
+import { TaskItem } from './TaskItem'
 import { FilterType } from '../../store/reducers/todolistsReducer/todolistsReducer'
 import { useTask } from './hooks/useTask'
 import { useDispatch } from 'react-redux'
 import { fetchTasksTC } from '../../store/reducers/tasksReducer/tasksThunks'
 import { AppDispatch } from '../../store/store'
 
-type TasksPropsType = {
+type TasksListPropsType = {
   todolistId: string
   filter: FilterType
 }
 
-export const Tasks: FC<TasksPropsType> = ({ todolistId, filter }) => {
+export const TasksList: FC<TasksListPropsType> = ({ todolistId, filter }) => {
   const { filteredTasks } = useTask(todolistId, filter)
   const dispatch: AppDispatch = useDispatch()
 
@@ -23,14 +23,7 @@ export const Tasks: FC<TasksPropsType> = ({ todolistId, filter }) => {
     <>
       {filteredTasks.length ? (
         filteredTasks.map((task) => (
-          <Task
-            key={task.id}
-            id={task.id}
-            todolistId={todolistId}
-            task={task.title}
-            status={task.status}
-            filter={filter}
-          />
+          <TaskItem key={task.id} task={task} filter={filter} />
         ))
       ) : (
         <span>

@@ -2,10 +2,10 @@ import { FC, memo, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { TodolistDomainType } from '../../store/reducers/todolistsReducer/todolistsReducer'
 import { AppDispatch, RootState } from '../../store/store'
-import { Todolist } from './Todolist'
+import { TodoItem } from './TodoItem'
 import { fetchTodolistsTC } from '../../store/reducers/todolistsReducer/todolistsThunks'
 
-export const Todolists: FC = memo(() => {
+export const TodosList: FC = memo(() => {
   const todolists = useSelector<RootState, TodolistDomainType[]>(
     (state) => state.todolists
   )
@@ -17,15 +17,8 @@ export const Todolists: FC = memo(() => {
 
   return (
     <div className="wrapper">
-      {todolists.map((tl) => {
-        return (
-          <Todolist
-            key={tl.id}
-            todolistId={tl.id}
-            title={tl.title}
-            filter={tl.filter}
-          />
-        )
+      {todolists.map((item) => {
+        return <TodoItem key={item.id} item={item} />
       })}
     </div>
   )
