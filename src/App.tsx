@@ -1,36 +1,59 @@
-import './App.scss'
-import { FC, memo } from 'react'
-import { TodosList } from './components/todolist/TodosList'
-import { SnackBar } from './components/snackBar/SnackBar'
-import { LinearProgress } from '@mui/material'
-import { useSelector } from 'react-redux'
-import { RequestStatusType } from './store/reducers/appReducer/appReducer'
-import { RootState } from './store/store'
-import { ConfirmProvider } from 'material-ui-confirm'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Login } from './components/login/Login'
+import "./App.scss"
+import { FC, memo, useEffect } from "react"
+import { TodosList } from "./components/todolist/TodosList"
+import { SnackBar } from "./components/snackBar/SnackBar"
+import { ConfirmProvider } from "material-ui-confirm"
+import { Route, Routes, Navigate } from "react-router-dom"
+import { LoginForm } from "./pages/loginForm/LoginForm"
+import { Error404 } from "./pages/error404/Error404"
+import { useAppDispatch, useAppSelector } from "./store/store"
+import { CircularProgress } from "@mui/material"
+import { initTC } from "./store/reducers/authReducer/authThunks"
 
 export const App: FC = memo(() => {
-  const status = useSelector<RootState, RequestStatusType>(
-    (state) => state.app.status
-  )
+  const { isInit } = useAppSelector((state) => state.auth)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(initTC())
+  }, [])
+
+  if (!isInit) {
+    return (
+      <CircularProgress
+        size={50}
+        sx={{ position: "fixed", left: "50%", top: "50%" }}
+      />
+    )
+  }
 
   return (
-    <BrowserRouter>
+    <div className='app'>
       <ConfirmProvider
         defaultOptions={{
           confirmationButtonProps: { autoFocus: true },
         }}
       >
-        <div className="app">
-          {status === 'loading' && <LinearProgress />}
-          <SnackBar />
-          <Routes>
-            <Route path={'/'} element={<TodosList />} />
-            <Route path={'/login'} element={<Login />} />
-          </Routes>
-        </div>
+        <SnackBar />
+        <Routes>
+          <Route
+            path={"/"}
+            element={<TodosList />}
+          />
+          <Route
+            path={"/login"}
+            element={<LoginForm />}
+          />
+          <Route
+            path={"/error404"}
+            element={<Error404 />}
+          />
+          <Route
+            path={"/*"}
+            element={<Navigate to={"/error404"} />}
+          />
+        </Routes>
       </ConfirmProvider>
-    </BrowserRouter>
+    </div>
   )
 })

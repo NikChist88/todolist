@@ -9,17 +9,15 @@
 .task__item {
   width: 100%;
   display: flex;
-  align-items: center;
-  gap: 0 10px;
   text-transform: uppercase;
 
   span {
+    padding: 5px;
     font-size: 14px;
   }
 
   &.is-done {
     text-decoration: line-through;
-    opacity: 0.5;
   }
 
   .btn-edit-task {

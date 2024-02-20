@@ -1,23 +1,23 @@
-const initialState: InitialStateType = {
-  status: 'idle',
+const initialState: AppStateType = {
+  status: "idle",
   error: null,
   message: null,
-  severity: 'info'
+  severity: "info",
 }
 
 // reducer
 export const appReducer = (
-  state: InitialStateType = initialState,
-  action: AppActionsTypes
-): InitialStateType => {
+  state: AppStateType = initialState,
+  action: AppActionsTypes,
+): AppStateType => {
   switch (action.type) {
-    case 'APP/SET_STATUS':
+    case "APP/SET_STATUS":
       return { ...state, status: action.status }
 
-    case 'APP/SET_ERROR':
+    case "APP/SET_ERROR":
       return { ...state, error: action.error }
 
-    case 'APP/SET_MESSAGE':
+    case "APP/SET_MESSAGE":
       return { ...state, message: action.message, severity: action.severity }
 
     default:
@@ -28,26 +28,26 @@ export const appReducer = (
 
 // actions
 export const setStatusAC = (status: RequestStatusType) =>
-  ({ type: 'APP/SET_STATUS', status } as const)
+  ({ type: "APP/SET_STATUS", status } as const)
 
 export const setErrorAC = (error: ErrorType) =>
-  ({ type: 'APP/SET_ERROR', error } as const)
+  ({ type: "APP/SET_ERROR", error } as const)
 
 export const setMessageAC = (message: MessageType, severity: SeverityType) =>
   ({
-    type: 'APP/SET_MESSAGE',
+    type: "APP/SET_MESSAGE",
     message,
     severity,
   } as const)
 
 
 // types
-export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
-export type SeverityType = 'success' | 'info' | 'error'
+export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed"
+export type SeverityType = "success" | "info" | "error"
 export type ErrorType = string | null
 export type MessageType = string | null
 
-export type InitialStateType = {
+export type AppStateType = {
   status: RequestStatusType
   error: ErrorType
   message: MessageType

@@ -1,6 +1,6 @@
-import { FC, useState, MouseEvent } from 'react'
-import { ToggleButtonGroup, ToggleButton } from '@mui/material'
-import { FilterType } from '../../store/reducers/todolistsReducer/todolistsReducer'
+import { FC, useState, MouseEvent } from "react"
+import { ToggleButtonGroup, ToggleButton } from "@mui/material"
+import { FilterType } from "../../store/reducers/todolistsReducer/todolistsReducer"
 
 type FilterPropsType = {
   id: string
@@ -8,33 +8,36 @@ type FilterPropsType = {
 }
 
 export const Filter: FC<FilterPropsType> = ({ id, changeFilter }) => {
-  const [alignment, setAlignment] = useState('all')
+  const [alignment, setAlignment] = useState("all")
 
-  const handleChange = (
-    event: MouseEvent<HTMLElement>,
-    newAlignment: string
-  ) => {
+  const handleChange = (event: MouseEvent<HTMLElement>, newAlignment: string) => {
     setAlignment(newAlignment)
   }
 
   return (
     <ToggleButtonGroup
-      color="primary"
+      color='primary'
       value={alignment}
       exclusive
-      size="small"
+      size='small'
       onChange={handleChange}
-      aria-label="Filter type"
+      aria-label='Filter type'
     >
-      <ToggleButton value={'all'} onClick={() => changeFilter('all', id)}>
+      <ToggleButton
+        value={"all"}
+        onClick={() => changeFilter("all", id)}
+      >
         ALL
       </ToggleButton>
-      <ToggleButton value={'active'} onClick={() => changeFilter('active', id)}>
+      <ToggleButton
+        value={"active"}
+        onClick={() => changeFilter("active", id)}
+      >
         ACTIVE
       </ToggleButton>
       <ToggleButton
-        value={'completed'}
-        onClick={() => changeFilter('completed', id)}
+        value={"completed"}
+        onClick={() => changeFilter("completed", id)}
       >
         COMPLETED
       </ToggleButton>

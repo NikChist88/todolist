@@ -1,30 +1,30 @@
-import { AxiosError } from 'axios'
-import { todolistsAPI, UpdateTaskModelType } from '../../../api/todolistsApi'
-import { AppThunk, RootState } from '../../store'
-import { setErrorAC, setStatusAC } from '../appReducer/appReducer'
+import { AxiosError } from "axios"
+import { todolistsAPI, UpdateTaskModelType } from "../../../api/todolistsApi"
+import { AppThunk, AppRootState } from "../../store"
+import { setErrorAC, setStatusAC } from "../appReducer/appReducer"
 import {
   setTasksAC,
   createTaskAC,
   deleteTaskAC,
   UpdateDomainModelTaskType,
   updateTaskAC,
-} from './tasksReducer'
+} from "./tasksReducer"
 
 export const fetchTasksTC =
   (todolistId: string): AppThunk =>
   (dispatch) => {
-    dispatch(setStatusAC('loading'))
+    dispatch(setStatusAC("loading"))
     todolistsAPI
       .getTasks(todolistId)
       .then(({ status, data }) => {
         if (status === 200) {
           dispatch(setTasksAC(todolistId, data.items))
-          dispatch(setStatusAC('succeeded'))
+          dispatch(setStatusAC("succeeded"))
         }
       })
       .catch((err: AxiosError) => {
         dispatch(setErrorAC(err.message))
-        dispatch(setStatusAC('failed'))
+        dispatch(setStatusAC("failed"))
       })
   }
 
@@ -60,12 +60,12 @@ export const updateTaskTC =
     id: string,
     model: UpdateDomainModelTaskType
   ): AppThunk =>
-  (dispatch, getState: () => RootState) => {
+  (dispatch, getState: () => AppRootState) => {
     const state = getState()
     const task = state.tasks[todolistId].find((t) => t.id === id)
 
     if (!task) {
-      dispatch(setErrorAC('Task not found!'))
+      dispatch(setErrorAC("Task not found!"))
       return
     }
 
@@ -81,7 +81,7 @@ export const updateTaskTC =
 
     todolistsAPI
       .updateTask(todolistId, id, apiModel)
-      .then(({status}) => {
+      .then(({ status }) => {
         status === 200 && dispatch(updateTaskAC(todolistId, id, model))
       })
       .catch((err: AxiosError) => {

@@ -1,7 +1,7 @@
-import { useState, useCallback, ChangeEvent, KeyboardEvent } from 'react'
+import { useState, useCallback, ChangeEvent, KeyboardEvent } from "react"
 
 export const useFormControl = (action: (value: string) => void) => {
-  const [inputValue, setInputValue] = useState<string>('')
+  const [inputValue, setInputValue] = useState<string>("")
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.currentTarget.value)
@@ -9,9 +9,9 @@ export const useFormControl = (action: (value: string) => void) => {
 
   const handleKeyUp = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter' && inputValue.length <= 20) {
+      if (e.key === "Enter" && inputValue.length <= 20) {
         action(inputValue)
-        setInputValue('')
+        setInputValue("")
       }
     },
     [inputValue, action]
@@ -19,7 +19,7 @@ export const useFormControl = (action: (value: string) => void) => {
 
   const handleClick = useCallback(() => {
     action(inputValue)
-    setInputValue('')
+    setInputValue("")
   }, [inputValue, action])
 
   return {

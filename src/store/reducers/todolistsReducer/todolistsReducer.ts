@@ -3,7 +3,7 @@ import { TodolistType } from '../../../api/todolistsApi'
 // reducer
 export const todolistsReducer = (
   state: TodolistDomainType[] = [],
-  action: TodolistsActionsTypes
+  action: TodolistsActionsTypes,
 ): TodolistDomainType[] => {
   switch (action.type) {
     case 'CREATE_TODOLIST':
@@ -14,12 +14,12 @@ export const todolistsReducer = (
 
     case 'UPDATE_TITLE':
       return state.map((tl) =>
-        tl.id === action.id ? { ...tl, title: action.title } : tl
+        tl.id === action.id ? { ...tl, title: action.title } : tl,
       )
 
     case 'CHANGE_FILTER':
       return state.map((tl) =>
-        tl.id === action.id ? { ...tl, filter: action.filter } : tl
+        tl.id === action.id ? { ...tl, filter: action.filter } : tl,
       )
 
     case 'SET_TODOLISTS':

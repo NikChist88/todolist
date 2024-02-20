@@ -1,27 +1,27 @@
-import { AxiosError } from 'axios'
-import { todolistsAPI } from '../../../api/todolistsApi'
-import { AppThunk, RootState } from '../../store'
-import { setErrorAC, setStatusAC } from '../appReducer/appReducer'
+import { AxiosError } from "axios"
+import { todolistsAPI } from "../../../api/todolistsApi"
+import { AppThunk, AppRootState } from "../../store"
+import { setErrorAC, setStatusAC } from "../appReducer/appReducer"
 import {
   setTodolistsAC,
   createTodolistAC,
   deleteTodolistAC,
-  updateTitleAC
-} from './todolistsReducer'
+  updateTitleAC,
+} from "./todolistsReducer"
 
 export const fetchTodolistsTC = (): AppThunk => (dispatch) => {
-  dispatch(setStatusAC('loading'))
+  dispatch(setStatusAC("loading"))
   todolistsAPI
     .getTodolists()
     .then(({ status, data }) => {
       if (status === 200) {
         dispatch(setTodolistsAC(data))
-        dispatch(setStatusAC('succeeded'))
+        dispatch(setStatusAC("succeeded"))
       }
     })
     .catch((err: AxiosError) => {
       dispatch(setErrorAC(err.message))
-      dispatch(setStatusAC('failed'))
+      dispatch(setStatusAC("failed"))
     })
 }
 
@@ -53,12 +53,12 @@ export const deleteTodolistTC =
 
 export const updateTitleTC =
   (todolistId: string, title: string): AppThunk =>
-  (dispatch, getState: () => RootState) => {
+  (dispatch, getState: () => AppRootState) => {
     const state = getState()
     const todolist = state.todolists.find((tl) => tl.id === todolistId)
 
     if (!todolist) {
-      dispatch(setErrorAC('Todolist not found!'))
+      dispatch(setErrorAC("Todolist not found!"))
       return
     }
 
