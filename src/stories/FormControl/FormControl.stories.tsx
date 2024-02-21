@@ -1,16 +1,16 @@
-import { FormControl } from '../../components/formControl/FormControl'
+import { FormControl } from "../../components/FormControl/FormControl"
 
 export default {
-  title: 'FormControl Component',
+  title: "FormControl Component",
   component: FormControl,
 }
 
 export const FormControlExample = (props: any) => {
   return (
     <FormControl
-      label="Form control"
+      label='Form control'
       action={() => {
-        alert('action')
+        alert("action")
       }}
     />
   )

@@ -1,9 +1,9 @@
 import { applyMiddleware, combineReducers, legacy_createStore as createStore } from "redux"
 import { ThunkAction, ThunkDispatch, thunk } from "redux-thunk"
-import { TodolistsActionsTypes, todolistsReducer } from "./reducers/todolistsReducer/todolistsReducer"
-import { TasksActionsTypes, tasksReducer } from "./reducers/tasksReducer/tasksReducer"
-import { AppActionsTypes, appReducer } from "./reducers/appReducer/appReducer"
-import { AuthActionsTypes, authReducer } from "./reducers/authReducer/authReducer"
+import { TodolistsActionsTypes, todolistsReducer } from "./reducers/todolists-reducer/todolists-reducer"
+import { TasksActionsTypes, tasksReducer } from "./reducers/tasks-reducer/tasks-reducer"
+import { AppActionsTypes, appReducer } from "./reducers/app-reducer/app-reducer"
+import { AuthActionsTypes, authReducer } from "./reducers/auth-reducer/auth-reducer"
 import { useSelector, useDispatch, TypedUseSelectorHook } from "react-redux"
 
 const rootReducer = combineReducers({

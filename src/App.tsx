@@ -1,14 +1,14 @@
 import "./App.scss"
 import { FC, memo, useEffect } from "react"
-import { TodosList } from "./components/todolist/TodosList"
-import { SnackBar } from "./components/snackBar/SnackBar"
+import { TodosList } from "./components/Todolist/TodosList"
+import { SnackBar } from "./components/SnackBar/SnackBar"
 import { ConfirmProvider } from "material-ui-confirm"
 import { Route, Routes, Navigate } from "react-router-dom"
-import { LoginForm } from "./pages/loginForm/LoginForm"
-import { Error404 } from "./pages/error404/Error404"
+import { LoginForm } from "./pages/LoginForm/LoginForm"
+import { Error404 } from "./pages/Error404/Error404"
 import { useAppDispatch, useAppSelector } from "./store/store"
 import { CircularProgress } from "@mui/material"
-import { initTC } from "./store/reducers/authReducer/authThunks"
+import { initTC } from "./store/reducers/auth-reducer/auth-thunks"
 
 export const App: FC = memo(() => {
   const { isInit } = useAppSelector((state) => state.auth)
