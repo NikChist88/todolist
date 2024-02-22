@@ -1,49 +1,26 @@
-const initialState: AuthStateType = {
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+
+const initialState = {
   loading: false,
   isLoggedIn: false,
-  isInit: false
+  isInit: false,
 }
 
-// reducer
-export const authReducer = (
-  state: AuthStateType = initialState,
-  action: AuthActionsTypes,
-): AuthStateType => {
-  switch (action.type) {
-    case "AUTH/SET_LOADING":
-      return { ...state, loading: action.loading }
+const slice = createSlice({
+  name: "auth",
+  initialState: initialState,
+  reducers: {
+    setLoading(state, action: PayloadAction<{ loading: boolean }>) {
+      state.loading = action.payload.loading
+    },
+    setIsLoggedIn(state, action: PayloadAction<{ isLoggedIn: boolean }>) {
+      state.isLoggedIn = action.payload.isLoggedIn
+    },
+    setIsInit(state, action: PayloadAction<{ isInit: boolean }>) {
+      state.isInit = action.payload.isInit
+    },
+  },
+})
 
-    case "AUTH/SET_IS_LOGGED_IN":
-      return { ...state, isLoggedIn: action.login }
-
-    case 'AUTH/SET_INIT':
-      return {...state, isInit: action.init}
-
-    default:
-      return state
-  }
-}
-
-
-// actions
-export const setLoadingAC = (loading: boolean) =>
-  ({ type: "AUTH/SET_LOADING", loading } as const)
-
-export const setIsLoggedInAC = (login: boolean) =>
-  ({ type: "AUTH/SET_IS_LOGGED_IN", login } as const)
-
-export const setIsInitAC = (init: boolean) =>
-  ({ type: "AUTH/SET_INIT", init } as const)
-
-
-// types
-export type AuthStateType = {
-  loading: boolean
-  isLoggedIn: boolean
-  isInit: boolean
-}
-
-export type AuthActionsTypes =
-  | ReturnType<typeof setLoadingAC>
-  | ReturnType<typeof setIsLoggedInAC>
-  | ReturnType<typeof setIsInitAC>
+export const authReducer = slice.reducer
+export const { setLoading, setIsInit, setIsLoggedIn } = slice.actions

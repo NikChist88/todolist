@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../../store/store"
 import { TaskStatuses } from "../../../api/todolists-api"
 import { updateTaskTC, deleteTaskTC, createTaskTC } from "../../../store/reducers/tasks-reducer/tasks-thunks"
 import { FilterType } from "../../../store/reducers/todolists-reducer/todolists-reducer"
-import { setErrorAC, setMessageAC } from "../../../store/reducers/app-reducer/app-reducer"
+import { setError, setMessage } from "../../../store/reducers/app-reducer/app-reducer"
 import { useConfirm } from "material-ui-confirm"
 import { AxiosError } from "axios"
 
@@ -20,7 +20,7 @@ export const useTask = (todolistId: string, filter?: FilterType, id?: string, ti
   const createTask = useCallback(
     (title: string) => {
       if (filteredTasks.some((t) => t.title === title)) {
-        dispatch(setMessageAC(`Task ${title.toUpperCase()} already exists!`, "info"))
+        dispatch(setMessage({ message: `Task ${title.toUpperCase()} already exists!`, severity: "info" }))
       } else {
         dispatch(createTaskTC(todolistId, title))
       }
@@ -31,7 +31,7 @@ export const useTask = (todolistId: string, filter?: FilterType, id?: string, ti
   const updateTaskTitle = useCallback(
     (newTitle: string) => {
       if (filteredTasks.some((t) => t.title === newTitle)) {
-        dispatch(setMessageAC(`Task ${newTitle.toUpperCase()} already exists!`, "info"))
+        dispatch(setMessage({ message: `Task ${newTitle.toUpperCase()} already exists!`, severity: "info" }))
       } else {
         dispatch(updateTaskTC(todolistId, id!, { title: newTitle }))
       }
@@ -44,10 +44,10 @@ export const useTask = (todolistId: string, filter?: FilterType, id?: string, ti
       confirm({ description: `Delete task ${title?.toUpperCase()}?` })
         .then(() => {
           dispatch(deleteTaskTC(todolistId, id!))
-          dispatch(setMessageAC(`Task ${title?.toUpperCase()} successfully deleted!`, "success"))
+          dispatch(setMessage({ message: `Task ${title?.toUpperCase()} successfully deleted!`, severity: "success" }))
         })
         .catch((err: AxiosError) => {
-          err && dispatch(setErrorAC(err.message))
+          err && dispatch(setError({ error: err.message }))
         })
     },
     [title, dispatch, confirm]

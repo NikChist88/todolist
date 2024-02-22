@@ -1,6 +1,6 @@
-import { TasksType, tasksReducer, createTaskAC, deleteTaskAC, updateTaskAC } from "./tasks-reducer"
+import { TasksType, tasksReducer, actions as taskActions } from "./tasks-reducer"
 import { TaskPriorities, TaskStatuses } from "../../../api/todolists-api"
-import { setTodolistsAC } from "../todolists-reducer/todolists-reducer"
+import { actions } from "../todolists-reducer/todolists-reducer"
 
 let startState: TasksType = {}
 
@@ -87,7 +87,7 @@ beforeEach(() => {
 
 // Delete Task
 test("delete task from todolist", () => {
-  const action = deleteTaskAC("todolistId_1", "2")
+  const action = taskActions.deleteTaskAC({ todolistId: "todolistId_1", id: "2" })
   const endState = tasksReducer(startState, action)
 
   expect(endState["todolistId_1"].length).toBe(2)
@@ -108,7 +108,7 @@ test("add task for todolist", () => {
     order: 0,
     addedDate: "",
   }
-  const action = createTaskAC(task)
+  const action = taskActions.createTaskAC({ task: task })
   const endState = tasksReducer(startState, action)
 
   expect(endState["todolistId_1"].length).toBe(4)
@@ -119,7 +119,18 @@ test("add task for todolist", () => {
 
 // Update Task Title
 test("update task title", () => {
-  const action = updateTaskAC("todolistId_2", "2", { title: "coffee" })
+  const action = taskActions.updateTaskAC({
+    todolistId: "todolistId_2",
+    id: "2",
+    model: {
+      title: "coffee",
+      status: TaskStatuses.New,
+      description: "",
+      priority: TaskPriorities.Low,
+      startDate: "",
+      deadline: "",
+    },
+  })
   const endState = tasksReducer(startState, action)
 
   expect(endState["todolistId_2"].length).toBe(3)
@@ -128,7 +139,18 @@ test("update task title", () => {
 
 // Change Task Status
 test("change task status", () => {
-  const action = updateTaskAC("todolistId_2", "2", { status: TaskStatuses.New })
+  const action = taskActions.updateTaskAC({
+    todolistId: "todolistId_2",
+    id: "2",
+    model: {
+      title: "beer",
+      status: TaskStatuses.New,
+      description: "",
+      priority: TaskPriorities.Low,
+      startDate: "",
+      deadline: "",
+    },
+  })
   const endState = tasksReducer(startState, action)
 
   expect(endState["todolistId_1"][1].status).toBe(TaskStatuses.Completed)
@@ -137,10 +159,12 @@ test("change task status", () => {
 
 // Empty array tasks when we set todolists
 test("empty array tasks when we set todolists", () => {
-  const action = setTodolistsAC([
-    { id: "1", title: "what to learn", addedDate: "", order: 0 },
-    { id: "2", title: "what to buy", addedDate: "", order: 0 },
-  ])
+  const action = actions.setTodolists({
+    todolists: [
+      { id: "1", title: "what to learn", addedDate: "", order: 0 },
+      { id: "2", title: "what to buy", addedDate: "", order: 0 },
+    ],
+  })
   const endState = tasksReducer({}, action)
   const keys = Object.keys(endState)
 

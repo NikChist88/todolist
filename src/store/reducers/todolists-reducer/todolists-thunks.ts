@@ -1,68 +1,84 @@
-import { AxiosError } from "axios"
+import axios from "axios"
 import { todolistsAPI } from "../../../api/todolists-api"
 import { AppThunk, AppRootState } from "../../store"
-import { setErrorAC, setStatusAC } from "../app-reducer/app-reducer"
-import { setTodolistsAC, createTodolistAC, deleteTodolistAC, updateTitleAC } from "./todolists-reducer"
+import { setStatus, setError } from "../app-reducer/app-reducer"
+import { actions } from "./todolists-reducer"
+import { Dispatch } from "redux"
 
-export const fetchTodolistsTC = (): AppThunk => (dispatch) => {
-  dispatch(setStatusAC("loading"))
-  todolistsAPI
-    .getTodolists()
-    .then(({ status, data }) => {
-      if (status === 200) {
-        dispatch(setTodolistsAC(data))
-        dispatch(setStatusAC("succeeded"))
-      }
-    })
-    .catch((err: AxiosError) => {
-      dispatch(setErrorAC(err.message))
-      dispatch(setStatusAC("failed"))
-    })
+export const fetchTodolistsTC = (): AppThunk => async (dispatch: Dispatch) => {
+  dispatch(setStatus({ status: "loading" }))
+  try {
+    const { data } = await todolistsAPI.getTodolists()
+    dispatch(actions.setTodolists({ todolists: data }))
+    dispatch(setStatus({ status: "succeeded" }))
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      dispatch(setError({ error: err.message }))
+    } else {
+      dispatch(setStatus({ status: "failed" }))
+    }
+  }
 }
 
 export const createTodolistTC =
   (title: string): AppThunk =>
-  (dispatch) => {
-    todolistsAPI
-      .createTodolist(title)
-      .then(({ data }) => {
-        data.resultCode === 0 && dispatch(createTodolistAC(data.data.item))
-      })
-      .catch((err: AxiosError) => {
-        dispatch(setErrorAC(err.message))
-      })
+  async (dispatch: Dispatch) => {
+    dispatch(setStatus({ status: "loading" }))
+    try {
+      const { data } = await todolistsAPI.createTodolist(title)
+      if (data.resultCode === 0) {
+        dispatch(actions.createTodolist({ todolist: data.data.item }))
+        dispatch(setStatus({ status: "succeeded" }))
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        dispatch(setError({ error: err.message }))
+      } else {
+        dispatch(setStatus({ status: "failed" }))
+      }
+    }
   }
 
 export const deleteTodolistTC =
   (id: string): AppThunk =>
-  (dispatch) => {
-    todolistsAPI
-      .deleteTodolist(id)
-      .then(({ data }) => {
-        data.resultCode === 0 && dispatch(deleteTodolistAC(id))
-      })
-      .catch((err: AxiosError) => {
-        dispatch(setErrorAC(err.message))
-      })
+  async (dispatch: Dispatch) => {
+    try {
+      const { data } = await todolistsAPI.deleteTodolist(id)
+      if (data.resultCode === 0) {
+        dispatch(actions.deleteTodolist({ id: id }))
+        dispatch(setStatus({ status: "succeeded" }))
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        dispatch(setError({ error: err.message }))
+      } else {
+        dispatch(setStatus({ status: "failed" }))
+      }
+    }
   }
 
 export const updateTitleTC =
   (todolistId: string, title: string): AppThunk =>
-  (dispatch, getState: () => AppRootState) => {
+  async (dispatch: Dispatch, getState: () => AppRootState) => {
     const state = getState()
     const todolist = state.todolists.find((tl) => tl.id === todolistId)
 
     if (!todolist) {
-      dispatch(setErrorAC("Todolist not found!"))
+      dispatch(setError({ error: "Todolist not found!" }))
       return
     }
 
-    todolistsAPI
-      .updateTodolist(todolistId, title)
-      .then(({ status }) => {
-        status === 200 && dispatch(updateTitleAC(todolistId, title))
-      })
-      .catch((err: AxiosError) => {
-        dispatch(setErrorAC(err.message))
-      })
+    try {
+      const { data } = await todolistsAPI.updateTodolist(todolistId, title)
+      if (data.resultCode === 0) {
+        dispatch(actions.updateTitle({ id: todolistId, title: title }))
+        dispatch(setStatus({ status: "succeeded" }))
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        dispatch(setError({ error: err.message }))
+      } else {
+        dispatch(setStatus({ status: "failed" }))
+      }
+    }
   }

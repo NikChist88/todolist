@@ -1,11 +1,4 @@
-import {
-  todolistsReducer,
-  TodolistDomainType,
-  deleteTodolistAC,
-  changeFilterAC,
-  createTodolistAC,
-  setTodolistsAC,
-} from "./todolists-reducer"
+import { todolistsReducer, TodolistDomainType, actions } from "./todolists-reducer"
 
 let startState: TodolistDomainType[] = []
 
@@ -17,7 +10,7 @@ beforeEach(() => {
 })
 
 test("removed todolist", () => {
-  const action = deleteTodolistAC(startState[0].id)
+  const action = actions.deleteTodolist({ id: startState[0].id })
   const endState = todolistsReducer(startState, action)
 
   expect(endState.length).toBe(1)
@@ -32,7 +25,7 @@ test("create todolist", () => {
     addedDate: "",
     order: 0,
   }
-  const action = createTodolistAC(todolist)
+  const action = actions.createTodolist({ todolist: todolist })
   const endState = todolistsReducer(startState, action)
 
   expect(endState.length).toBe(3)
@@ -40,7 +33,7 @@ test("create todolist", () => {
 })
 
 test("change todolist filter", () => {
-  const action = changeFilterAC("active", startState[0].id)
+  const action = actions.changeFilter({ id: startState[0].id, filter: "active" })
   const endState = todolistsReducer(startState, action)
 
   expect(endState[0].filter).toBe("active")
@@ -48,7 +41,7 @@ test("change todolist filter", () => {
 })
 
 test("set todolists to state", () => {
-  const action = setTodolistsAC(startState)
+  const action = actions.setTodolists({ todolists: startState })
   const endState = todolistsReducer([], action)
 
   expect(endState.length).toBe(2)

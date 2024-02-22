@@ -111,5 +111,3 @@ export type UpdateTaskModelType = {
   startDate: string
   deadline: string
 }
-
-

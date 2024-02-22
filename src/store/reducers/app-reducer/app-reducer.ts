@@ -1,3 +1,5 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+
 const initialState: AppStateType = {
   status: "idle",
   error: null,
@@ -5,56 +7,31 @@ const initialState: AppStateType = {
   severity: "info",
 }
 
-// reducer
-export const appReducer = (
-  state: AppStateType = initialState,
-  action: AppActionsTypes,
-): AppStateType => {
-  switch (action.type) {
-    case "APP/SET_STATUS":
-      return { ...state, status: action.status }
+const slice = createSlice({
+  name: "app",
+  initialState: initialState,
+  reducers: {
+    setStatus(state, action: PayloadAction<{ status: RequestStatusType }>) {
+      state.status = action.payload.status
+    },
+    setError(state, action: PayloadAction<{ error: null | string }>) {
+      state.error = action.payload.error
+    },
+    setMessage(state, action: PayloadAction<{ message: null | string; severity: SeverityType }>) {
+      state.message = action.payload.message
+      state.severity = action.payload.severity
+    },
+  },
+})
 
-    case "APP/SET_ERROR":
-      return { ...state, error: action.error }
+export const appReducer = slice.reducer
+export const { setStatus, setError, setMessage } = slice.actions
 
-    case "APP/SET_MESSAGE":
-      return { ...state, message: action.message, severity: action.severity }
-
-    default:
-      return { ...state }
-  }
-}
-
-
-// actions
-export const setStatusAC = (status: RequestStatusType) =>
-  ({ type: "APP/SET_STATUS", status } as const)
-
-export const setErrorAC = (error: ErrorType) =>
-  ({ type: "APP/SET_ERROR", error } as const)
-
-export const setMessageAC = (message: MessageType, severity: SeverityType) =>
-  ({
-    type: "APP/SET_MESSAGE",
-    message,
-    severity,
-  } as const)
-
-
-// types
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed"
-export type SeverityType = "success" | "info" | "error"
-export type ErrorType = string | null
-export type MessageType = string | null
-
+export type SeverityType = "success" | "info" | "error" | "warning"
 export type AppStateType = {
   status: RequestStatusType
-  error: ErrorType
-  message: MessageType
+  error: null | string
+  message: null | string
   severity: SeverityType
 }
-
-export type AppActionsTypes =
-  | ReturnType<typeof setErrorAC>
-  | ReturnType<typeof setStatusAC>
-  | ReturnType<typeof setMessageAC>

@@ -1,59 +1,56 @@
-import { AxiosError } from "axios"
+import axios, { AxiosError } from "axios"
 import { AuthLoginDataType, authAPI } from "../../../api/auth-api"
-import { setErrorAC, setStatusAC } from "../app-reducer/app-reducer"
+import { setError, setStatus } from "../app-reducer/app-reducer"
 import { AppThunk } from "../../store"
-import { setIsInitAC, setIsLoggedInAC, setLoadingAC } from "./auth-reducer"
+import { actions } from "../todolists-reducer/todolists-reducer"
+import { setLoading, setIsLoggedIn, setIsInit } from "./auth-reducer"
+import { Dispatch } from "redux"
 
-export const loginTC =
-  (data: AuthLoginDataType): AppThunk =>
-  (dispatch) => {
-    dispatch(setStatusAC("loading"))
-    dispatch(setLoadingAC(true))
-    authAPI
-      .login(data)
-      .then(({ data }) => {
-        if (data.resultCode === 0) {
-          dispatch(setStatusAC("succeeded"))
-          dispatch(setIsLoggedInAC(true))
-          dispatch(setLoadingAC(false))
-        } else {
-          dispatch(setStatusAC("failed"))
-          dispatch(setErrorAC(data.messages.toString()))
-          dispatch(setLoadingAC(false))
-        }
-      })
-      .catch((err: AxiosError) => {
-        dispatch(setErrorAC(err.message))
-      })
+export const loginTC = (authData: AuthLoginDataType) => async (dispatch: Dispatch) => {
+  dispatch(setStatus({ status: "loading" }))
+  dispatch(setLoading({ loading: true }))
+  try {
+    await authAPI.login(authData)
+    dispatch(setLoading({ loading: false }))
+    dispatch(setStatus({ status: "succeeded" }))
+    dispatch(setIsLoggedIn({ isLoggedIn: true }))
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      dispatch(setError({ error: err.message }))
+    } else {
+      dispatch(setStatus({ status: "failed" }))
+    }
   }
+}
 
-export const initTC = (): AppThunk => (dispatch) => {
+export const initTC = (): AppThunk => (dispatch: Dispatch) => {
   authAPI
     .init()
     .then(({ data }) => {
-      dispatch(setIsInitAC(true))
+      dispatch(setIsInit({ isInit: true }))
       if (data.resultCode === 0) {
-        dispatch(setIsLoggedInAC(true))
+        dispatch(setIsLoggedIn({ isLoggedIn: true }))
       } else {
-        dispatch(setErrorAC(data.messages.toString()))
+        dispatch(setError({ error: data.messages.toString() }))
       }
     })
     .catch((err: AxiosError) => {
-      dispatch(setErrorAC(err.message))
+      dispatch(setError({ error: err.message }))
     })
 }
 
-export const logoutTC = (): AppThunk => (dispatch) => {
+export const logoutTC = (): AppThunk => (dispatch: Dispatch) => {
   authAPI
     .logout()
     .then(({ data }) => {
       if (data.resultCode === 0) {
-        dispatch(setIsLoggedInAC(false))
+        dispatch(setIsLoggedIn({ isLoggedIn: false }))
+        dispatch(actions.clearData())
       } else {
-        dispatch(setErrorAC(data.messages.toString()))
+        dispatch(setError({ error: data.messages.toString() }))
       }
     })
     .catch((err: AxiosError) => {
-      dispatch(setErrorAC(err.message))
+      dispatch(setError({ error: err.message }))
     })
 }

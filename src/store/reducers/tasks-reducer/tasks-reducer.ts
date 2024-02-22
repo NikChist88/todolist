@@ -1,71 +1,52 @@
-import { TodolistsActionsTypes } from "../todolists-reducer/todolists-reducer"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { TaskPriorities, TaskStatuses, TaskType } from "../../../api/todolists-api"
+import { actions as todolistActions } from "../todolists-reducer/todolists-reducer"
 
-// reducer
-export const tasksReducer = (state: TasksType = {}, action: TasksActionsTypes | TodolistsActionsTypes): TasksType => {
-  switch (action.type) {
-    case "CREATE_TASK":
-      return {
-        ...state,
-        [action.task.todoListId]: [action.task, ...state[action.task.todoListId]],
-      }
+const initialState: TasksType = {}
 
-    case "DELETE_TASK":
-      return {
-        ...state,
-        [action.todolistId]: state[action.todolistId].filter((t) => t.id !== action.id),
-      }
+const slice = createSlice({
+  name: "tasks",
+  initialState: initialState,
+  reducers: {
+    createTaskAC(state, action: PayloadAction<{ task: TaskType }>) {
+      state[action.payload.task.todoListId].unshift(action.payload.task)
+    },
+    deleteTaskAC(state, action: PayloadAction<{ todolistId: string; id: string }>) {
+      const tasks = state[action.payload.todolistId]
+      const index = tasks.findIndex((t) => t.id === action.payload.id)
+      tasks.splice(index, 1)
+    },
+    updateTaskAC(state, action: PayloadAction<{ todolistId: string; id: string; model: UpdateDomainModelTaskType }>) {
+      const tasks = state[action.payload.todolistId]
+      const index = tasks.findIndex((t) => t.id === action.payload.id)
+      tasks[index] = { ...tasks[index], ...action.payload.model }
+    },
+    setTasksAC(state, action: PayloadAction<{ todolistId: string; tasks: TaskType[] }>) {
+      state[action.payload.todolistId] = action.payload.tasks
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(todolistActions.createTodolist, (state, action) => {
+      state[action.payload.todolist.id] = []
+    })
+    builder.addCase(todolistActions.deleteTodolist, (state, action) => {
+      delete state[action.payload.id]
+    })
+    builder.addCase(todolistActions.setTodolists, (state, action) => {
+      action.payload.todolists.forEach((tl) => (state[tl.id] = []))
+    })
+    builder.addCase(todolistActions.clearData, () => {
+      return {}
+    })
+  },
+})
 
-    case "UPDATE_TASK":
-      return {
-        ...state,
-        [action.todolistId]: state[action.todolistId].map((t) => (t.id === action.id ? { ...t, ...action.model } : t)),
-      }
+export const tasksReducer = slice.reducer
+export const actions = slice.actions
 
-    case "CREATE_TODOLIST":
-      return { ...state, [action.todolist.id]: [] }
-
-    case "DELETE_TODOLIST": {
-      const copyState = { ...state }
-      delete copyState[action.id]
-      return copyState
-    }
-
-    case "SET_TODOLISTS": {
-      const copyState = { ...state }
-      action.todolists.forEach((tl) => (copyState[tl.id] = []))
-      return copyState
-    }
-
-    case "SET_TASKS":
-      return { ...state, [action.todolistId]: action.tasks }
-
-    default:
-      return state
-  }
-}
-
-// actions
-export const createTaskAC = (task: TaskType) => ({ type: "CREATE_TASK", task } as const)
-
-export const deleteTaskAC = (todolistId: string, id: string) => ({ type: "DELETE_TASK", todolistId, id } as const)
-
-export const updateTaskAC = (todolistId: string, id: string, model: UpdateDomainModelTaskType) =>
-  ({ type: "UPDATE_TASK", todolistId, id, model } as const)
-
-export const setTasksAC = (todolistId: string, tasks: TaskType[]) => ({ type: "SET_TASKS", todolistId, tasks } as const)
-
-// types
 export type TasksType = {
   [todolistId: string]: TaskType[]
 }
-
-export type TasksActionsTypes =
-  | ReturnType<typeof createTaskAC>
-  | ReturnType<typeof deleteTaskAC>
-  | ReturnType<typeof updateTaskAC>
-  | ReturnType<typeof setTasksAC>
-
 export type UpdateDomainModelTaskType = {
   description?: string
   title?: string

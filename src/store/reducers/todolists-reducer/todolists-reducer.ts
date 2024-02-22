@@ -1,57 +1,40 @@
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { TodolistType } from "../../../api/todolists-api"
 
-// reducer
-export const todolistsReducer = (
-  state: TodolistDomainType[] = [],
-  action: TodolistsActionsTypes
-): TodolistDomainType[] => {
-  switch (action.type) {
-    case "CREATE_TODOLIST":
-      return [{ ...action.todolist, filter: "all" }, ...state]
+const initialState: TodolistDomainType[] = []
 
-    case "DELETE_TODOLIST":
-      return state.filter((tl) => tl.id !== action.id)
+const slice = createSlice({
+  name: "todolists",
+  initialState: initialState,
+  reducers: {
+    createTodolist(state, action: PayloadAction<{ todolist: TodolistType }>) {
+      state.unshift({ ...action.payload.todolist, filter: "all" })
+    },
+    deleteTodolist(state, action: PayloadAction<{ id: string }>) {
+      const index = state.findIndex((tl) => tl.id === action.payload.id)
+      state.splice(index, 1)
+    },
+    updateTitle(state, action: PayloadAction<{ id: string; title: string }>) {
+      const index = state.findIndex((tl) => tl.id === action.payload.id)
+      state[index].title = action.payload.title
+    },
+    changeFilter(state, action: PayloadAction<{ id: string; filter: FilterType }>) {
+      const index = state.findIndex((tl) => tl.id === action.payload.id)
+      state[index].filter = action.payload.filter
+    },
+    setTodolists(state, action: PayloadAction<{ todolists: TodolistType[] }>) {
+      return action.payload.todolists.map((tl) => ({ ...tl, filter: "all" }))
+    },
+    clearData(state, action: PayloadAction) {
+      return (state = [])
+    },
+  },
+})
 
-    case "UPDATE_TITLE":
-      return state.map((tl) => (tl.id === action.id ? { ...tl, title: action.title } : tl))
-
-    case "CHANGE_FILTER":
-      return state.map((tl) => (tl.id === action.id ? { ...tl, filter: action.filter } : tl))
-
-    case "SET_TODOLISTS":
-      return action.todolists.map((tl) => ({ ...tl, filter: "all" }))
-
-    default:
-      return state
-  }
-}
-
-// actions
-export const createTodolistAC = (todolist: TodolistType) => ({ type: "CREATE_TODOLIST", todolist } as const)
-
-export const deleteTodolistAC = (id: string) => ({ type: "DELETE_TODOLIST", id } as const)
-
-export const updateTitleAC = (id: string, title: string) =>
-  ({
-    type: "UPDATE_TITLE",
-    id,
-    title,
-  } as const)
-
-export const changeFilterAC = (filter: FilterType, id: string) => ({ type: "CHANGE_FILTER", id, filter } as const)
-
-export const setTodolistsAC = (todolists: TodolistType[]) => ({ type: "SET_TODOLISTS", todolists } as const)
-
-// types
-export type FilterType = "all" | "active" | "completed"
+export const todolistsReducer = slice.reducer
+export const actions = slice.actions
 
 export type TodolistDomainType = TodolistType & {
   filter: FilterType
 }
-
-export type TodolistsActionsTypes =
-  | ReturnType<typeof createTodolistAC>
-  | ReturnType<typeof deleteTodolistAC>
-  | ReturnType<typeof updateTitleAC>
-  | ReturnType<typeof changeFilterAC>
-  | ReturnType<typeof setTodolistsAC>
+export type FilterType = "all" | "active" | "completed"

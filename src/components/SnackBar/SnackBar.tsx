@@ -1,6 +1,6 @@
 import { FC, SyntheticEvent } from "react"
 import { Alert, Snackbar } from "@mui/material"
-import { setErrorAC, setMessageAC } from "../../store/reducers/app-reducer/app-reducer"
+import { setError, setMessage } from "../../store/reducers/app-reducer/app-reducer"
 import { useAppDispatch, useAppSelector } from "../../store/store"
 
 export const SnackBar: FC = () => {
@@ -12,8 +12,8 @@ export const SnackBar: FC = () => {
     if (reason === "clickaway") {
       return
     }
-    dispatch(setErrorAC(null))
-    dispatch(setMessageAC(null, "info"))
+    dispatch(setError({ error: null }))
+    dispatch(setMessage({ message: null, severity: severity }))
   }
 
   return (
