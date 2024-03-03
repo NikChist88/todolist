@@ -1,6 +1,6 @@
 import { FC, useState, MouseEvent } from "react"
 import { ToggleButtonGroup, ToggleButton } from "@mui/material"
-import { FilterType } from "../../store/reducers/todolists-reducer/todolists-reducer"
+import { FilterType } from "../../store/todolists/todolists-reducer"
 
 type FilterPropsType = {
   id: string

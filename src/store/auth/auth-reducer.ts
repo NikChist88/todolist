@@ -10,14 +10,14 @@ const slice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
-    setLoading(state, action: PayloadAction<{ loading: boolean }>) {
-      state.loading = action.payload.loading
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload
     },
-    setIsLoggedIn(state, action: PayloadAction<{ isLoggedIn: boolean }>) {
-      state.isLoggedIn = action.payload.isLoggedIn
+    setIsLoggedIn(state, action: PayloadAction<boolean>) {
+      state.isLoggedIn = action.payload
     },
-    setIsInit(state, action: PayloadAction<{ isInit: boolean }>) {
-      state.isInit = action.payload.isInit
+    setIsInit(state, action: PayloadAction<boolean>) {
+      state.isInit = action.payload
     },
   },
 })

@@ -1,25 +1,25 @@
 import { AxiosError } from "axios"
-import { todolistsAPI, UpdateTaskModelType } from "../../../api/todolists-api"
-import { AppThunk, AppRootState } from "../../store"
-import { setError, setStatus } from "../app-reducer/app-reducer"
+import { todolistsAPI, UpdateTaskModelType } from "../../api/todolists-api"
+import { AppThunk, AppRootState } from "../store"
+import { setError, setStatus } from "../app/app-reducer"
 import { actions, UpdateDomainModelTaskType } from "./tasks-reducer"
 import { Dispatch } from "redux"
 
 export const fetchTasksTC =
   (todolistId: string): AppThunk =>
   (dispatch: Dispatch) => {
-    dispatch(setStatus({ status: "loading" }))
+    dispatch(setStatus("loading"))
     todolistsAPI
       .getTasks(todolistId)
       .then(({ status, data }) => {
         if (status === 200) {
-          dispatch(actions.setTasksAC({ todolistId: todolistId, tasks: data.items }))
-          dispatch(setStatus({ status: "succeeded" }))
+          dispatch(actions.setTasks({ todolistId: todolistId, tasks: data.items }))
+          dispatch(setStatus("succeeded"))
         }
       })
       .catch((err: AxiosError) => {
-        dispatch(setError({ error: err.message }))
-        dispatch(setStatus({ status: "failed" }))
+        dispatch(setError(err.message))
+        dispatch(setStatus("failed"))
       })
   }
 
@@ -29,10 +29,10 @@ export const createTaskTC =
     todolistsAPI
       .createTask(todolistId, title)
       .then(({ status, data }) => {
-        status === 200 && dispatch(actions.createTaskAC({ task: data.data.item }))
+        status === 200 && dispatch(actions.createTask(data.data.item))
       })
       .catch((err: AxiosError) => {
-        dispatch(setError({ error: err.message }))
+        dispatch(setError(err.message))
       })
   }
 
@@ -42,10 +42,10 @@ export const deleteTaskTC =
     todolistsAPI
       .deleteTask(todolistId, id)
       .then(({ status }) => {
-        status === 200 && dispatch(actions.deleteTaskAC({ todolistId: todolistId, id: id }))
+        status === 200 && dispatch(actions.deleteTask({ todolistId: todolistId, id: id }))
       })
       .catch((err: AxiosError) => {
-        dispatch(setError({ error: err.message }))
+        dispatch(setError(err.message))
       })
   }
 
@@ -56,7 +56,7 @@ export const updateTaskTC =
     const task = state.tasks[todolistId].find((t) => t.id === id)
 
     if (!task) {
-      dispatch(setError({ error: "Task not found!" }))
+      dispatch(setError("Task not found!"))
       return
     }
 
@@ -73,9 +73,9 @@ export const updateTaskTC =
     todolistsAPI
       .updateTask(todolistId, id, apiModel)
       .then(({ status }) => {
-        status === 200 && dispatch(actions.updateTaskAC({ todolistId: todolistId, id: id, model: apiModel }))
+        status === 200 && dispatch(actions.updateTask({ todolistId: todolistId, id: id, model: apiModel }))
       })
       .catch((err: AxiosError) => {
-        dispatch(setError({ error: err.message }))
+        dispatch(setError(err.message))
       })
   }

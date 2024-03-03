@@ -8,10 +8,11 @@ import { LoginForm } from "./pages/LoginForm/LoginForm"
 import { Error404 } from "./pages/Error404/Error404"
 import { useAppDispatch, useAppSelector } from "./store/store"
 import { CircularProgress } from "@mui/material"
-import { initTC } from "./store/reducers/auth-reducer/auth-thunks"
+import { initTC } from "./store/auth/auth-thunks"
+import { selectAuthIsInit } from "./store/auth/auth-selectors"
 
 export const App: FC = memo(() => {
-  const { isInit } = useAppSelector((state) => state.auth)
+  const isInit = useAppSelector(selectAuthIsInit)
   const dispatch = useAppDispatch()
 
   useEffect(() => {

@@ -12,14 +12,14 @@ beforeEach(() => {
 })
 
 test("set error", () => {
-  const action = setError({ error: "some error" })
+  const action = setError("some error")
   const endState = appReducer(startState, action)
 
   expect(endState.error).toBe("some error")
 })
 
 test("set status", () => {
-  const action = setStatus({ status: "loading" })
+  const action = setStatus("loading")
   const endState = appReducer(startState, action)
 
   expect(endState.status).toBe("loading")

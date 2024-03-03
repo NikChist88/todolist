@@ -4,11 +4,13 @@ import { TextField, Checkbox } from "@mui/material"
 import LoadingButton from "@mui/lab/LoadingButton"
 import { useFormik } from "formik"
 import { useAppDispatch, useAppSelector } from "../../store/store"
-import { loginTC } from "../../store/reducers/auth-reducer/auth-thunks"
+import { loginTC } from "../../store/auth/auth-thunks"
 import { Navigate } from "react-router-dom"
+import { selectAuthIsLoggedIn, selectAuthLoading } from "../../store/auth/auth-selectors"
 
 export const LoginForm: FC = () => {
-  const { loading, isLoggedIn } = useAppSelector((state) => state.auth)
+  const loading = useAppSelector(selectAuthLoading)
+  const isLoggedIn = useAppSelector(selectAuthIsLoggedIn)
   const dispatch = useAppDispatch()
 
   const formik = useFormik({

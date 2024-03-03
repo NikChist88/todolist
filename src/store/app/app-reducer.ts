@@ -11,11 +11,11 @@ const slice = createSlice({
   name: "app",
   initialState: initialState,
   reducers: {
-    setStatus(state, action: PayloadAction<{ status: RequestStatusType }>) {
-      state.status = action.payload.status
+    setStatus(state, action: PayloadAction<RequestStatusType>) {
+      state.status = action.payload
     },
-    setError(state, action: PayloadAction<{ error: null | string }>) {
-      state.error = action.payload.error
+    setError(state, action: PayloadAction<null | string>) {
+      state.error = action.payload
     },
     setMessage(state, action: PayloadAction<{ message: null | string; severity: SeverityType }>) {
       state.message = action.payload.message

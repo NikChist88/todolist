@@ -1,8 +1,8 @@
 import { FC, useEffect } from "react"
 import { TaskItem } from "./TaskItem"
-import { FilterType } from "../../store/reducers/todolists-reducer/todolists-reducer"
+import { FilterType } from "../../store/todolists/todolists-reducer"
 import { useTask } from "./hooks/useTask"
-import { fetchTasksTC } from "../../store/reducers/tasks-reducer/tasks-thunks"
+import { fetchTasksTC } from "../../store/tasks/tasks-thunks"
 import { useAppDispatch } from "../../store/store"
 
 type TasksListPropsType = {

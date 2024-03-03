@@ -1,14 +1,15 @@
 import { useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../../../store/store"
 import { TaskStatuses } from "../../../api/todolists-api"
-import { updateTaskTC, deleteTaskTC, createTaskTC } from "../../../store/reducers/tasks-reducer/tasks-thunks"
-import { FilterType } from "../../../store/reducers/todolists-reducer/todolists-reducer"
-import { setError, setMessage } from "../../../store/reducers/app-reducer/app-reducer"
+import { updateTaskTC, deleteTaskTC, createTaskTC } from "../../../store/tasks/tasks-thunks"
+import { FilterType } from "../../../store/todolists/todolists-reducer"
+import { setError, setMessage } from "../../../store/app/app-reducer"
 import { useConfirm } from "material-ui-confirm"
 import { AxiosError } from "axios"
+import { selectTasks } from "../../../store/tasks/tasks-selectors"
 
 export const useTask = (todolistId: string, filter?: FilterType, id?: string, title?: string) => {
-  const tasks = useAppSelector((state) => state.tasks)
+  const tasks = useAppSelector(selectTasks)
   const dispatch = useAppDispatch()
   const confirm = useConfirm()
 
@@ -47,7 +48,7 @@ export const useTask = (todolistId: string, filter?: FilterType, id?: string, ti
           dispatch(setMessage({ message: `Task ${title?.toUpperCase()} successfully deleted!`, severity: "success" }))
         })
         .catch((err: AxiosError) => {
-          err && dispatch(setError({ error: err.message }))
+          err && dispatch(setError(err.message))
         })
     },
     [title, dispatch, confirm]

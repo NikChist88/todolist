@@ -1,6 +1,6 @@
 import "./TodoItem.styles.scss"
 import { FC, memo } from "react"
-import { TodolistDomainType } from "../../store/reducers/todolists-reducer/todolists-reducer"
+import { TodolistDomainType } from "../../store/todolists/todolists-reducer"
 import { FormControl } from "../FormControl/FormControl"
 import { useTodolist } from "./hooks/useTodolist"
 import { TasksList } from "../Task/TasksList"

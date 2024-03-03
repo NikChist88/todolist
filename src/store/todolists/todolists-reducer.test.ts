@@ -10,7 +10,7 @@ beforeEach(() => {
 })
 
 test("removed todolist", () => {
-  const action = actions.deleteTodolist({ id: startState[0].id })
+  const action = actions.deleteTodolist(startState[0].id)
   const endState = todolistsReducer(startState, action)
 
   expect(endState.length).toBe(1)
@@ -25,7 +25,7 @@ test("create todolist", () => {
     addedDate: "",
     order: 0,
   }
-  const action = actions.createTodolist({ todolist: todolist })
+  const action = actions.createTodolist(todolist)
   const endState = todolistsReducer(startState, action)
 
   expect(endState.length).toBe(3)
@@ -41,7 +41,7 @@ test("change todolist filter", () => {
 })
 
 test("set todolists to state", () => {
-  const action = actions.setTodolists({ todolists: startState })
+  const action = actions.setTodolists(startState)
   const endState = todolistsReducer([], action)
 
   expect(endState.length).toBe(2)
