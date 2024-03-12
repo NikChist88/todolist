@@ -2,14 +2,16 @@ import "./LoginForm.styles.scss"
 import { FC } from "react"
 import { TextField, Checkbox } from "@mui/material"
 import LoadingButton from "@mui/lab/LoadingButton"
-import { useFormik } from "formik"
+import { FormikHelpers, useFormik } from "formik"
 import { useAppDispatch, useAppSelector } from "../../store/store"
-import { loginTC } from "../../store/auth/auth-thunks"
+import { login } from "../../store/auth/auth-thunks"
 import { Navigate } from "react-router-dom"
-import { selectAuthIsLoggedIn, selectAuthLoading } from "../../store/auth/auth-selectors"
+import { selectAuthIsLoggedIn } from "../../store/auth/auth-selectors"
+import { AuthLoginDataType } from "../../api/todolists-api"
+import { selectAppStatus } from "../../store/app/app-selectors"
 
 export const LoginForm: FC = () => {
-  const loading = useAppSelector(selectAuthLoading)
+  const status = useAppSelector(selectAppStatus)
   const isLoggedIn = useAppSelector(selectAuthIsLoggedIn)
   const dispatch = useAppDispatch()
 
@@ -20,8 +22,8 @@ export const LoginForm: FC = () => {
       rememberMe: false,
       captcha: "",
     },
-    onSubmit: (values) => {
-      dispatch(loginTC(values))
+    onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginDataType>) => {
+      dispatch(login(values))
     },
   })
 
@@ -35,7 +37,7 @@ export const LoginForm: FC = () => {
         className='login-form'
         onSubmit={formik.handleSubmit}
       >
-        <h1>Welcome To Todos App</h1>
+        <h1>Welcome</h1>
         <p>Please login to your account</p>
         <div className='input-group'>
           <TextField
@@ -71,7 +73,7 @@ export const LoginForm: FC = () => {
           type='submit'
           variant='contained'
           size='large'
-          loading={loading}
+          loading={status === "loading"}
         >
           Login
         </LoadingButton>

@@ -16,7 +16,7 @@ type TaskItemPropsType = {
 
 export const TaskItem: FC<TaskItemPropsType> = memo(({ task, filter }) => {
   const { todoListId, id, title } = task
-  const { updateTaskTitle, deleteTask, changeTaskStatus } = useTask(todoListId, filter, id, title)
+  const { updateTaskTitle, deleteTask, changeTaskStatus } = useTask(todoListId, id, filter, title)
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     changeTaskStatus(event.currentTarget.checked)

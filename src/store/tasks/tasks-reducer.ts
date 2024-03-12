@@ -1,31 +1,35 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
 import { TaskPriorities, TaskStatuses, TaskType } from "../../api/todolists-api"
 import { actions as todolistActions } from "../todolists/todolists-reducer"
+import { createTaskTC, deleteTaskTC, fetchTasks, updateTaskTC } from "./tasks-thunks"
 
 const initialState: TasksType = {}
 
 const slice = createSlice({
   name: "tasks",
   initialState: initialState,
-  reducers: {
-    createTask(state, action: PayloadAction<TaskType>) {
-      state[action.payload.todoListId].unshift(action.payload)
-    },
-    deleteTask(state, action: PayloadAction<{ todolistId: string; id: string }>) {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchTasks.fulfilled, (state, action) => {
+      if (action.payload) {
+        state[action.payload.todolistId] = action.payload.tasks
+      }
+    })
+    builder.addCase(createTaskTC.fulfilled, (state, action) => {
+      state[action.payload.todolistId].unshift(action.payload.task)
+    })
+    builder.addCase(deleteTaskTC.fulfilled, (state, action) => {
       const tasks = state[action.payload.todolistId]
       const index = tasks.findIndex((t) => t.id === action.payload.id)
       tasks.splice(index, 1)
-    },
-    updateTask(state, action: PayloadAction<{ todolistId: string; id: string; model: UpdateDomainModelTaskType }>) {
-      const tasks = state[action.payload.todolistId]
-      const index = tasks.findIndex((t) => t.id === action.payload.id)
-      tasks[index] = { ...tasks[index], ...action.payload.model }
-    },
-    setTasks(state, action: PayloadAction<{ todolistId: string; tasks: TaskType[] }>) {
-      state[action.payload.todolistId] = action.payload.tasks
-    },
-  },
-  extraReducers: (builder) => {
+    })
+    builder.addCase(updateTaskTC.fulfilled, (state, action) => {
+      if (action.payload) {
+        const tasks = state[action.payload.todolistId]
+        const index = tasks.findIndex((t) => (action.payload ? t.id === action.payload.id : t))
+        tasks[index] = { ...tasks[index], ...action.meta.arg.model }
+      }
+    })
     builder.addCase(todolistActions.createTodolist, (state, action) => {
       state[action.payload.id] = []
     })
@@ -42,7 +46,6 @@ const slice = createSlice({
 })
 
 export const tasksReducer = slice.reducer
-export const actions = slice.actions
 
 export type TasksType = {
   [todolistId: string]: TaskType[]

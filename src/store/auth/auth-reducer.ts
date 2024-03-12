@@ -1,26 +1,32 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { init, login, logout } from "./auth-thunks"
 
 const initialState = {
-  loading: false,
   isLoggedIn: false,
   isInit: false,
+  logout: false,
 }
 
 const slice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
-    setLoading(state, action: PayloadAction<boolean>) {
-      state.loading = action.payload
-    },
     setIsLoggedIn(state, action: PayloadAction<boolean>) {
       state.isLoggedIn = action.payload
     },
-    setIsInit(state, action: PayloadAction<boolean>) {
-      state.isInit = action.payload
-    },
+  },
+  extraReducers(builder) {
+    builder.addCase(login.fulfilled, (state) => {
+      state.isLoggedIn = true
+    })
+    builder.addCase(init.fulfilled, (state) => {
+      state.isInit = true
+    })
+    builder.addCase(logout.fulfilled, (state) => {
+      state.logout = true
+    })
   },
 })
 
 export const authReducer = slice.reducer
-export const { setLoading, setIsInit, setIsLoggedIn } = slice.actions
+export const { setIsLoggedIn } = slice.actions

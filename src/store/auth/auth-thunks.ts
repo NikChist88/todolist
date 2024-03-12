@@ -1,56 +1,50 @@
-import axios, { AxiosError } from "axios"
-import { AuthLoginDataType, authAPI } from "../../api/auth-api"
-import { setError, setStatus } from "../app/app-reducer"
-import { AppThunk } from "../store"
+import { AuthLoginDataType, todolistsAPI } from "../../api/todolists-api"
+import { setAppError, setAppStatus } from "../app/app-reducer"
 import { actions } from "../todolists/todolists-reducer"
-import { setLoading, setIsLoggedIn, setIsInit } from "./auth-reducer"
-import { Dispatch } from "redux"
+import { setIsLoggedIn } from "./auth-reducer"
+import { createAsyncThunk } from "@reduxjs/toolkit"
 
-export const loginTC = (authData: AuthLoginDataType) => async (dispatch: Dispatch) => {
-  dispatch(setStatus("loading"))
-  dispatch(setLoading(true))
-  try {
-    await authAPI.login(authData)
-    dispatch(setLoading(false))
-    dispatch(setStatus("succeeded"))
-    dispatch(setIsLoggedIn(true))
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      dispatch(setError(err.message))
-    } else {
-      dispatch(setStatus("failed"))
+export const login = createAsyncThunk(
+  "auth/login",
+  async (authData: AuthLoginDataType, { dispatch, rejectWithValue }) => {
+    dispatch(setAppStatus("loading"))
+    try {
+      const { data } = await todolistsAPI.login(authData)
+      if (data.resultCode === 0) {
+        dispatch(setAppStatus("succeeded"))
+      } else {
+        dispatch(setAppError({ message: data.messages.toString(), severity: "error" }))
+      }
+    } catch {
+      dispatch(setAppError({ message: "An error occured!", severity: "error" }))
+      dispatch(setAppStatus("failed"))
+      return rejectWithValue({ setIsLoggedIn: false })
     }
   }
-}
+)
 
-export const initTC = (): AppThunk => (dispatch: Dispatch) => {
-  authAPI
-    .init()
-    .then(({ data }) => {
-      dispatch(setIsInit(true))
-      if (data.resultCode === 0) {
-        dispatch(setIsLoggedIn(true))
-      } else {
-        dispatch(setError(data.messages.toString()))
-      }
-    })
-    .catch((err: AxiosError) => {
-      dispatch(setError(err.message))
-    })
-}
+export const init = createAsyncThunk("auth/init", async (param, { dispatch }) => {
+  try {
+    const { data } = await todolistsAPI.init()
+    if (data.resultCode === 0) {
+      dispatch(setIsLoggedIn(true))
+    }
+  } catch {
+    dispatch(setAppError({ message: "An error occured!", severity: "error" }))
+  }
+})
 
-export const logoutTC = (): AppThunk => (dispatch: Dispatch) => {
-  authAPI
-    .logout()
-    .then(({ data }) => {
-      if (data.resultCode === 0) {
-        dispatch(setIsLoggedIn(false))
-        dispatch(actions.clearData())
-      } else {
-        dispatch(setError(data.messages.toString()))
-      }
-    })
-    .catch((err: AxiosError) => {
-      dispatch(setError(err.message))
-    })
-}
+export const logout = createAsyncThunk("auth/logout", async (param, { dispatch }) => {
+  try {
+    const { data } = await todolistsAPI.logout()
+    if (data.resultCode === 0) {
+      dispatch(setIsLoggedIn(false))
+      dispatch(setAppStatus("idle"))
+      dispatch(actions.clearData())
+    } else {
+      dispatch(setAppError({ message: data.messages.toString(), severity: "error" }))
+    }
+  } catch {
+    dispatch(setAppError({ message: "An error occured!", severity: "error" }))
+  }
+})

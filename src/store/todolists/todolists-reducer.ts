@@ -29,6 +29,9 @@ const slice = createSlice({
       return (state = [])
     },
   },
+  extraReducers(builder) {
+    builder.addCase
+  }
 })
 
 export const todolistsReducer = slice.reducer

@@ -9,7 +9,20 @@ export const instance = axios.create({
 })
 
 export const todolistsAPI = {
-  // Todolists
+  // auth
+  init() {
+    return instance.get<ResponseType<AuthInitDataType>>("auth/me")
+  },
+
+  login(data: AuthLoginDataType) {
+    return instance.post<ResponseType<{ userId?: number }>>("auth/login", data)
+  },
+
+  logout() {
+    return instance.delete<ResponseType>("auth/login")
+  },
+
+  // todolists
   getTodolists() {
     return instance.get<TodolistType[]>("todo-lists")
   },
@@ -28,34 +41,38 @@ export const todolistsAPI = {
     return instance.put<ResponseType>(`todo-lists/${id}`, { title: title })
   },
 
-  // Tasks
+  // tasks
   getTasks(todolistId: string) {
     return instance.get<GetTaskResponse>(`todo-lists/${todolistId}/tasks/`)
   },
 
   createTask(todolistId: string, title: string) {
-    return instance.post<ResponseType<{ item: TaskType }>>(
-      `todo-lists/${todolistId}/tasks`,
-      { title: title },
-    )
+    return instance.post<ResponseType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks`, { title: title })
   },
 
   deleteTask(todolistId: string, taskId: string) {
-    return instance.delete<ResponseType>(
-      `todo-lists/${todolistId}/tasks/${taskId}`,
-    )
+    return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`)
   },
 
   updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
-    return instance.put<ResponseType<TaskType>>(
-      `todo-lists/${todolistId}/tasks/${taskId}`,
-      { ...model },
-    )
+    return instance.put<ResponseType<TaskType>>(`todo-lists/${todolistId}/tasks/${taskId}`, { ...model })
   },
 }
 
-
 // types
+export type AuthLoginDataType = {
+  email: string
+  password: string
+  rememberMe?: boolean
+  captcha?: string
+}
+
+export type AuthInitDataType = {
+  id: number
+  email: string
+  login: string
+}
+
 export type TodolistType = {
   id: string
   title: string

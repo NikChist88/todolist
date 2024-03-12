@@ -4,7 +4,7 @@ import { FilterType } from "../../store/todolists/todolists-reducer"
 
 type FilterPropsType = {
   id: string
-  changeFilter: (filter: FilterType, id: string) => void
+  changeFilter: (id: string, filter: FilterType) => void
 }
 
 export const Filter: FC<FilterPropsType> = ({ id, changeFilter }) => {
@@ -25,19 +25,19 @@ export const Filter: FC<FilterPropsType> = ({ id, changeFilter }) => {
     >
       <ToggleButton
         value={"all"}
-        onClick={() => changeFilter("all", id)}
+        onClick={() => changeFilter(id, "all")}
       >
         ALL
       </ToggleButton>
       <ToggleButton
         value={"active"}
-        onClick={() => changeFilter("active", id)}
+        onClick={() => changeFilter(id, "active")}
       >
         ACTIVE
       </ToggleButton>
       <ToggleButton
         value={"completed"}
-        onClick={() => changeFilter("completed", id)}
+        onClick={() => changeFilter(id, "completed")}
       >
         COMPLETED
       </ToggleButton>

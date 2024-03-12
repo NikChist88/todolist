@@ -1,9 +1,10 @@
 import { FC, useEffect } from "react"
 import { TaskItem } from "./TaskItem"
 import { FilterType } from "../../store/todolists/todolists-reducer"
-import { useTask } from "./hooks/useTask"
-import { fetchTasksTC } from "../../store/tasks/tasks-thunks"
-import { useAppDispatch } from "../../store/store"
+import { fetchTasks } from "../../store/tasks/tasks-thunks"
+import { useAppDispatch, useAppSelector } from "../../store/store"
+import { selectTasks } from "../../store/tasks/tasks-selectors"
+import { TaskStatuses } from "../../api/todolists-api"
 
 type TasksListPropsType = {
   todolistId: string
@@ -11,12 +12,17 @@ type TasksListPropsType = {
 }
 
 export const TasksList: FC<TasksListPropsType> = ({ todolistId, filter }) => {
-  const { filteredTasks } = useTask(todolistId, filter)
+  const tasks = useAppSelector(selectTasks)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(fetchTasksTC(todolistId))
+    dispatch(fetchTasks(todolistId))
   }, [])
+
+  // Filtered Tasks
+  let filteredTasks = tasks[todolistId]
+  if (filter === "active") filteredTasks = filteredTasks.filter((t) => t.status === TaskStatuses.New)
+  if (filter === "completed") filteredTasks = filteredTasks.filter((t) => t.status === TaskStatuses.Completed)
 
   return (
     <>

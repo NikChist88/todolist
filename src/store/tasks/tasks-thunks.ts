@@ -1,62 +1,45 @@
-import { AxiosError } from "axios"
-import { todolistsAPI, UpdateTaskModelType } from "../../api/todolists-api"
-import { AppThunk, AppRootState } from "../store"
-import { setError, setStatus } from "../app/app-reducer"
-import { actions, UpdateDomainModelTaskType } from "./tasks-reducer"
-import { Dispatch } from "redux"
+import { TaskType, todolistsAPI, UpdateTaskModelType } from "../../api/todolists-api"
+import { setAppError, setAppStatus } from "../app/app-reducer"
+import { UpdateDomainModelTaskType } from "./tasks-reducer"
+import { createAsyncThunk } from "@reduxjs/toolkit"
 
-export const fetchTasksTC =
-  (todolistId: string): AppThunk =>
-  (dispatch: Dispatch) => {
-    dispatch(setStatus("loading"))
-    todolistsAPI
-      .getTasks(todolistId)
-      .then(({ status, data }) => {
-        if (status === 200) {
-          dispatch(actions.setTasks({ todolistId: todolistId, tasks: data.items }))
-          dispatch(setStatus("succeeded"))
-        }
-      })
-      .catch((err: AxiosError) => {
-        dispatch(setError(err.message))
-        dispatch(setStatus("failed"))
-      })
+export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async (todolistId: string, { dispatch, rejectWithValue }) => {
+  dispatch(setAppStatus("loading"))
+  try {
+    const { data, status } = await todolistsAPI.getTasks(todolistId)
+    if (status === 200) {
+      const tasks = data.items
+      dispatch(setAppStatus("succeeded"))
+      return { todolistId, tasks }
+    }
+  } catch (err) {
+    dispatch(setAppStatus("failed"))
+    dispatch(setAppError({ message: "An error occured!", severity: "error" }))
+    return rejectWithValue(err)
   }
+})
 
-export const createTaskTC =
-  (todolistId: string, title: string): AppThunk =>
-  (dispatch: Dispatch) => {
-    todolistsAPI
-      .createTask(todolistId, title)
-      .then(({ status, data }) => {
-        status === 200 && dispatch(actions.createTask(data.data.item))
-      })
-      .catch((err: AxiosError) => {
-        dispatch(setError(err.message))
-      })
+export const createTaskTC = createAsyncThunk(
+  "tasks/createTask",
+  async (param: { todolistId: string; title: string }) => {
+    const { data } = await todolistsAPI.createTask(param.todolistId, param.title)
+    return { todolistId: param.todolistId, task: data.data.item }
   }
+)
 
-export const deleteTaskTC =
-  (todolistId: string, id: string): AppThunk =>
-  (dispatch: Dispatch) => {
-    todolistsAPI
-      .deleteTask(todolistId, id)
-      .then(({ status }) => {
-        status === 200 && dispatch(actions.deleteTask({ todolistId: todolistId, id: id }))
-      })
-      .catch((err: AxiosError) => {
-        dispatch(setError(err.message))
-      })
-  }
+export const deleteTaskTC = createAsyncThunk("tasks/deleteTask", async (param: { todolistId: string; id: string }) => {
+  await todolistsAPI.deleteTask(param.todolistId, param.id)
+  return { todolistId: param.todolistId, id: param.id }
+})
 
-export const updateTaskTC =
-  (todolistId: string, id: string, model: UpdateDomainModelTaskType): AppThunk =>
-  (dispatch: Dispatch, getState: () => AppRootState) => {
-    const state = getState()
-    const task = state.tasks[todolistId].find((t) => t.id === id)
+export const updateTaskTC = createAsyncThunk(
+  "tasks/updateTask",
+  async (param: { todolistId: string; id: string; model: UpdateDomainModelTaskType }, thunkAPI) => {
+    const state: any = thunkAPI.getState()
+    const task: TaskType = state.tasks[param.todolistId].find((t: TaskType) => t.id === param.id)
 
     if (!task) {
-      dispatch(setError("Task not found!"))
+      thunkAPI.dispatch(setAppError({ message: "Task not found!", severity: "error" }))
       return
     }
 
@@ -67,15 +50,10 @@ export const updateTaskTC =
       priority: task.priority,
       startDate: task.startDate,
       deadline: task.deadline,
-      ...model,
+      ...param.model,
     }
 
-    todolistsAPI
-      .updateTask(todolistId, id, apiModel)
-      .then(({ status }) => {
-        status === 200 && dispatch(actions.updateTask({ todolistId: todolistId, id: id, model: apiModel }))
-      })
-      .catch((err: AxiosError) => {
-        dispatch(setError(err.message))
-      })
+    await todolistsAPI.updateTask(param.todolistId, param.id, apiModel)
+    return { todolistId: param.todolistId, id: param.id, model: apiModel }
   }
+)

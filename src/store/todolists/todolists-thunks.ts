@@ -1,21 +1,22 @@
 import axios from "axios"
 import { todolistsAPI } from "../../api/todolists-api"
 import { AppThunk, AppRootState } from "../store"
-import { setStatus, setError } from "../app/app-reducer"
+import { setAppStatus, setAppError } from "../app/app-reducer"
 import { actions } from "./todolists-reducer"
 import { Dispatch } from "redux"
+import { createAsyncThunk } from "@reduxjs/toolkit"
 
 export const fetchTodolistsTC = (): AppThunk => async (dispatch: Dispatch) => {
-  dispatch(setStatus("loading"))
+  dispatch(setAppStatus("loading"))
   try {
     const { data } = await todolistsAPI.getTodolists()
     dispatch(actions.setTodolists(data))
-    dispatch(setStatus("succeeded"))
+    dispatch(setAppStatus("succeeded"))
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      dispatch(setError(err.message))
+      dispatch(setAppError({ message: err.message.toString(), severity: "error" }))
     } else {
-      dispatch(setStatus("failed"))
+      dispatch(setAppStatus("failed"))
     }
   }
 }
@@ -23,18 +24,16 @@ export const fetchTodolistsTC = (): AppThunk => async (dispatch: Dispatch) => {
 export const createTodolistTC =
   (title: string): AppThunk =>
   async (dispatch: Dispatch) => {
-    dispatch(setStatus("loading"))
     try {
       const { data } = await todolistsAPI.createTodolist(title)
       if (data.resultCode === 0) {
         dispatch(actions.createTodolist(data.data.item))
-        dispatch(setStatus("succeeded"))
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        dispatch(setError(err.message))
+        dispatch(setAppError({ message: err.message.toString(), severity: "error" }))
       } else {
-        dispatch(setStatus("failed"))
+        dispatch(setAppStatus("failed"))
       }
     }
   }
@@ -46,13 +45,12 @@ export const deleteTodolistTC =
       const { data } = await todolistsAPI.deleteTodolist(id)
       if (data.resultCode === 0) {
         dispatch(actions.deleteTodolist(id))
-        dispatch(setStatus("succeeded"))
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        dispatch(setError(err.message))
+        dispatch(setAppError({ message: err.message.toString(), severity: "error" }))
       } else {
-        dispatch(setStatus("failed"))
+        dispatch(setAppStatus("failed"))
       }
     }
   }
@@ -64,7 +62,7 @@ export const updateTitleTC =
     const todolist = state.todolists.find((tl) => tl.id === todolistId)
 
     if (!todolist) {
-      dispatch(setError("Todolist not found!"))
+      dispatch(setAppError({ message: "Todolist not found!", severity: "error" }))
       return
     }
 
@@ -72,13 +70,12 @@ export const updateTitleTC =
       const { data } = await todolistsAPI.updateTodolist(todolistId, title)
       if (data.resultCode === 0) {
         dispatch(actions.updateTitle({ id: todolistId, title: title }))
-        dispatch(setStatus("succeeded"))
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        dispatch(setError(err.message))
+        dispatch(setAppError({ message: err.message.toString(), severity: "error" }))
       } else {
-        dispatch(setStatus("failed"))
+        dispatch(setAppStatus("failed"))
       }
     }
   }

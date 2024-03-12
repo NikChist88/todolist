@@ -1,6 +1,7 @@
-import { TasksType, tasksReducer, actions as taskActions } from "./tasks-reducer"
+import { TasksType, tasksReducer } from "./tasks-reducer"
 import { TaskPriorities, TaskStatuses } from "../../api/todolists-api"
 import { actions } from "../todolists/todolists-reducer"
+import { createTaskTC, deleteTaskTC, fetchTasks, updateTaskTC } from "./tasks-thunks"
 
 let startState: TasksType = {}
 
@@ -87,7 +88,10 @@ beforeEach(() => {
 
 // Delete Task
 test("delete task from todolist", () => {
-  const action = taskActions.deleteTask({ todolistId: "todolistId_1", id: "2" })
+  const action = deleteTaskTC.fulfilled({ todolistId: "todolistId_1", id: "2" }, "", {
+    todolistId: "todolistId_1",
+    id: "2",
+  })
   const endState = tasksReducer(startState, action)
 
   expect(endState["todolistId_1"].length).toBe(2)
@@ -108,7 +112,10 @@ test("add task for todolist", () => {
     order: 0,
     addedDate: "",
   }
-  const action = taskActions.createTask(task)
+  const action = createTaskTC.fulfilled({ todolistId: "todolistId_1", task }, "", {
+    todolistId: "todolistId_1",
+    title: "restAPI",
+  })
   const endState = tasksReducer(startState, action)
 
   expect(endState["todolistId_1"].length).toBe(4)
@@ -119,18 +126,33 @@ test("add task for todolist", () => {
 
 // Update Task Title
 test("update task title", () => {
-  const action = taskActions.updateTask({
-    todolistId: "todolistId_2",
-    id: "2",
-    model: {
-      title: "coffee",
-      status: TaskStatuses.New,
-      description: "",
-      priority: TaskPriorities.Low,
-      startDate: "",
-      deadline: "",
+  const action = updateTaskTC.fulfilled(
+    {
+      todolistId: "todolistId_2",
+      id: "2",
+      model: {
+        title: "coffee",
+        status: TaskStatuses.New,
+        description: "",
+        priority: TaskPriorities.Low,
+        startDate: "",
+        deadline: "",
+      },
     },
-  })
+    "",
+    {
+      todolistId: "todolistId_2",
+      id: "2",
+      model: {
+        title: "coffee",
+        status: TaskStatuses.New,
+        description: "",
+        priority: TaskPriorities.Low,
+        startDate: "",
+        deadline: "",
+      },
+    }
+  )
   const endState = tasksReducer(startState, action)
 
   expect(endState["todolistId_2"].length).toBe(3)
@@ -139,18 +161,33 @@ test("update task title", () => {
 
 // Change Task Status
 test("change task status", () => {
-  const action = taskActions.updateTask({
-    todolistId: "todolistId_2",
-    id: "2",
-    model: {
-      title: "beer",
-      status: TaskStatuses.New,
-      description: "",
-      priority: TaskPriorities.Low,
-      startDate: "",
-      deadline: "",
+  const action = updateTaskTC.fulfilled(
+    {
+      todolistId: "todolistId_2",
+      id: "2",
+      model: {
+        title: "coffee",
+        status: TaskStatuses.New,
+        description: "",
+        priority: TaskPriorities.Low,
+        startDate: "",
+        deadline: "",
+      },
     },
-  })
+    "",
+    {
+      todolistId: "todolistId_2",
+      id: "2",
+      model: {
+        title: "coffee",
+        status: TaskStatuses.New,
+        description: "",
+        priority: TaskPriorities.Low,
+        startDate: "",
+        deadline: "",
+      },
+    }
+  )
   const endState = tasksReducer(startState, action)
 
   expect(endState["todolistId_1"][1].status).toBe(TaskStatuses.Completed)
@@ -169,4 +206,17 @@ test("empty array tasks when we set todolists", () => {
   expect(keys.length).toBe(2)
   expect(endState["1"]).toStrictEqual([])
   expect(endState["2"]).toStrictEqual([])
+})
+
+// set tasks for todolist
+test("add tasks for todolist", () => {
+  const action = fetchTasks.fulfilled(
+    { todolistId: "todolistId_1", tasks: startState["todolistId_1"] },
+    "",
+    "todolistId_1"
+  )
+  const endState = tasksReducer({ todolistId_1: [], todolistId_2: [] }, action)
+
+  expect(endState["todolistId_1"].length).toBe(3)
+  expect(endState["todolistId_2"].length).toBe(0)
 })

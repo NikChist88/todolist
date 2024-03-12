@@ -7,10 +7,10 @@ import { useTodolist } from "./hooks/useTodolist"
 import { LinearProgress, IconButton } from "@mui/material"
 import { Navigate } from "react-router-dom"
 import LogoutIcon from "@mui/icons-material/Logout"
-import { logoutTC } from "../../store/auth/auth-thunks"
 import { selectAppStatus } from "../../store/app/app-selectors"
 import { selectAuthIsLoggedIn } from "../../store/auth/auth-selectors"
 import { selectTodolists } from "../../store/todolists/todolists-selectors"
+import { logout } from "../../store/auth/auth-thunks"
 
 export const TodosList: FC = memo(() => {
   const { createTodolist } = useTodolist()
@@ -25,7 +25,7 @@ export const TodosList: FC = memo(() => {
   }, [])
 
   const handleLogOut = useCallback(() => {
-    dispatch(logoutTC())
+    dispatch(logout())
   }, [dispatch])
 
   if (!isLoggedIn) {
