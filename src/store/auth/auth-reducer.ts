@@ -26,7 +26,6 @@ const slice = createSlice({
       state.logout = true
     })
   },
-  
 })
 
 export const authReducer = slice.reducer

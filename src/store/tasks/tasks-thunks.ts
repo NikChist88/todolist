@@ -24,7 +24,7 @@ export const fetchTasks = createAsyncThunk(
   }
 )
 
-export const createTaskTC = createAsyncThunk(
+export const createTask = createAsyncThunk(
   "tasks/createTask",
   async (param: { todolistId: string; title: string }, { dispatch, rejectWithValue }) => {
     try {
@@ -40,12 +40,12 @@ export const createTaskTC = createAsyncThunk(
   }
 )
 
-export const deleteTaskTC = createAsyncThunk("tasks/deleteTask", async (param: { todolistId: string; id: string }) => {
+export const deleteTask = createAsyncThunk("tasks/deleteTask", async (param: { todolistId: string; id: string }) => {
   await todolistsAPI.deleteTask(param.todolistId, param.id)
   return { todolistId: param.todolistId, id: param.id }
 })
 
-export const updateTaskTC = createAsyncThunk(
+export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async (
     param: { todolistId: string; id: string; model: UpdateDomainModelTaskType },

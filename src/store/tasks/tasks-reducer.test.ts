@@ -1,7 +1,7 @@
 import { TasksType, tasksReducer } from "./tasks-reducer"
 import { TaskPriorities, TaskStatuses } from "../../api/todolists-api"
-import { createTaskTC, deleteTaskTC, fetchTasks, updateTaskTC } from "./tasks-thunks"
-import { fetchTodolistsTC } from "../todolists/todolists-thunks"
+import { createTask, deleteTask, fetchTasks, updateTask } from "./tasks-thunks"
+import { fetchTodolists } from "../todolists/todolists-thunks"
 
 let startState: TasksType = {}
 
@@ -88,7 +88,7 @@ beforeEach(() => {
 
 // Delete Task
 test("delete task from todolist", () => {
-  const action = deleteTaskTC.fulfilled({ todolistId: "todolistId_1", id: "2" }, "", {
+  const action = deleteTask.fulfilled({ todolistId: "todolistId_1", id: "2" }, "", {
     todolistId: "todolistId_1",
     id: "2",
   })
@@ -112,7 +112,7 @@ test("add task for todolist", () => {
     order: 0,
     addedDate: "",
   }
-  const action = createTaskTC.fulfilled({ todolistId: "todolistId_1", task }, "", {
+  const action = createTask.fulfilled({ todolistId: "todolistId_1", task }, "", {
     todolistId: "todolistId_1",
     title: "restAPI",
   })
@@ -126,7 +126,7 @@ test("add task for todolist", () => {
 
 // Update Task Title
 test("update task title", () => {
-  const action = updateTaskTC.fulfilled(
+  const action = updateTask.fulfilled(
     {
       todolistId: "todolistId_2",
       id: "2",
@@ -161,7 +161,7 @@ test("update task title", () => {
 
 // Change Task Status
 test("change task status", () => {
-  const action = updateTaskTC.fulfilled(
+  const action = updateTask.fulfilled(
     {
       todolistId: "todolistId_2",
       id: "2",

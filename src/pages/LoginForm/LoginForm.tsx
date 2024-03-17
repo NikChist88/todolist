@@ -4,15 +4,12 @@ import { TextField, Checkbox } from "@mui/material"
 import LoadingButton from "@mui/lab/LoadingButton"
 import { FormikHelpers, useFormik } from "formik"
 import { useAppDispatch, useAppSelector } from "../../store/store"
-import { login } from "../../store/auth/auth-thunks"
 import { Navigate } from "react-router-dom"
-import { selectAuthIsLoggedIn } from "../../store/auth/auth-selectors"
+import { authThunks, authSelectors } from "../../store/auth"
 import { AuthLoginDataType } from "../../api/todolists-api"
-import { selectAppStatus } from "../../store/app/app-selectors"
 
 export const LoginForm: FC = () => {
-  const status = useAppSelector(selectAppStatus)
-  const isLoggedIn = useAppSelector(selectAuthIsLoggedIn)
+  const isLoggedIn = useAppSelector(authSelectors.selectAuthIsLoggedIn)
   const dispatch = useAppDispatch()
 
   const formik = useFormik({
@@ -23,7 +20,7 @@ export const LoginForm: FC = () => {
       captcha: "",
     },
     onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginDataType>) => {
-      dispatch(login(values))
+      dispatch(authThunks.login(values))
     },
   })
 

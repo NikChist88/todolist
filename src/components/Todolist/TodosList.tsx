@@ -1,31 +1,29 @@
 import { FC, memo, useCallback, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../../store/store"
 import { TodoItem } from "./TodoItem"
-import { fetchTodolistsTC } from "../../store/todolists/todolists-thunks"
 import { FormControl } from "../FormControl/FormControl"
 import { useTodolist } from "./hooks/useTodolist"
 import { LinearProgress, IconButton } from "@mui/material"
 import { Navigate } from "react-router-dom"
 import LogoutIcon from "@mui/icons-material/Logout"
-import { selectAppStatus } from "../../store/app/app-selectors"
-import { selectAuthIsLoggedIn } from "../../store/auth/auth-selectors"
-import { selectTodolists } from "../../store/todolists/todolists-selectors"
-import { logout } from "../../store/auth/auth-thunks"
+import { appSelectors } from "../../store/app"
+import { selectors, thunks } from "../../store/todolists"
+import { authThunks, authSelectors } from "../../store/auth"
 
 export const TodosList: FC = memo(() => {
   const { createTodolist } = useTodolist()
-  const todolists = useAppSelector(selectTodolists)
-  const status = useAppSelector(selectAppStatus)
-  const isLoggedIn = useAppSelector(selectAuthIsLoggedIn)
+  const todolists = useAppSelector(selectors.selectTodolists)
+  const status = useAppSelector(appSelectors.selectAppStatus)
+  const isLoggedIn = useAppSelector(authSelectors.selectAuthIsLoggedIn)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(fetchTodolistsTC())
+    dispatch(thunks.fetchTodolists())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleLogOut = useCallback(() => {
-    dispatch(logout())
+    dispatch(authThunks.logout())
   }, [dispatch])
 
   if (!isLoggedIn) {

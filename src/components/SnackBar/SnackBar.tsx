@@ -1,11 +1,10 @@
 import { FC, SyntheticEvent } from "react"
 import { Alert, Snackbar } from "@mui/material"
-import { setAppError } from "../../store/app/app-reducer"
 import { useAppDispatch, useAppSelector } from "../../store/store"
-import { selectAppError } from "../../store/app/app-selectors"
+import { appSelectors, appReducer } from "../../store/app"
 
 export const SnackBar: FC = () => {
-  const error = useAppSelector(selectAppError)
+  const error = useAppSelector(appSelectors.selectAppError)
   const dispatch = useAppDispatch()
   const isOpen = error.message !== null
 
@@ -13,7 +12,7 @@ export const SnackBar: FC = () => {
     if (reason === "clickaway") {
       return
     }
-    dispatch(setAppError({ message: null, severity: error.severity }))
+    dispatch(appReducer.setAppError({ message: null, severity: error.severity }))
   }
 
   return (

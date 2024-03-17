@@ -1,6 +1,6 @@
 import { AuthLoginDataType, todolistsAPI } from "../../api/todolists-api"
 import { setAppError, setAppStatus } from "../app/app-reducer"
-import { actions } from "../todolists/todolists-reducer"
+import { clearData } from "../todolists/todolists-reducer"
 import { setIsLoggedIn } from "./auth-reducer"
 import { createAsyncThunk } from "@reduxjs/toolkit"
 
@@ -39,7 +39,7 @@ export const logout = createAsyncThunk("auth/logout", async (param, { dispatch }
     if (data.resultCode === 0) {
       dispatch(setIsLoggedIn(false))
       dispatch(setAppStatus("idle"))
-      dispatch(actions.clearData())
+      dispatch(clearData())
     } else {
       dispatch(setAppError({ message: data.messages.toString(), severity: "error" }))
     }

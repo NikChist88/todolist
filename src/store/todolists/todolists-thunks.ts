@@ -3,7 +3,7 @@ import { AppRootState } from "../store"
 import { setAppStatus, setAppError } from "../app/app-reducer"
 import { createAsyncThunk } from "@reduxjs/toolkit"
 
-export const fetchTodolistsTC = createAsyncThunk(
+export const fetchTodolists = createAsyncThunk(
   "todolists/fetchTodolists",
   async (param, { dispatch, rejectWithValue }) => {
     dispatch(setAppStatus("loading"))
@@ -22,7 +22,7 @@ export const fetchTodolistsTC = createAsyncThunk(
   }
 )
 
-export const createTodolistTC = createAsyncThunk(
+export const createTodolist = createAsyncThunk(
   "todolists/createTodolist",
   async (title: string, { dispatch, rejectWithValue }) => {
     try {
@@ -38,7 +38,7 @@ export const createTodolistTC = createAsyncThunk(
   }
 )
 
-export const deleteTodolistTC = createAsyncThunk(
+export const deleteTodolist = createAsyncThunk(
   "todolists/deleteTodolist",
   async (id: string, { dispatch, rejectWithValue }) => {
     try {
@@ -54,7 +54,7 @@ export const deleteTodolistTC = createAsyncThunk(
   }
 )
 
-export const updateTitleTC = createAsyncThunk(
+export const updateTitle = createAsyncThunk(
   "todolists/updateTitle",
   async (param: { todolistId: string; title: string }, { dispatch, rejectWithValue, getState }) => {
     const state = getState() as AppRootState
