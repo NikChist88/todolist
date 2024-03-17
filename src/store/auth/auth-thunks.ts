@@ -13,12 +13,11 @@ export const login = createAsyncThunk(
       if (data.resultCode === 0) {
         dispatch(setAppStatus("succeeded"))
       } else {
+        dispatch(setAppStatus("failed"))
         dispatch(setAppError({ message: data.messages.toString(), severity: "error" }))
       }
-    } catch {
-      dispatch(setAppError({ message: "An error occured!", severity: "error" }))
-      dispatch(setAppStatus("failed"))
-      return rejectWithValue({ setIsLoggedIn: false })
+    } catch (err) {
+      return rejectWithValue(err)
     }
   }
 )

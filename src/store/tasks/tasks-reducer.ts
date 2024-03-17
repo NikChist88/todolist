@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 import { TaskPriorities, TaskStatuses, TaskType } from "../../api/todolists-api"
 import { actions as todolistActions } from "../todolists/todolists-reducer"
 import { createTaskTC, deleteTaskTC, fetchTasks, updateTaskTC } from "./tasks-thunks"
+import { createTodolistTC, deleteTodolistTC, fetchTodolistsTC } from "../todolists/todolists-thunks"
 
 const initialState: TasksType = {}
 
@@ -16,7 +17,9 @@ const slice = createSlice({
       }
     })
     builder.addCase(createTaskTC.fulfilled, (state, action) => {
-      state[action.payload.todolistId].unshift(action.payload.task)
+      if (action.payload) {
+        state[action.payload.todolistId].unshift(action.payload.task)
+      }
     })
     builder.addCase(deleteTaskTC.fulfilled, (state, action) => {
       const tasks = state[action.payload.todolistId]
@@ -26,18 +29,22 @@ const slice = createSlice({
     builder.addCase(updateTaskTC.fulfilled, (state, action) => {
       if (action.payload) {
         const tasks = state[action.payload.todolistId]
-        const index = tasks.findIndex((t) => (action.payload ? t.id === action.payload.id : t))
-        tasks[index] = { ...tasks[index], ...action.meta.arg.model }
+        const index = tasks.findIndex((t) => t.id === action.payload?.id)
+        tasks[index] = { ...tasks[index], ...action.payload.model }
       }
     })
-    builder.addCase(todolistActions.createTodolist, (state, action) => {
-      state[action.payload.id] = []
+    builder.addCase(createTodolistTC.fulfilled, (state, action) => {
+      if (action.payload) {
+        state[action.payload.todolist.id] = []
+      }
     })
-    builder.addCase(todolistActions.deleteTodolist, (state, action) => {
-      delete state[action.payload]
+    builder.addCase(deleteTodolistTC.fulfilled, (state, action) => {
+      if (action.payload) {
+        delete state[action.payload?.id]
+      }
     })
-    builder.addCase(todolistActions.setTodolists, (state, action) => {
-      action.payload.forEach((tl) => (state[tl.id] = []))
+    builder.addCase(fetchTodolistsTC.fulfilled, (state, action) => {
+      action.payload?.data.forEach((tl) => (state[tl.id] = []))
     })
     builder.addCase(todolistActions.clearData, () => {
       return {}

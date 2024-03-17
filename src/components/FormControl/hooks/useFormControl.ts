@@ -9,7 +9,7 @@ export const useFormControl = (action: (value: string) => void) => {
 
   const handleKeyUp = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter" && inputValue.length <= 20) {
+      if (e.key === "Enter" && inputValue.length <= 20 && inputValue) {
         action(inputValue)
         setInputValue("")
       }

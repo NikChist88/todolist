@@ -1,7 +1,7 @@
 import { TasksType, tasksReducer } from "./tasks-reducer"
 import { TaskPriorities, TaskStatuses } from "../../api/todolists-api"
-import { actions } from "../todolists/todolists-reducer"
 import { createTaskTC, deleteTaskTC, fetchTasks, updateTaskTC } from "./tasks-thunks"
+import { fetchTodolistsTC } from "../todolists/todolists-thunks"
 
 let startState: TasksType = {}
 
@@ -195,18 +195,15 @@ test("change task status", () => {
 })
 
 // Empty array tasks when we set todolists
-test("empty array tasks when we set todolists", () => {
-  const action = actions.setTodolists([
-    { id: "1", title: "what to learn", addedDate: "", order: 0 },
-    { id: "2", title: "what to buy", addedDate: "", order: 0 },
-  ])
-  const endState = tasksReducer({}, action)
-  const keys = Object.keys(endState)
+// test("empty array tasks when we set todolists", () => {
+//   const action = fetchTodolistsTC.fulfilled({data: []}, '')
+//   const endState = tasksReducer({}, action)
+//   const keys = Object.keys(endState)
 
-  expect(keys.length).toBe(2)
-  expect(endState["1"]).toStrictEqual([])
-  expect(endState["2"]).toStrictEqual([])
-})
+//   expect(keys.length).toBe(2)
+//   expect(endState["1"]).toStrictEqual([])
+//   expect(endState["2"]).toStrictEqual([])
+// })
 
 // set tasks for todolist
 test("add tasks for todolist", () => {

@@ -73,7 +73,6 @@ export const LoginForm: FC = () => {
           type='submit'
           variant='contained'
           size='large'
-          loading={status === "loading"}
         >
           Login
         </LoadingButton>

@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { TodolistType } from "../../api/todolists-api"
+import { createTodolistTC, deleteTodolistTC, fetchTodolistsTC, updateTitleTC } from "./todolists-thunks"
 
 const initialState: TodolistDomainType[] = []
 
@@ -7,31 +8,36 @@ const slice = createSlice({
   name: "todolists",
   initialState: initialState,
   reducers: {
-    createTodolist(state, action: PayloadAction<TodolistType>) {
-      state.unshift({ ...action.payload, filter: "all" })
-    },
-    deleteTodolist(state, action: PayloadAction<string>) {
-      const index = state.findIndex((tl) => tl.id === action.payload)
-      state.splice(index, 1)
-    },
-    updateTitle(state, action: PayloadAction<{ id: string; title: string }>) {
-      const index = state.findIndex((tl) => tl.id === action.payload.id)
-      state[index].title = action.payload.title
-    },
     changeFilter(state, action: PayloadAction<{ id: string; filter: FilterType }>) {
       const index = state.findIndex((tl) => tl.id === action.payload.id)
       state[index].filter = action.payload.filter
-    },
-    setTodolists(state, action: PayloadAction<TodolistType[]>) {
-      return action.payload.map((tl) => ({ ...tl, filter: "all" }))
     },
     clearData(state, action: PayloadAction) {
       return (state = [])
     },
   },
   extraReducers(builder) {
-    builder.addCase
-  }
+    builder.addCase(fetchTodolistsTC.fulfilled, (state, action) => {
+      if (action.payload) {
+        return action.payload.data.map((tl) => ({ ...tl, filter: "all" }))
+      }
+    })
+    builder.addCase(createTodolistTC.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.unshift({ ...action.payload.todolist, filter: "all" })
+      }
+    })
+    builder.addCase(deleteTodolistTC.fulfilled, (state, action) => {
+      const index = state.findIndex((tl) => tl.id === action.payload?.id)
+      state.splice(index, 1)
+    })
+    builder.addCase(updateTitleTC.fulfilled, (state, action) => {
+      if (action.payload) {
+        const index = state.findIndex((tl) => tl.id === action.payload?.id)
+        state[index].title = action.payload.title
+      }
+    })
+  },
 })
 
 export const todolistsReducer = slice.reducer

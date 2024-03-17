@@ -27,10 +27,12 @@ export const useTodolist = (todolistId?: string, title?: string) => {
     confirm({ description: `Delete todolist ${title?.toUpperCase()}?` })
       .then(() => {
         dispatch(deleteTodolistTC(todolistId!))
-        dispatch(setAppError({ message: `Todolist ${title?.toUpperCase()} successfully deleted!`, severity: "success" }))
+        dispatch(
+          setAppError({ message: `Todolist ${title?.toUpperCase()} successfully deleted!`, severity: "success" })
+        )
       })
       .catch((err: AxiosError) => {
-        err && dispatch(setAppError({message: err.message.toString(), severity: 'error'}))
+        err && dispatch(setAppError({ message: err.message.toString(), severity: "error" }))
       })
   }, [todolistId, title, dispatch, confirm])
 
@@ -39,7 +41,7 @@ export const useTodolist = (todolistId?: string, title?: string) => {
       if (todolists.some((tl) => tl.title === newTitle)) {
         dispatch(setAppError({ message: `Todolist ${newTitle.toUpperCase()} already exists!`, severity: "info" }))
       } else {
-        dispatch(updateTitleTC(todolistId!, newTitle))
+        dispatch(updateTitleTC({ todolistId: todolistId!, title: newTitle }))
       }
     },
     [todolists, todolistId, dispatch]

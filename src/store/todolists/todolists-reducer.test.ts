@@ -1,4 +1,6 @@
+import { TodolistType } from "../../api/todolists-api"
 import { todolistsReducer, TodolistDomainType, actions } from "./todolists-reducer"
+import { createTodolistTC, deleteTodolistTC, fetchTodolistsTC } from "./todolists-thunks"
 
 let startState: TodolistDomainType[] = []
 
@@ -10,7 +12,7 @@ beforeEach(() => {
 })
 
 test("removed todolist", () => {
-  const action = actions.deleteTodolist(startState[0].id)
+  const action = deleteTodolistTC.fulfilled({id: '1'}, '', '')
   const endState = todolistsReducer(startState, action)
 
   expect(endState.length).toBe(1)
@@ -18,18 +20,17 @@ test("removed todolist", () => {
 })
 
 test("create todolist", () => {
-  const todolist = {
+  const todolist: TodolistType = {
     id: "3",
     title: "home work",
-    filter: "all",
     addedDate: "",
     order: 0,
   }
-  const action = actions.createTodolist(todolist)
+  const action = createTodolistTC.fulfilled({todolist}, '', todolist.title)
   const endState = todolistsReducer(startState, action)
 
   expect(endState.length).toBe(3)
-  expect(endState[0].title).toBe("home work")
+  expect(endState[0].title).toBe(todolist.title)
 })
 
 test("change todolist filter", () => {
@@ -41,7 +42,7 @@ test("change todolist filter", () => {
 })
 
 test("set todolists to state", () => {
-  const action = actions.setTodolists(startState)
+  const action = fetchTodolistsTC.fulfilled({data: startState}, '')
   const endState = todolistsReducer([], action)
 
   expect(endState.length).toBe(2)

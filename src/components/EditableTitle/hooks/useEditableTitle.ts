@@ -4,7 +4,7 @@ export const useEditableTitle = (
   title: string,
   onChange: (newTitle: string) => void
 ) => {
-  
+
   const [editMode, setEditMode] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
 
@@ -15,7 +15,7 @@ export const useEditableTitle = (
 
   const activateViewMode = useCallback(() => {
     if (!inputValue) {
-      window.alert('Title is requaried!')
+      return
     } else {
       setEditMode(false)
       onChange(inputValue)

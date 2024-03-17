@@ -1,29 +1,42 @@
-import { TaskType, todolistsAPI, UpdateTaskModelType } from "../../api/todolists-api"
+import { todolistsAPI, UpdateTaskModelType } from "../../api/todolists-api"
 import { setAppError, setAppStatus } from "../app/app-reducer"
+import { AppRootState } from "../store"
 import { UpdateDomainModelTaskType } from "./tasks-reducer"
 import { createAsyncThunk } from "@reduxjs/toolkit"
 
-export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async (todolistId: string, { dispatch, rejectWithValue }) => {
-  dispatch(setAppStatus("loading"))
-  try {
-    const { data, status } = await todolistsAPI.getTasks(todolistId)
-    if (status === 200) {
-      const tasks = data.items
-      dispatch(setAppStatus("succeeded"))
-      return { todolistId, tasks }
+export const fetchTasks = createAsyncThunk(
+  "tasks/fetchTasks",
+  async (todolistId: string, { dispatch, rejectWithValue }) => {
+    dispatch(setAppStatus("loading"))
+    try {
+      const { data, status } = await todolistsAPI.getTasks(todolistId)
+      if (status === 200) {
+        const tasks = data.items
+        dispatch(setAppStatus("succeeded"))
+        return { todolistId, tasks }
+      } else {
+        dispatch(setAppError({ message: data.error, severity: "error" }))
+        dispatch(setAppStatus("failed"))
+      }
+    } catch (err) {
+      return rejectWithValue(err)
     }
-  } catch (err) {
-    dispatch(setAppStatus("failed"))
-    dispatch(setAppError({ message: "An error occured!", severity: "error" }))
-    return rejectWithValue(err)
   }
-})
+)
 
 export const createTaskTC = createAsyncThunk(
   "tasks/createTask",
-  async (param: { todolistId: string; title: string }) => {
-    const { data } = await todolistsAPI.createTask(param.todolistId, param.title)
-    return { todolistId: param.todolistId, task: data.data.item }
+  async (param: { todolistId: string; title: string }, { dispatch, rejectWithValue }) => {
+    try {
+      const { data } = await todolistsAPI.createTask(param.todolistId, param.title)
+      if (data.resultCode === 0) {
+        return { todolistId: param.todolistId, task: data.data.item }
+      } else {
+        dispatch(setAppError({ message: data.messages.toString(), severity: "error" }))
+      }
+    } catch (err) {
+      return rejectWithValue(err)
+    }
   }
 )
 
@@ -34,13 +47,16 @@ export const deleteTaskTC = createAsyncThunk("tasks/deleteTask", async (param: {
 
 export const updateTaskTC = createAsyncThunk(
   "tasks/updateTask",
-  async (param: { todolistId: string; id: string; model: UpdateDomainModelTaskType }, thunkAPI) => {
-    const state: any = thunkAPI.getState()
-    const task: TaskType = state.tasks[param.todolistId].find((t: TaskType) => t.id === param.id)
+  async (
+    param: { todolistId: string; id: string; model: UpdateDomainModelTaskType },
+    { dispatch, rejectWithValue, getState }
+  ) => {
+    const state = getState() as AppRootState
+    const task = state.tasks[param.todolistId].find((t) => t.id === param.id)
 
     if (!task) {
-      thunkAPI.dispatch(setAppError({ message: "Task not found!", severity: "error" }))
-      return
+      dispatch(setAppError({ message: "Task not found!", severity: "error" }))
+      return rejectWithValue("Task not found!")
     }
 
     const apiModel: UpdateTaskModelType = {
@@ -53,7 +69,15 @@ export const updateTaskTC = createAsyncThunk(
       ...param.model,
     }
 
-    await todolistsAPI.updateTask(param.todolistId, param.id, apiModel)
-    return { todolistId: param.todolistId, id: param.id, model: apiModel }
+    try {
+      const { data } = await todolistsAPI.updateTask(param.todolistId, param.id, apiModel)
+      if (data.resultCode === 0) {
+        return { todolistId: param.todolistId, id: param.id, model: apiModel }
+      } else {
+        dispatch(setAppError({ message: data.messages.toString(), severity: "error" }))
+      }
+    } catch (err) {
+      return rejectWithValue(err)
+    }
   }
 )
